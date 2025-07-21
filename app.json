@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "qutta-app",
-    "slug": "qutta-app",
+    "name": "Qutta",
+    "slug": "Qutta",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "quttaapp",
-    "userInterfaceStyle": "automatic",
+    "scheme": "qutta",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
