@@ -10,12 +10,14 @@ export const Colors = {
   light: {
     // Base brand colors
     text: "#1A1A1A", // Soft black for high contrast text
+    textSecondary: "#666",
     background: "#FDF6EC", // Cream background
     primary: "#CBB89D", // Light brown (elegant, warm)
     highlight: "#D8BBA2", // Slightly brighter accent for hover/active
     button: "#7A5C3E", // Rich dark brown for CTA
     icon: "#1A1A1A", // Dark icons for contrast
     border: "#E6DCCF", // Light border or divider color
+    muted: "#C8C8C8",
 
     // Brand accents
     tint: "#7A5C3E", // Matches button (brand accent)
@@ -23,6 +25,7 @@ export const Colors = {
     tabIconSelected: "#7A5C3E", // Active tab with brand brown
 
     // Optional extras
+    white: "#FFFFFF",
     black: "#000000", // For overlays or strong elements
     softBlack: "#1A1A1A",
     cream: "#FDF6EC",

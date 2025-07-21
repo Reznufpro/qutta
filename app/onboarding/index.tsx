@@ -33,7 +33,6 @@ export const BACKGROUNDS: backgrounds[] = [
 
 export default function OnboardingScreen() {
   const [isReady, setIsReady] = useState(false);
-  const [bgVisible, setBgVisible] = useState(false);
   const [index, setIndex] = useState(0);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -110,7 +109,6 @@ export default function OnboardingScreen() {
           source={BACKGROUNDS[index].source}
           style={styles.background}
           resizeMode="cover"
-          onLoadEnd={() => setBgVisible(true)}
         >
           <View style={styles.overlay} />
           <SafeAreaView style={{ flex: 1, zIndex: 2 }}>
