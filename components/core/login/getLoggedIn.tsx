@@ -3,6 +3,7 @@ import CustomText from "@/components/ui/customText";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { h3 } from "@/constants";
 import { Colors } from "@/constants/Colors";
+import { useUserData } from "@/context/userContext";
 import { useRegisterUser } from "@/hooks/useAuth";
 import { checkEmailExists, validateEmail } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -56,7 +57,12 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
     null | "name" | "lastName" | "email" | "password"
   >(null);
   const [errors, setErrors] = useState(initialState);
-  const { mutateAsync: register, isPending, error } = useRegisterUser();
+  const {
+    mutateAsync: register,
+    isPending: loginPending,
+    error,
+  } = useRegisterUser();
+  const { setUser } = useUserData();
 
   const handleInputChange = (key: keyof typeof formData, value: string) => {
     setFormData((prev) => ({
@@ -151,6 +157,13 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
 
     try {
       console.log(formData);
+
+      // const { user, token } = await register(formData);
+      // console.log("Created:", user);
+
+      // setUser({ ...user, token: token });
+
+      // await SecureStore.setItemAsync("token", token);
     } catch (error) {
       console.error("Registration failed", error);
     }

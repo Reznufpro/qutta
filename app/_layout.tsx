@@ -1,3 +1,4 @@
+import { UserProvider } from "@/context/userContext";
 import { useTheme } from "@/hooks/userThemeContext";
 import {
   DarkTheme,
@@ -37,15 +38,17 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: false,
-          }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
+        <UserProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              gestureEnabled: false,
+            }}
+          >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </UserProvider>
         <StatusBar style="auto" />
       </ThemeProvider>
     </QueryClientProvider>
