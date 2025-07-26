@@ -57,7 +57,12 @@ export default function IndexScreen() {
 
         const user = await res.json();
         setUser({ ...user, token }); // Save user data
-        router.replace("/home");
+
+        if (user.role === "Client") {
+          router.replace("/(client)/home");
+        } else {
+          router.replace("/(business)/dashboard");
+        }
       } catch (err) {
         console.error("Auth failed:", err);
         router.replace("/onboarding");

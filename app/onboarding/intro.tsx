@@ -3,11 +3,12 @@ import { CustomProgressBar } from "@/components/ui/customProgressBar";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { ListingButtons } from "@/components/ui/listingButtons";
 import { blurhash } from "@/constants";
+import { useUserData } from "@/context/userContext";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AnimatePresence, MotiView } from "moti";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dimensions,
   DimensionValue,
@@ -18,7 +19,7 @@ import {
 
 const { width } = Dimensions.get("screen");
 
-const onboardingData = [
+const clientOnboardingData = [
   {
     heading: "Book Services Instantly",
     subHeading:
@@ -39,8 +40,36 @@ const onboardingData = [
   },
 ];
 
+const businessOnboardingData = [
+  {
+    heading: "Manage Your Schedule Effortlessly",
+    subHeading:
+      "Set your business hours, block out time, and let clients book without back-and-forth messages.",
+    image: require("../../assets/onBoarding/spa1.jpg"),
+  },
+  {
+    heading: "Build a Loyal Client Base",
+    subHeading:
+      "Showcase your services, team, and reviews. Get discovered by nearby clients ready to book.",
+    image: require("../../assets/onBoarding/spa1.jpg"),
+  },
+  {
+    heading: "Stay in Control with Waitlists",
+    subHeading:
+      "Fill every empty slot. Clients join waitlists and get auto-notified when there’s an opening.",
+    image: require("../../assets/onBoarding/spa1.jpg"),
+  },
+];
+
 export default function IntroScreen() {
   const router = useRouter();
+  const { userData } = useUserData();
+
+  const onboardingData = useMemo(
+    () => (userData.role === "Client" ? clientOnboardingData : businessOnboardingData),
+    [userData.role]
+  );
+
   const [currentIndex, setCurrentIndex] = useState(1);
   const totalIntro = onboardingData.length + 1;
 
