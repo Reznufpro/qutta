@@ -1,17 +1,103 @@
+import { CustomListingHeader } from "@/components/ui/customListingHeader";
+import { CustomProgressBar } from "@/components/ui/customProgressBar";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { ListingButtons } from "@/components/ui/listingButtons";
-import { Dimensions, SafeAreaView, StyleSheet } from "react-native";
+import { blurhash } from "@/constants";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { AnimatePresence, MotiView } from "moti";
+import { useState } from "react";
+import {
+  Dimensions,
+  DimensionValue,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from "react-native";
 
 const { width } = Dimensions.get("screen");
 
-export default function IntroScreen() {
-  const handleNext = () => {};
+const onboardingData = [
+  {
+    heading: "Book Services Instantly",
+    subHeading:
+      "Easily browse and book appointments with barbers, trainers, wellness experts, and more — all in just a few taps.",
+    image: require("../../assets/onBoarding/book.png"),
+  },
+  {
+    heading: "Join Waitlists with Ease",
+    subHeading:
+      "No slots available? No problem. Join the waitlist and get notified the moment something opens up.",
+    image: require("../../assets/onBoarding/notification.png"),
+  },
+  {
+    heading: "Discover Quality Businesses",
+    subHeading:
+      "Explore local businesses, view their staff schedules, and read reviews — so you always know what to expect.",
+    image: require("../../assets/onBoarding/spa1.jpg"),
+  },
+];
 
-  const handleSkip = () => {};
+export default function IntroScreen() {
+  const router = useRouter();
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const totalIntro = onboardingData.length + 1;
+
+  const progressPercentage: DimensionValue = `${
+    (currentIndex / onboardingData.length) * 100
+  }%`;
+  const currentItem = onboardingData[currentIndex - 1];
+
+  const handleNext = () => {
+    if (currentIndex < totalIntro - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      router.push("/home");
+    }
+  };
+
+  const handleSkip = () => {
+    setCurrentIndex(totalIntro);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
       <InnerContainer style={{ flex: 1, justifyContent: "space-between" }}>
+        <View>
+          <CustomProgressBar progressPercentage={progressPercentage} />
+
+          <AnimatePresence exitBeforeEnter>
+            <MotiView
+              key={currentIndex}
+              from={{ opacity: 0, translateY: 20 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              exit={{ opacity: 0, translateY: -20 }}
+              transition={{ type: "timing", duration: 400 }}
+              style={{
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <CustomListingHeader
+                heading={currentItem.heading}
+                subHeading={currentItem.subHeading}
+              />
+
+              <View style={styles.imageContainer}>
+                <Image
+                  source={currentItem.image}
+                  placeholder={blurhash}
+                  style={styles.image}
+                  contentFit="cover"
+                  cachePolicy="memory-disk"
+                />
+              </View>
+            </MotiView>
+          </AnimatePresence>
+        </View>
+
         <ListingButtons handleBack={handleSkip} handleNext={handleNext} />
       </InnerContainer>
     </SafeAreaView>

@@ -14,7 +14,6 @@ import * as SecureStore from "expo-secure-store";
 import { AnimatePresence, MotiView } from "moti";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Keyboard,
   KeyboardAvoidingView,
@@ -27,6 +26,7 @@ import {
   View,
 } from "react-native";
 import { Easing } from "react-native-reanimated";
+import { ActionButton } from "./actionButton";
 import { ErrorIndicator } from "./errorIndicator";
 import { FormInput } from "./formInput";
 import { PasswordInput } from "./passwordInput";
@@ -293,38 +293,11 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal }) => {
                       <ErrorIndicator errors={errors.password} />
                     )}
 
-                    <TouchableOpacity
-                      style={[
-                        styles.nextButton,
-                        !formData.email && styles.disabledButton,
-                        { marginVertical: 30 },
-                      ]}
-                      disabled={loginPending || !formData.email}
-                      onPress={handleContinue}
-                    >
-                      {loginPending ? (
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 6,
-                          }}
-                        >
-                          <ActivityIndicator
-                            size="small"
-                            color={Colors.light.white}
-                          />
-
-                          <CustomText style={styles.buttonText}>
-                            loading...
-                          </CustomText>
-                        </View>
-                      ) : (
-                        <CustomText style={styles.buttonText}>
-                          Continue
-                        </CustomText>
-                      )}
-                    </TouchableOpacity>
+                    <ActionButton
+                      disabledFlag={loginPending || !formData.email}
+                      loading={loginPending}
+                      func={handleContinue}
+                    />
 
                     <CustomDivider text="OR" />
 
@@ -448,35 +421,11 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal }) => {
                       currentRole={formData.role}
                     />
 
-                    <TouchableOpacity
-                      style={[
-                        styles.nextButton,
-                        emptyForm && styles.disabledButton,
-                        { marginVertical: 30 },
-                      ]}
-                      disabled={emptyForm || signUpPending}
-                      onPress={handleSubmitRegister}
-                    >
-                      {signUpPending ? (
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 6,
-                          }}
-                        >
-                          <ActivityIndicator color={Colors.light.white} />
-
-                          <CustomText style={styles.buttonText}>
-                            loading...
-                          </CustomText>
-                        </View>
-                      ) : (
-                        <CustomText style={styles.buttonText}>
-                          Continue
-                        </CustomText>
-                      )}
-                    </TouchableOpacity>
+                    <ActionButton
+                      disabledFlag={emptyForm || signUpPending}
+                      loading={signUpPending}
+                      func={handleSubmitRegister}
+                    />
                   </MotiView>
                 )}
               </AnimatePresence>
@@ -503,62 +452,5 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 6,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: Colors.light.textSecondary,
-    borderRadius: 5,
-    padding: 12,
-    fontSize: 16,
-    height: 45.5,
-    backgroundColor: "#fafafa",
-  },
-  passwordInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderColor: Colors.light.textSecondary,
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 45.5,
-    paddingHorizontal: 10,
-    backgroundColor: "#fafafa",
-  },
-  passwordInput: {
-    flex: 1,
-    color: "#000",
-    height: 45.5,
-    fontSize: 16,
-  },
-  btnText: {
-    fontSize: 16,
-    fontFamily: "Satoshi-Bold",
-    textDecorationLine: "underline",
-    textDecorationStyle: "solid",
-  },
-  focusedInput: {
-    borderColor: "#000",
-    borderWidth: 2,
-    borderRadius: 4,
-  },
-  disabledButton: {
-    backgroundColor: Colors.light.muted,
-  },
-  error: {
-    fontSize: 12,
-    color: "red",
-  },
-  errorInput: {
-    borderColor: "red",
-  },
-  nextButton: {
-    backgroundColor: Colors.light.black,
-    paddingVertical: 14,
-    alignItems: "center",
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: Colors.light.white,
-    fontFamily: "Satoshi-Bold",
-    fontSize: 18,
   },
 });

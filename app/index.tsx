@@ -1,8 +1,10 @@
 import CustomHeading from "@/components/ui/customHeading";
 import CustomText from "@/components/ui/customText";
-import { AppName } from "@/constants";
+import { AppName, BASE_URL } from "@/constants";
 import { Colors } from "@/constants/Colors";
+import { useUserData } from "@/context/userContext";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, StyleSheet, View } from "react-native";
 
@@ -10,6 +12,7 @@ export default function IndexScreen() {
   const router = useRouter();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [status, setStatus] = useState("Checking for updates...");
+  const { setUser } = useUserData();
 
   useEffect(() => {
     // Pulse animation
@@ -30,12 +33,38 @@ export default function IndexScreen() {
       ])
     ).start();
 
-    // Text sequence
-    setTimeout(() => setStatus("Loading data..."), 1000);
+    const tryAuth = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("token");
 
-    const splashTimeout = setTimeout(() => {
-      router.replace("/onboarding");
-    }, 2200);
+        if (!token) {
+          setStatus("No token found. Redirecting...");
+          return router.replace("/onboarding");
+        }
+
+        setStatus("Loading data...");
+
+        const res = await fetch(`${BASE_URL}auth/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Token invalid or expired");
+        }
+
+        const user = await res.json();
+        setUser({ ...user, token }); // Save user data
+        router.replace("/home");
+      } catch (err) {
+        console.error("Auth failed:", err);
+        router.replace("/onboarding");
+      }
+    };
+
+    const splashTimeout = setTimeout(tryAuth, 1000); // delay for animation
 
     return () => clearTimeout(splashTimeout);
   }, []);

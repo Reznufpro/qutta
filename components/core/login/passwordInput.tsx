@@ -1,7 +1,15 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
-import { formState, initialLoginState } from "./getLoggedIn";
+import { formState } from "./getLoggedIn";
+
+const initialLoginState: formState = {
+  name: "",
+  lastName: "",
+  email: "",
+  password: "",
+  role: "Client",
+};
 
 interface PasswordInputProps {
   ref: React.RefObject<TextInput | null>;
