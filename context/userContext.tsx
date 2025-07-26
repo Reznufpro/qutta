@@ -3,7 +3,7 @@ import React, { createContext, FC, useContext, useState } from "react";
 interface userProfile {
   id: string;
   name: string;
-  last_name: string;
+  lastName: string;
   email: string;
   role: string;
   token: string;
@@ -12,7 +12,7 @@ interface userProfile {
 const initialState: userProfile = {
   id: "",
   name: "",
-  last_name: "",
+  lastName: "",
   email: "",
   role: "",
   token: "",

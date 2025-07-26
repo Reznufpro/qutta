@@ -23,10 +23,7 @@ export const Login = () => {
         closeModal={() => setModalVisible(false)}
         styles={{ height: height - 150 }}
       >
-        <GetLoggedIn
-          closeModal={() => setModalVisible(false)}
-          func={() => {}}
-        />
+        <GetLoggedIn closeModal={() => setModalVisible(false)} />
       </FlexibleModal>
     </>
   );
@@ -42,7 +39,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.light.black,
-    fontFamily: "Satoshi-Bold",
+    fontFamily: "CarosSoftBold",
     fontSize: 18,
   },
 });

@@ -18,7 +18,7 @@ const CustomText: FC<CustomTextProps> = ({ style, ...props }) => {
 
 const styles = StyleSheet.create({
   defaultFont: {
-    fontFamily: "Satoshi-Bold",
+    fontFamily: "CarosSoftBold",
     fontSize: 16,
     lineHeight: 24,
     letterSpacing: 0.25,

@@ -23,6 +23,8 @@ export default function RootLayout() {
     "Satoshi-Bold": require("../assets/fonts/Satoshi-Bold.ttf"),
     "ClashDisplay-Bold": require("../assets/fonts/ClashDisplay-Bold.ttf"),
     "SpaceGrotesk-Bold": require("../assets/fonts/SpaceGrotesk-Bold.ttf"),
+    CarosSoftLight: require("../assets/fonts/CarosSoftLight.ttf"),
+    CarosSoftBold: require("../assets/fonts/CarosSoftBold.ttf"),
   });
 
   useEffect(() => {

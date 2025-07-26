@@ -35,7 +35,7 @@ export default function IndexScreen() {
 
     const splashTimeout = setTimeout(() => {
       router.replace("/onboarding");
-    }, 2200); // adjust total duration as needed
+    }, 2200);
 
     return () => clearTimeout(splashTimeout);
   }, []);

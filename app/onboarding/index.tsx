@@ -155,7 +155,7 @@ export default function OnboardingScreen() {
               <Animated.View style={[styles.boldText, { opacity: fadeAnim }]}>
                 <CustomHeading
                   style={{
-                    fontFamily: "SpaceGrotesk-Bold",
+                    fontFamily: "CarosSoftBold",
                     fontSize: 28,
                     color: Colors.light.cream,
                   }}
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   subtitle: {
-    fontFamily: "Satoshi-Bold",
+    fontFamily: "CarosSoftBold",
     fontSize: 18,
     marginTop: 15,
     color: Colors.light.cream,
@@ -195,18 +195,6 @@ const styles = StyleSheet.create({
   boldText: {
     marginTop: 25,
     maxWidth: 230,
-  },
-  button: {
-    backgroundColor: Colors.light.cream,
-    paddingVertical: 14,
-    alignItems: "center",
-    borderRadius: 8,
-    marginBottom: 40,
-  },
-  buttonText: {
-    color: Colors.light.black,
-    fontFamily: "Satoshi-Bold",
-    fontSize: 16,
   },
   bottomButtonWrapper: {
     paddingHorizontal: 24,

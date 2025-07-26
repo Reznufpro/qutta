@@ -4,14 +4,18 @@ import { InnerContainer } from "@/components/ui/innerContainer";
 import { h3 } from "@/constants";
 import { Colors } from "@/constants/Colors";
 import { useUserData } from "@/context/userContext";
-import { useRegisterUser } from "@/hooks/useAuth";
-import { checkEmailExists, validateEmail } from "@/utils";
+import { useLoginUser, useRegisterUser } from "@/hooks/useAuth";
+import { checkEmailExists, validateEmail, validatePassword } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as AppleAuthentication from "expo-apple-authentication";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { AnimatePresence, MotiView } from "moti";
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -22,11 +26,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { Easing } from "react-native-reanimated";
+import { ErrorIndicator } from "./errorIndicator";
+import { FormInput } from "./formInput";
+import { PasswordInput } from "./passwordInput";
 import { RoleSelector } from "./roleSelector";
 
 interface GetLoggedInProps {
   closeModal: () => void;
-  func: () => void;
 }
 
 export interface formState {
@@ -37,7 +44,7 @@ export interface formState {
   role: "Client" | "Business";
 }
 
-const initialState: formState = {
+export const initialLoginState: formState = {
   name: "",
   lastName: "",
   email: "",
@@ -45,24 +52,28 @@ const initialState: formState = {
   role: "Client",
 };
 
-export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
+export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal }) => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState(initialLoginState);
   const nameInputRef = useRef<TextInput>(null);
   const lastNameInputRef = useRef<TextInput>(null);
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
+  const [emailExists, setEmailExists] = useState(false);
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [focusedInput, setFocusedInput] = useState<
     null | "name" | "lastName" | "email" | "password"
   >(null);
-  const [errors, setErrors] = useState(initialState);
+  const [errors, setErrors] = useState(initialLoginState);
+  const { mutateAsync: register, isPending: signUpPending } = useRegisterUser();
   const {
-    mutateAsync: register,
+    mutateAsync: login,
     isPending: loginPending,
-    error,
-  } = useRegisterUser();
+    error: loginError,
+    isError,
+  } = useLoginUser();
   const { setUser } = useUserData();
+  const router = useRouter();
 
   const handleInputChange = (key: keyof typeof formData, value: string) => {
     setFormData((prev) => ({
@@ -83,7 +94,7 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
   }, [formData]);
 
   const validateInputs = () => {
-    const newErrors = initialState;
+    const newErrors = initialLoginState;
     let isValid = true;
 
     if (!formData.email) {
@@ -104,7 +115,7 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
   };
 
   const handleContinue = async () => {
-    setErrors(initialState);
+    setErrors(initialLoginState);
 
     if (!validateEmail(formData.email)) {
       setErrors((prev) => ({
@@ -115,16 +126,40 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
       return;
     }
 
-    const exists = await checkEmailExists(formData.email);
+    if (!emailExists) {
+      const exists = await checkEmailExists(formData.email);
+      console.log("Email exists?", exists);
 
-    console.log(exists);
+      if (exists) {
+        setEmailExists(true); // Show password field
+        return;
+      } else {
+        setStep(2); // Email doesn't exist, move to register step
+        return;
+      }
+    }
 
-    if (!exists) {
-      setStep(2);
+    if (!formData.password) {
+      setErrors((prev) => ({
+        ...prev,
+        password: "Please enter your password",
+      }));
+      Haptics.selectionAsync();
       return;
     }
 
     try {
+      const { user, token } = await login({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      setUser({ ...user, token });
+      await SecureStore.setItemAsync("token", token);
+
+      console.log("Logged in", user);
+      closeModal();
+      router.push("/home");
     } catch (error) {
       console.log("Error: logging in", error);
     }
@@ -136,10 +171,19 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
       return;
     }
 
-    if (!validateEmail(formData.email)) {
+    const emailError = validateEmail(formData.email)
+      ? ""
+      : "Invalid email format.";
+
+    const passwordError = validatePassword(formData.password)
+      ? ""
+      : "Password must be at least 6 characters long, include uppercase, lowercase, a number, and a special character.";
+
+    if (emailError || passwordError) {
       setErrors((prev) => ({
         ...prev,
-        email: "Please enter a valid email address",
+        email: emailError,
+        password: passwordError,
       }));
       Haptics.selectionAsync();
       return;
@@ -158,16 +202,24 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
     try {
       console.log(formData);
 
-      // const { user, token } = await register(formData);
-      // console.log("Created:", user);
+      const { user, token } = await register(formData);
+      console.log("Created:", user, token);
 
-      // setUser({ ...user, token: token });
+      setUser({ ...user, token: token });
 
-      // await SecureStore.setItemAsync("token", token);
+      await SecureStore.setItemAsync("token", token);
+      closeModal();
+      router.push("/onboarding/intro");
     } catch (error) {
       console.error("Registration failed", error);
     }
   };
+
+  useEffect(() => {
+    if (isError) {
+      Alert.alert(loginError.message);
+    }
+  }, [loginError?.message, isError]);
 
   return (
     <InnerContainer>
@@ -194,56 +246,51 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
                     exit={{ opacity: 0, translateY: -20 }}
                     transition={{ type: "timing", duration: 300 }}
                   >
-                    <CustomText style={[styles.label]}>Email</CustomText>
-                    <TextInput
+                    <FormInput
                       ref={emailInputRef}
-                      style={[
-                        styles.input,
-                        focusedInput === "email" && styles.focusedInput,
-                        errors.email && styles.errorInput,
-                      ]}
-                      placeholder="Email"
-                      placeholderTextColor="#c7c7c7"
-                      selectionColor="#000"
-                      keyboardType="email-address"
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      onFocus={() => setFocusedInput("email")}
-                      onBlur={async () => {
-                        setFocusedInput(null);
-                      }}
+                      label="Email"
+                      errors={errors}
                       value={formData.email}
-                      onChangeText={(text) => {
-                        handleInputChange("email", text);
-                      }}
+                      focusedInput={focusedInput}
+                      focusedString="email"
+                      setFocusedInput={setFocusedInput}
+                      handleInputChange={handleInputChange}
+                      setErrors={setErrors}
                     />
 
-                    {errors.email && (
+                    {errors.email && <ErrorIndicator errors={errors.email} />}
+
+                    {emailExists && (
                       <MotiView
-                        from={{
-                          opacity: 0,
-                          translateY: -6,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          translateY: 0,
-                        }}
+                        key="step3"
+                        from={{ opacity: 0, translateY: 20 }}
+                        animate={{ opacity: 1, translateY: 0 }}
+                        exit={{ opacity: 0, translateY: -20 }}
                         transition={{
                           type: "timing",
-                          duration: 300,
-                        }}
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 6,
-                          marginTop: 5,
+                          duration: 600,
+                          easing: Easing.inOut(Easing.cubic),
                         }}
                       >
-                        <Ionicons name="alert-circle" color="red" />
-                        <CustomText style={styles.error}>
-                          {errors.email}
-                        </CustomText>
+                        <View style={{ marginTop: 30 }}>
+                          <PasswordInput
+                            label="Password"
+                            ref={passwordInputRef}
+                            setErrors={setErrors}
+                            value={formData.password}
+                            focusedString="password"
+                            focusedInput={focusedInput}
+                            isPasswordVisible={isPasswordVisible}
+                            setFocusedInput={setFocusedInput}
+                            handleInputChange={handleInputChange}
+                            setPasswordVisible={setPasswordVisible}
+                          />
+                        </View>
                       </MotiView>
+                    )}
+
+                    {errors.password && (
+                      <ErrorIndicator errors={errors.password} />
                     )}
 
                     <TouchableOpacity
@@ -252,11 +299,31 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
                         !formData.email && styles.disabledButton,
                         { marginVertical: 30 },
                       ]}
+                      disabled={loginPending || !formData.email}
                       onPress={handleContinue}
                     >
-                      <CustomText style={styles.buttonText}>
-                        Continue
-                      </CustomText>
+                      {loginPending ? (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 6,
+                          }}
+                        >
+                          <ActivityIndicator
+                            size="small"
+                            color={Colors.light.white}
+                          />
+
+                          <CustomText style={styles.buttonText}>
+                            loading...
+                          </CustomText>
+                        </View>
+                      ) : (
+                        <CustomText style={styles.buttonText}>
+                          Continue
+                        </CustomText>
+                      )}
                     </TouchableOpacity>
 
                     <CustomDivider text="OR" />
@@ -291,7 +358,16 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
                   >
                     {/* Back Button */}
                     <TouchableOpacity
-                      onPress={() => setStep(1)}
+                      onPress={() => {
+                        setStep(1);
+                        setFormData((prev) => ({
+                          ...prev,
+                          name: "",
+                          lastName: "",
+                          password: "",
+                          role: "Client",
+                        }));
+                      }}
                       style={{ marginBottom: 24, alignSelf: "flex-start" }}
                     >
                       <Ionicons
@@ -302,186 +378,69 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
                     </TouchableOpacity>
 
                     <CustomText style={[styles.label]}>Full name</CustomText>
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.light.textSecondary,
-                        borderRadius: 5,
-                        marginBottom: 30,
-                      }}
-                    >
+                    <View style={styles.nameContainer}>
                       {/* First Name */}
-                      <TextInput
+                      <FormInput
                         ref={nameInputRef}
-                        style={[
-                          styles.input,
-                          {
-                            borderBottomLeftRadius: 0,
-                            borderBottomRightRadius: 0,
-                          },
-                          focusedInput === "name" && styles.focusedInput,
-                          errors.name && styles.errorInput,
-                        ]}
                         placeholder="First name"
-                        placeholderTextColor="#c7c7c7"
-                        selectionColor="#000"
-                        keyboardType="name-phone-pad"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        onFocus={() => setFocusedInput("name")}
-                        onBlur={async () => {
-                          setFocusedInput(null);
-                        }}
+                        errors={errors}
                         value={formData.name}
-                        onChangeText={(text) => {
-                          handleInputChange("name", text);
-                        }}
+                        focusedInput={focusedInput}
+                        focusedString="name"
+                        setFocusedInput={setFocusedInput}
+                        handleInputChange={handleInputChange}
+                        setErrors={setErrors}
                       />
 
                       {/* Last Name */}
-                      <TextInput
+                      <FormInput
                         ref={lastNameInputRef}
-                        style={[
-                          styles.input,
-                          { borderTopLeftRadius: 0, borderTopRightRadius: 0 },
-                          focusedInput === "lastName" && styles.focusedInput,
-                          errors.lastName && styles.errorInput,
-                        ]}
                         placeholder="Last name"
-                        placeholderTextColor="#c7c7c7"
-                        selectionColor="#000"
-                        keyboardType="name-phone-pad"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        onFocus={() => setFocusedInput("lastName")}
-                        onBlur={async () => {
-                          setFocusedInput(null);
-                        }}
+                        errors={errors}
                         value={formData.lastName}
-                        onChangeText={(text) => {
-                          handleInputChange("lastName", text);
-                        }}
+                        focusedInput={focusedInput}
+                        focusedString="lastName"
+                        setFocusedInput={setFocusedInput}
+                        handleInputChange={handleInputChange}
+                        setErrors={setErrors}
                       />
                     </View>
 
-                    {errors.name && (
-                      <MotiView
-                        from={{
-                          opacity: 0,
-                          translateY: -6,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          translateY: 0,
-                        }}
-                        transition={{
-                          type: "timing",
-                          duration: 300,
-                        }}
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 6,
-                          marginTop: 5,
-                        }}
-                      >
-                        <Ionicons name="alert-circle" color="red" />
-                        <CustomText style={styles.error}>
-                          {errors.name}
-                        </CustomText>
-                      </MotiView>
-                    )}
+                    {errors.name && <ErrorIndicator errors={errors.name} />}
 
                     <View style={{ marginBottom: 30 }}>
-                      <CustomText style={[styles.label]}>Email</CustomText>
-                      <TextInput
+                      <FormInput
                         ref={emailInputRef}
-                        style={[
-                          styles.input,
-                          focusedInput === "email" && styles.focusedInput,
-                          errors.email && styles.errorInput,
-                        ]}
-                        placeholder="Email"
-                        placeholderTextColor="#c7c7c7"
-                        selectionColor="#000"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        onFocus={() => setFocusedInput("email")}
-                        onBlur={async () => {
-                          setFocusedInput(null);
-                        }}
+                        label="Email"
+                        errors={errors}
                         value={formData.email}
-                        onChangeText={(text) => {
-                          handleInputChange("email", text);
-                        }}
+                        focusedInput={focusedInput}
+                        focusedString="email"
+                        setFocusedInput={setFocusedInput}
+                        handleInputChange={handleInputChange}
+                        setErrors={setErrors}
                       />
 
-                      {errors.email && (
-                        <MotiView
-                          from={{
-                            opacity: 0,
-                            translateY: -6,
-                          }}
-                          animate={{
-                            opacity: 1,
-                            translateY: 0,
-                          }}
-                          transition={{
-                            type: "timing",
-                            duration: 300,
-                          }}
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 6,
-                            marginTop: 5,
-                          }}
-                        >
-                          <Ionicons name="alert-circle" color="red" />
-                          <CustomText style={styles.error}>
-                            {errors.email}
-                          </CustomText>
-                        </MotiView>
-                      )}
+                      {errors.email && <ErrorIndicator errors={errors.email} />}
                     </View>
 
                     <View style={{ marginBottom: 30 }}>
-                      <CustomText style={[styles.label]}>Password</CustomText>
+                      <PasswordInput
+                        ref={passwordInputRef}
+                        label="Password"
+                        value={formData.password}
+                        isPasswordVisible={isPasswordVisible}
+                        focusedString="password"
+                        focusedInput={focusedInput}
+                        setErrors={setErrors}
+                        setFocusedInput={setFocusedInput}
+                        handleInputChange={handleInputChange}
+                        setPasswordVisible={setPasswordVisible}
+                      />
 
-                      <View
-                        style={[
-                          styles.passwordInputContainer,
-                          focusedInput === "password" && styles.focusedInput,
-                        ]}
-                      >
-                        <TextInput
-                          ref={passwordInputRef}
-                          style={styles.passwordInput}
-                          placeholder="Password"
-                          placeholderTextColor="#c7c7c7"
-                          selectionColor="#000"
-                          secureTextEntry={!isPasswordVisible}
-                          autoCapitalize="none"
-                          autoCorrect={false}
-                          onFocus={() => setFocusedInput("password")}
-                          onBlur={async () => {
-                            setFocusedInput(null);
-                          }}
-                          value={formData.password}
-                          onChangeText={(text) => {
-                            handleInputChange("password", text);
-                          }}
-                        />
-
-                        <TouchableOpacity
-                          onPress={() => setPasswordVisible(!isPasswordVisible)}
-                        >
-                          <CustomText style={styles.btnText}>
-                            {!isPasswordVisible ? "Show" : "Hide"}
-                          </CustomText>
-                        </TouchableOpacity>
-                      </View>
+                      {errors.password && (
+                        <ErrorIndicator errors={errors.password} />
+                      )}
                     </View>
 
                     <RoleSelector
@@ -495,12 +454,28 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal, func }) => {
                         emptyForm && styles.disabledButton,
                         { marginVertical: 30 },
                       ]}
-                      disabled={emptyForm}
+                      disabled={emptyForm || signUpPending}
                       onPress={handleSubmitRegister}
                     >
-                      <CustomText style={styles.buttonText}>
-                        Continue
-                      </CustomText>
+                      {signUpPending ? (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 6,
+                          }}
+                        >
+                          <ActivityIndicator color={Colors.light.white} />
+
+                          <CustomText style={styles.buttonText}>
+                            loading...
+                          </CustomText>
+                        </View>
+                      ) : (
+                        <CustomText style={styles.buttonText}>
+                          Continue
+                        </CustomText>
+                      )}
                     </TouchableOpacity>
                   </MotiView>
                 )}
@@ -518,6 +493,12 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 24,
     alignItems: "center",
+  },
+  nameContainer: {
+    borderWidth: 1,
+    borderColor: Colors.light.textSecondary,
+    borderRadius: 5,
+    marginBottom: 30,
   },
   label: {
     fontSize: 16,

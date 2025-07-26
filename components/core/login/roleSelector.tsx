@@ -20,11 +20,12 @@ export const RoleSelector = ({
   return (
     <View style={styles.container}>
       {roles.map((role) => {
-        const isSelected = currentRole === role.value.toLowerCase();
+        const isSelected = currentRole === role.value;
+
         return (
           <TouchableOpacity
             key={role.value}
-            onPress={() => handleInputChange("role", role.value.toLowerCase())}
+            onPress={() => handleInputChange("role", role.value)}
             style={{
               flex: 1,
               paddingVertical: 12,
@@ -50,7 +51,7 @@ export const RoleSelector = ({
               </View>
 
               <CustomText
-                style={{ color: isSelected ? "#fff" : "#000", fontSize: 12 }}
+                style={{ color: isSelected ? "#fff" : "#000", fontSize: 13 }}
               >
                 {role.desc}
               </CustomText>
