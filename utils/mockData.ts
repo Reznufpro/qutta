@@ -1,0 +1,66 @@
+export interface businessType {
+  id: string;
+  name: string;
+  distance: string;
+  rating: number;
+  tag: "Recommended" | "New" | "Popular" | "Open Now";
+  image: any;
+}
+
+export const featuredBusinesses: businessType[] = [
+  {
+    id: "1",
+    name: "Fade & Blade Barbers",
+    distance: "1.2 km",
+    rating: 4.6,
+    tag: "Recommended",
+    image: require("../assets/onBoarding/barber.jpg"),
+  },
+  {
+    id: "2",
+    name: "Core & Flow Pilates",
+    distance: "2.9 km",
+    rating: 4.8,
+    tag: "Popular",
+    image: require("../assets/onBoarding/wellness.jpg"),
+  },
+  {
+    id: "3",
+    name: "Lush Retreat Spa",
+    distance: "0.8 km",
+    rating: 4.3,
+    tag: "New",
+    image: require("../assets/onBoarding/spa1.jpg"),
+  },
+  {
+    id: "4",
+    name: "Alans Therapy",
+    distance: "3.5 km",
+    rating: 4.0,
+    tag: "Open Now",
+    image: require("../assets/onBoarding/therapy.jpg"),
+  },
+];
+
+export interface marketingCards {
+  img: any;
+  title: string;
+  subtitle: string;
+  extra?: string;
+  heading?: string;
+}
+
+export const marketingHome: marketingCards[] = [
+  {
+    title: "Appointments Made Easy",
+    subtitle: "Wait in comfort",
+    extra: "Browse and book at anytime.",
+    img: require("../assets/onBoarding/book.png"),
+  },
+  {
+    title: "Discover Trusted Businesses",
+    subtitle: "Local and verified",
+    extra: "Find top-rated services near you from barbers to pilates.",
+    img: require("../assets/onBoarding/book.png"),
+  },
+];

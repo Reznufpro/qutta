@@ -16,7 +16,7 @@ export const Header = ({ children, headerTitle, style }: HeaderProps) => {
           fontFamily: "Satoshi-Bold",
           color: Colors.light.text,
           textTransform: "capitalize",
-          fontSize: 20,
+          fontSize: 23,
         }}
       >
         {headerTitle}

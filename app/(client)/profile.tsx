@@ -1,32 +1,22 @@
 import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
-import { InnerContainer } from "@/components/ui/innerContainer";
+import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
 import { useLogout } from "@/hooks/useAuth";
-import { StatusBar } from "expo-status-bar";
 import { AnimatePresence, MotiView } from "moti";
-import {
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet } from "react-native";
 
 export default function ProfileScreen() {
   const { logout } = useLogout();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" />
-      <InnerContainer style={{ gap: 12, marginTop: 20 }}>
-        <Header headerTitle="Profile" style={{ marginBottom: 12 }} />
+    <ScreenContainer>
+      <Header headerTitle="Profile" style={{ marginBottom: 12 }} />
 
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        ></ScrollView>
-      </InnerContainer>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      ></ScrollView>
 
       <AnimatePresence exitBeforeEnter>
         <MotiView
@@ -42,15 +32,11 @@ export default function ProfileScreen() {
           </Pressable>
         </MotiView>
       </AnimatePresence>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FAFAF7",
-  },
   scrollContent: {
     paddingBottom: Platform.OS === "ios" ? 70 : 30,
   },

@@ -1,21 +1,32 @@
+import { HeroCardBig } from "@/components/core/home/homeCard";
+import { HomeSection } from "@/components/core/home/homeSections";
 import { Header } from "@/components/ui/header";
-import { InnerContainer } from "@/components/ui/innerContainer";
-import { StatusBar } from "expo-status-bar";
-import { Platform, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { ScreenContainer } from "@/components/ui/screenContainer";
+import { featuredBusinesses, marketingHome } from "@/utils";
+import { Platform, ScrollView, StyleSheet } from "react-native";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" />
-      <InnerContainer style={{ gap: 12, marginTop: 20 }}>
-        <Header headerTitle="Popular businesses" style={{ marginBottom: 12 }} />
+    <ScreenContainer>
+      <Header headerTitle="Home" style={{ marginBottom: 12 }} />
 
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        ></ScrollView>
-      </InnerContainer>
-    </SafeAreaView>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <HomeSection heading="For you" business={featuredBusinesses} />
+
+        <HeroCardBig
+          img={marketingHome[0].img}
+          title={marketingHome[0].title}
+          subtitle={marketingHome[0].subtitle}
+          extra={marketingHome[0].extra}
+          heading="Comfort"
+        />
+
+        <HomeSection heading="Top picks" business={featuredBusinesses} />
+      </ScrollView>
+    </ScreenContainer>
   );
 }
 
@@ -25,6 +36,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAF7",
   },
   scrollContent: {
-    paddingBottom: Platform.OS === "ios" ? 70 : 30,
+    paddingBottom: Platform.OS === "ios" ? 120 : 30,
   },
 });

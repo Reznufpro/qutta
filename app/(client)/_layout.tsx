@@ -1,6 +1,5 @@
 import { HapticTab } from "@/components/HapticTab";
 import { Colors } from "@/constants/Colors";
-import { useUserData } from "@/context/userContext";
 import { getIconNameClient } from "@/utils";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { Tabs } from "expo-router";
@@ -8,9 +7,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 export default function TabLayout() {
-  const { userData } = useUserData();
-
-  console.log(userData.role);
+  console.log("Client");
 
   return (
     <Tabs
