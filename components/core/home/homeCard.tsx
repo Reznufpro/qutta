@@ -89,7 +89,7 @@ export const HomeCard = ({
                     },
                   ]}
                 >
-                  {location} {distance}
+                  {location} • {distance}
                 </CustomText>
               )}
             </View>
@@ -121,25 +121,31 @@ export const HeroCardBig = ({
   subtitle,
   extra,
   heading,
+  style,
 }: marketingCards) => {
   return (
     <View
-      style={{
-        paddingTop: 8,
-        marginBottom: 30,
-        gap: 15,
-      }}
+      style={[
+        {
+          paddingTop: 8,
+          marginBottom: 30,
+          gap: 15,
+        },
+        style,
+      ]}
     >
-      <CustomHeading
-        style={{
-          fontFamily: "Satoshi-Bold",
-          color: Colors.light.text,
-          textTransform: "capitalize",
-          fontSize: 20,
-        }}
-      >
-        {heading}
-      </CustomHeading>
+      {heading && (
+        <CustomHeading
+          style={{
+            fontFamily: "Satoshi-Bold",
+            color: Colors.light.text,
+            textTransform: "capitalize",
+            fontSize: 20,
+          }}
+        >
+          {heading}
+        </CustomHeading>
+      )}
 
       <View style={styles.containerBig}>
         <View style={[styles.overlay]} />

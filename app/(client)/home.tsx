@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAF7",
   },
   scrollContent: {
-    paddingBottom: Platform.OS === "ios" ? 120 : 30,
+    paddingBottom: Platform.OS === "ios" ? 70 : 30,
   },
 });

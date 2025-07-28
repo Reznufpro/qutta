@@ -24,7 +24,7 @@ export const ScreenContainer: FC<Props> = ({ children }) => {
           easing: Easing.out(Easing.ease),
         }}
       >
-        <InnerContainer style={{ gap: 12, marginTop: 20 }}>
+        <InnerContainer style={{ gap: 12, marginTop: 20, paddingBottom: 70 }}>
           {children}
         </InnerContainer>
       </MotiView>

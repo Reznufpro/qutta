@@ -1,9 +1,12 @@
+import { StyleProp, ViewStyle } from "react-native";
+
 export interface businessType {
   id: string;
   name: string;
   distance: string;
   rating: number;
-  tag: "Recommended" | "New" | "Popular" | "Open Now";
+  location?: string;
+  tag?: "Recommended" | "New" | "Popular" | "Open Now";
   image: any;
 }
 
@@ -14,6 +17,7 @@ export const featuredBusinesses: businessType[] = [
     distance: "1.2 km",
     rating: 4.6,
     tag: "Recommended",
+    location: "San Pedro, Monterrey",
     image: require("../assets/onBoarding/barber.jpg"),
   },
   {
@@ -22,6 +26,7 @@ export const featuredBusinesses: businessType[] = [
     distance: "2.9 km",
     rating: 4.8,
     tag: "Popular",
+    location: "San Jeronimo, Monterrey",
     image: require("../assets/onBoarding/wellness.jpg"),
   },
   {
@@ -30,6 +35,7 @@ export const featuredBusinesses: businessType[] = [
     distance: "0.8 km",
     rating: 4.3,
     tag: "New",
+    location: "San Nicolas, Monterrey",
     image: require("../assets/onBoarding/spa1.jpg"),
   },
   {
@@ -38,6 +44,7 @@ export const featuredBusinesses: businessType[] = [
     distance: "3.5 km",
     rating: 4.0,
     tag: "Open Now",
+    location: "Apodaca, Monterrey",
     image: require("../assets/onBoarding/therapy.jpg"),
   },
 ];
@@ -45,9 +52,10 @@ export const featuredBusinesses: businessType[] = [
 export interface marketingCards {
   img: any;
   title: string;
-  subtitle: string;
+  subtitle: string | number | React.ReactNode;
   extra?: string;
   heading?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 export const marketingHome: marketingCards[] = [
@@ -64,3 +72,11 @@ export const marketingHome: marketingCards[] = [
     img: require("../assets/onBoarding/book.png"),
   },
 ];
+
+export interface favoriteCardsT {
+  img: any;
+  title: string;
+  subtitle: string;
+  extra?: string;
+  heading?: string;
+}

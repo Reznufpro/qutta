@@ -16,8 +16,8 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
       <View style={styles.headerContainer}>
         <CustomHeading
           style={{
-            fontFamily: "CormorantGaramond-Light",
-            fontSize: 30,
+            fontFamily: "CarosSoftLight",
+            fontSize: 28,
             textTransform: "capitalize",
             color: Colors.light.textSecondary,
           }}
