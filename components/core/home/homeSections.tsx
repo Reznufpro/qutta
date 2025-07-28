@@ -17,7 +17,7 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
         <CustomHeading
           style={{
             fontFamily: "CarosSoftLight",
-            fontSize: 28,
+            fontSize: 26,
             textTransform: "capitalize",
             color: Colors.light.textSecondary,
           }}

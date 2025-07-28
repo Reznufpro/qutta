@@ -80,3 +80,34 @@ export interface favoriteCardsT {
   extra?: string;
   heading?: string;
 }
+
+export interface bookingClientCardT {
+  id: string;
+  businessName: string;
+  img: string | any; // or ImageSourcePropType if using local assets
+  date: string; // e.g., "July 22"
+  time: string; // e.g., "4:30 PM"
+  location?: string; // For "Get Directions"
+  calendarUrl?: string; // Deep link or ICS generator
+}
+
+export const mockClientBookings: bookingClientCardT[] = [
+  {
+    id: "1",
+    businessName: "Glow Hair Studio",
+    img: require("../assets/onBoarding/barber.jpg"),
+    date: "July 25",
+    time: "4:30 PM",
+    location: "Av. Reforma 123, CDMX",
+    calendarUrl: "https://calendar.google.com/event?eid=abc123",
+  },
+  {
+    id: "2",
+    businessName: "Zen Pilates",
+    img: require("../assets/onBoarding/wellness.jpg"),
+    date: "August 2",
+    time: "10:00 AM",
+    location: "Insurgentes Sur 456, CDMX",
+    calendarUrl: "https://calendar.google.com/event?eid=def456",
+  },
+];
