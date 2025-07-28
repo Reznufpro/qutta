@@ -22,6 +22,7 @@ export default function RootLayout() {
     "Satoshi-Bold": require("../assets/fonts/Satoshi-Bold.ttf"),
     CarosSoftLight: require("../assets/fonts/CarosSoftLight.ttf"),
     CarosSoftBold: require("../assets/fonts/CarosSoftBold.ttf"),
+    CarosSoftMedium: require("../assets/fonts/CarosSoftMedium.ttf"),
     "CormorantGaramond-Light": require("../assets/fonts/CormorantGaramond-Light.ttf"),
     "CormorantGaramond-Bold": require("../assets/fonts/CormorantGaramond-Bold.ttf"),
   });

@@ -6,7 +6,7 @@ import CustomText from "./customText";
 interface HeaderProps {
   children?: React.ReactNode;
   headerTitle?: string;
-  subHeader?: string;
+  subHeader?: string | React.ReactNode;
   style?: StyleProp<ViewStyle>;
 }
 
