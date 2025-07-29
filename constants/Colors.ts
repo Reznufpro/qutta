@@ -26,6 +26,7 @@ export const Colors = {
 
     // Optional extras
     white: "#FFFFFF",
+    chill: "#FAFAFA",
     black: "#000000", // For overlays or strong elements
     softBlack: "#1A1A1A",
     cream: "#FDF6EC",

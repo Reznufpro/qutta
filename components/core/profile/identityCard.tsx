@@ -67,13 +67,16 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.light.white,
     borderRadius: 16,
+    borderWidth: 0.5,
+    borderColor: "#E7E7E7",
     padding: 16,
+    paddingVertical: 24,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
+    shadowColor: "#E7E7E7",
+    shadowOpacity: 0.6,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
+    elevation: 1,
     marginBottom: 20,
   },
   profileSection: {
@@ -109,7 +112,8 @@ const styles = StyleSheet.create({
   },
   subText: {
     fontSize: 13,
-    color: Colors.light.muted,
+    color: Colors.light.black,
+    fontFamily: "CarosSoftLight",
     marginTop: 4,
   },
   stats: {

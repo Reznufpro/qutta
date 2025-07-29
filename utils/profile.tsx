@@ -12,7 +12,7 @@ export const getProfileTop = (): profileT[] => [
   {
     label: "Account settings",
     icon: "settings-outline",
-    link: "/",
+    link: "/accountSettings/",
     iconRight: "chevron-forward-outline",
   },
   {
@@ -29,6 +29,42 @@ export const getProfileTop = (): profileT[] => [
   },
 ];
 
+export const getAccountSettings = (): profileT[] => [
+  {
+    label: "Personal information",
+    icon: "person-outline",
+    link: "/",
+    iconRight: "chevron-forward-outline",
+  },
+  {
+    label: "Login & Security",
+    icon: "shield-outline",
+    link: "/",
+    iconRight: "chevron-forward-outline",
+  },
+  {
+    label: "Translation",
+    icon: "language-outline",
+    link: "/",
+    iconRight: "chevron-forward-outline",
+  },
+];
+
+export const getLegal = (): profileT[] => [
+  {
+    label: "Terms of Service",
+    icon: "book-outline",
+    link: "/",
+    iconRight: "chevron-forward-outline",
+  },
+  {
+    label: "Privacy policy",
+    icon: "book-outline",
+    link: "/",
+    iconRight: "chevron-forward-outline",
+  },
+];
+
 export const getProfileBottom = (): profileT[] => [
   {
     label: "Get help",
@@ -39,7 +75,7 @@ export const getProfileBottom = (): profileT[] => [
   {
     label: "Legal",
     icon: "book-outline",
-    link: "/",
+    link: "/legal/",
     iconRight: "chevron-forward-outline",
   },
   { label: "Log out", icon: "log-out-outline", func: true },

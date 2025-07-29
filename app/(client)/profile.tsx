@@ -5,13 +5,21 @@ import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
+import { useUserData } from "@/context/userContext";
 import { useLogout } from "@/hooks/useAuth";
-import { getProfileBottom, getProfileTop, user } from "@/utils";
+import {
+  getFirstName,
+  getProfileBottom,
+  getProfileTop,
+  getTimeOfDay,
+  user,
+} from "@/utils";
 import { useRouter } from "expo-router";
 import { FlatList, Platform, ScrollView, StyleSheet } from "react-native";
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { userData } = useUserData();
   const { logout } = useLogout();
 
   const profileBottom = getProfileBottom();
@@ -23,9 +31,9 @@ export default function ProfileScreen() {
         headerTitle="Profile"
         subHeader={
           <CustomText style={{ fontSize: 20, fontFamily: "CarosSoftLight" }}>
-            Good Afternoon!{" "}
+            {getTimeOfDay()}{" "}
             <CustomText style={{ fontSize: 20, fontFamily: "Satoshi-Bold" }}>
-              Emmanuel
+              {getFirstName(userData.name)}
             </CustomText>
           </CustomText>
         }
@@ -51,7 +59,6 @@ export default function ProfileScreen() {
           keyExtractor={(item) => item.label}
           scrollEnabled={false}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
             <ProfileCard
               icon={item.icon}
@@ -71,7 +78,6 @@ export default function ProfileScreen() {
           keyExtractor={(item) => item.label}
           scrollEnabled={false}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
             <ProfileCard
               icon={item.icon}
@@ -92,10 +98,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: Platform.OS === "ios" ? 150 : 30,
-    gap: 15,
-  },
-  listContent: {
-    gap: 30,
   },
   wrapper: {
     position: "absolute",

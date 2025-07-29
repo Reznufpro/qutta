@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    color: Colors.light.muted,
+    color: Colors.light.black,
+    fontFamily: "CarosSoftLight",
   },
 });

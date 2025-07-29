@@ -2,7 +2,7 @@ import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
 import { profileT } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface ProfileCardProps extends profileT {
   onPress: () => void;
@@ -15,10 +15,7 @@ export const ProfileCard = ({
   onPress,
 }: ProfileCardProps) => {
   return (
-    <Pressable
-      style={({ pressed }) => [pressed && { opacity: 0.7 }]}
-      onPress={onPress}
-    >
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.card}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
           <Ionicons name={icon} size={24} color={Colors.light.black} />
@@ -28,12 +25,12 @@ export const ProfileCard = ({
         {iconRight && (
           <Ionicons
             name="chevron-forward"
-            size={20}
+            size={14}
             color={Colors.light.textSecondary}
           />
         )}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -41,6 +38,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 15,
     justifyContent: "space-between",
     borderRadius: 16,
     shadowColor: "#000",
