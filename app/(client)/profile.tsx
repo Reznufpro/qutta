@@ -1,3 +1,4 @@
+import { IdentityCard } from "@/components/core/profile/identityCard";
 import { ProfileCard } from "@/components/core/profile/profileCard";
 import { CustomDivider } from "@/components/ui/customDivider";
 import CustomText from "@/components/ui/customText";
@@ -5,7 +6,7 @@ import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
 import { useLogout } from "@/hooks/useAuth";
-import { getProfileBottom, getProfileTop } from "@/utils";
+import { getProfileBottom, getProfileTop, user } from "@/utils";
 import { useRouter } from "expo-router";
 import { FlatList, Platform, ScrollView, StyleSheet } from "react-native";
 
@@ -35,6 +36,16 @@ export default function ProfileScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        <IdentityCard
+          name={user.name}
+          image={user.image}
+          type={user.type}
+          joined={user.joined}
+          appointments={user.appointments}
+          reviews={user.reviews}
+          completionRate={user.completionRate}
+        />
+
         <FlatList
           data={profileTop}
           keyExtractor={(item) => item.label}
@@ -81,6 +92,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: Platform.OS === "ios" ? 150 : 30,
+    gap: 15,
   },
   listContent: {
     gap: 30,

@@ -111,3 +111,13 @@ export const mockClientBookings: bookingClientCardT[] = [
     calendarUrl: "https://calendar.google.com/event?eid=def456",
   },
 ];
+
+export const user = {
+  name: "Emmanuel Okeke",
+  image: require("../assets/images/yo.jpeg"),
+  type: "Client",
+  joined: "3 months ago",
+  reviews: 24,
+  appointments: 12,
+  completionRate: "100%",
+};

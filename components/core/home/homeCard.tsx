@@ -23,7 +23,7 @@ export const HomeCard = ({
   name,
   rating = 4.5,
   distance = "3km away",
-  location = "Monterrey",
+  location = "San Pedro, Monterrey",
   tag = "Recommended",
 }: HomeCardT) => {
   return (

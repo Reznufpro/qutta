@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     fontFamily: "Satoshi-Bold",
     color: Colors.light.text,
     textTransform: "capitalize",
-    fontSize: 23,
+    fontSize: 26,
   },
   text: {
     fontFamily: "CarosSoftLight",

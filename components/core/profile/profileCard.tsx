@@ -12,7 +12,6 @@ export const ProfileCard = ({
   icon,
   label,
   iconRight,
-  link,
   onPress,
 }: ProfileCardProps) => {
   return (
