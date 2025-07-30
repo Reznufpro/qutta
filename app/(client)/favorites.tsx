@@ -7,12 +7,22 @@ import { Colors } from "@/constants/Colors";
 import { featuredBusinesses } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function FavoritesScreen() {
   const router = useRouter();
 
   const handleGetStarted = () => router.push("/(client)/home");
+
+  const handlePress = () => {
+    router.push("/clientBusiness/[id]");
+  };
 
   return (
     <ScreenContainer>
@@ -30,20 +40,22 @@ export default function FavoritesScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <HeroCardBig
-            img={item.image}
-            title={item.name}
-            subtitle={
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
-              >
-                <CustomText style={styles.text}>{item.rating}</CustomText>
-                <Ionicons name="star" size={14} color={Colors.light.white} />
-              </View>
-            }
-            extra={`${item.location} • ${item.distance}`}
-            style={{ marginBottom: 0, paddingTop: 0 }}
-          />
+          <TouchableOpacity onPress={handlePress}>
+            <HeroCardBig
+              img={item.image}
+              title={item.name}
+              subtitle={
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
+                >
+                  <CustomText style={styles.text}>{item.rating}</CustomText>
+                  <Ionicons name="star" size={14} color={Colors.light.white} />
+                </View>
+              }
+              extra={`${item.location} • ${item.distance}`}
+              style={{ marginBottom: 0, paddingTop: 0 }}
+            />
+          </TouchableOpacity>
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>

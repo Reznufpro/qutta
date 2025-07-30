@@ -27,8 +27,6 @@ export const CustomModal = ({
   style,
   bg,
 }: CustomModalProps) => {
-  const bgcolor = Colors.light.background;
-
   return (
     <Modal
       visible={modalVisible}
@@ -45,7 +43,7 @@ export const CustomModal = ({
         }}
       >
         <View
-          style={[styles.modalContent, style, { backgroundColor: bgcolor }]}
+          style={[styles.modalContent, style]}
           onStartShouldSetResponder={() => true}
         >
           {children}
@@ -68,5 +66,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    backgroundColor: Colors.light.background,
   },
 });

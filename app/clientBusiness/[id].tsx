@@ -1,3 +1,4 @@
+import { ServiceTabs } from "@/components/core/bookings/serviceTabs";
 import { ClientActions } from "@/components/core/business/clientActions";
 import { ItemImagesCarousel } from "@/components/core/business/clientBusiness/itemImgCarousel";
 import { BackButton } from "@/components/ui/backButton";
@@ -21,7 +22,7 @@ const { height } = Dimensions.get("window");
 
 export default function ClientBusinessScreen() {
   const { id } = useLocalSearchParams();
-  const { image, name, rating, location, distance } = mockBusiness;
+  const { image, name, rating, distance, services } = mockBusiness;
 
   const [modalVisible, setModalVisible] = useState(false);
   const openModal = () => setModalVisible(true);
@@ -37,7 +38,7 @@ export default function ClientBusinessScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>
-        <InnerContainer style={{ gap: 24 }}>
+        <InnerContainer style={{ gap: 40 }}>
           <View style={{ gap: 12 }}>
             <View style={styles.headerContent}>
               <CustomText style={styles.headerTitle}>{name}</CustomText>
@@ -53,10 +54,15 @@ export default function ClientBusinessScreen() {
                 <CustomText style={styles.itemText}>{distance}</CustomText>
                 <Ionicons
                   name="chevron-forward-outline"
-                  color={Colors.light.black}
+                  color={Colors.light.textSecondary}
                 />
               </Pressable>
             </View>
+          </View>
+
+          <View>
+            <CustomText style={styles.itemHeader}>Services</CustomText>
+            <ServiceTabs services={services} />
           </View>
         </InnerContainer>
       </ScrollView>
@@ -64,6 +70,7 @@ export default function ClientBusinessScreen() {
       <FlexibleModal
         modalVisible={modalVisible}
         closeModal={() => setModalVisible(false)}
+        styles={{ backgroundColor: Colors.light.white }}
       >
         <ClientActions
           mockBusiness={mockBusiness}
@@ -118,5 +125,9 @@ const styles = StyleSheet.create({
     fontFamily: "CarosSoftMedium",
     color: Colors.light.textSecondary,
     fontSize: 15,
+  },
+  itemHeader: {
+    fontSize: 20,
+    fontFamily: "Satoshi-Bold",
   },
 });

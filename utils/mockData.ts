@@ -143,6 +143,17 @@ export const mockBooking: bookingT = {
 
 export interface fullBusinessT extends businessType {
   openTime: string;
+  services: {
+    [key: number]: {
+      title: string;
+      service: {
+        title: string;
+        time: string;
+        price: number;
+        description?: string;
+      }[];
+    };
+  };
 }
 
 export const mockBusiness: fullBusinessT = {
@@ -158,6 +169,60 @@ export const mockBusiness: fullBusinessT = {
   tag: "New",
   openTime: "1:30pm",
   location: "San Pedro, Monterrey",
+  services: {
+    0: {
+      title: "Barbering",
+      service: [
+        {
+          title: "Delineado Express",
+          time: "15 mins",
+          price: 100,
+          description: "Line up the hair, fresh and new.",
+        },
+        {
+          title: "Express cut",
+          time: "15 mins",
+          price: 150,
+          description: "Line up the hair, fresh and new.",
+        },
+        {
+          title: "Cut",
+          time: "15 mins",
+          price: 150,
+          description: "Line up the hair, fresh and new.",
+        },
+        {
+          title: "Fresher",
+          time: "15 mins",
+          price: 150,
+          description: "Line up the hair, fresh and new.",
+        },
+        {
+          title: "Fresh cut",
+          time: "15 mins",
+          price: 150,
+          description: "Line up the hair, fresh and new.",
+        },
+      ],
+    },
+    1: {
+      title: "Facial",
+      service: [
+        {
+          title: "Black Mask",
+          time: "20 mins",
+          price: 50,
+          description: "Line up the hair, fresh and new.",
+        },
+        {
+          title: "Facial Completo",
+          time: "1 hour",
+          price: 350,
+          description: "Line up the hair, fresh and new.",
+        },
+      ],
+    },
+  },
 };
 
 export const user = {
