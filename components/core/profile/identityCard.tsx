@@ -66,7 +66,7 @@ export const IdentityCard = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.light.white,
-    borderRadius: 16,
+    borderRadius: 15,
     borderWidth: 0.5,
     borderColor: "#E7E7E7",
     padding: 16,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#E7E7E7",
     shadowOpacity: 0.6,
-    shadowRadius: 8,
+    shadowRadius: 15,
     shadowOffset: { width: 0, height: 4 },
     elevation: 1,
     marginBottom: 20,

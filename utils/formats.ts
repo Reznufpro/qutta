@@ -10,6 +10,21 @@ export const getTimeOfDay = (): string => {
   }
 };
 
+export const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 export const getFirstName = (name: string): string => {
   return name.trim().split(" ")[0];
+};
+
+export const getShortLocation = (address: string): string => {
+  const parts = address.split(",").map((part) => part.trim());
+
+  if (parts.length < 2) return address;
+
+  const withoutState = parts.slice(0, -1);
+  const result = withoutState.slice(-2);
+
+  return result.join(", ");
 };

@@ -106,6 +106,7 @@ export const mockClientBookings: bookingClientCardT[] = [
     location: "Av. Reforma 123, CDMX",
     service: [
       { serviceTitle: "Corte Clasico", price: "230", staff: "Santiago" },
+      { serviceTitle: "Barba", price: "330" },
     ],
     calendarUrl: "https://calendar.google.com/event?eid=abc123",
   },
@@ -116,6 +117,9 @@ export const mockClientBookings: bookingClientCardT[] = [
     date: "August 2",
     time: "10:00 AM",
     location: "Insurgentes Sur 456, CDMX",
+    service: [
+      { serviceTitle: "Corte Clasico", price: "230", staff: "Santiago" },
+    ],
     calendarUrl: "https://calendar.google.com/event?eid=def456",
   },
 ];
@@ -128,8 +132,12 @@ export const mockBooking: bookingT = {
   img: require("../assets/onBoarding/barber.jpg"),
   date: "July 25",
   time: "4:30 PM",
-  location: "Av. Reforma 123, CDMX",
-  service: [{ serviceTitle: "Corte Clasico", price: "230", staff: "Santiago" }],
+  location:
+    "Avenida Paseo de los Leones 157, Local 17, Cumbres Elite, Monterrey, Nuevo León",
+  service: [
+    { serviceTitle: "Corte Clasico", price: "230", staff: "Santiago" },
+    { serviceTitle: "Barba", price: "330", staff: "Collins" },
+  ],
   calendarUrl: "https://calendar.google.com/event?eid=abc123",
 };
 
