@@ -2,6 +2,7 @@ import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
 import { bookingClientCardT } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import {
   Image,
   Linking,
@@ -15,6 +16,8 @@ interface Props {
 }
 
 export const ClientBookingCard = ({ booking }: Props) => {
+  const router = useRouter();
+
   const handleDirections = () => {
     if (booking.location) {
       const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -30,52 +33,82 @@ export const ClientBookingCard = ({ booking }: Props) => {
     }
   };
 
+  const handlePress = () => {
+    router.push("/bookings/[id]");
+  };
+
+  console.log(booking.img);
+
   return (
-    <View style={styles.card}>
-      <Image source={booking.img} style={styles.image} />
-      <View style={styles.details}>
-        <CustomText style={styles.name}>{booking.businessName}</CustomText>
-        <CustomText
-          style={styles.dateTime}
-        >{`${booking.date} at ${booking.time}`}</CustomText>
+    <TouchableOpacity onPress={handlePress}>
+      <View style={styles.card}>
+        <Image source={booking.img} style={styles.image} />
+        <View style={styles.details}>
+          <CustomText style={styles.name}>{booking.businessName}</CustomText>
+          <CustomText
+            style={styles.dateTime}
+          >{`${booking.date} at ${booking.time}`}</CustomText>
 
-        <View style={styles.buttons}>
-          <TouchableOpacity onPress={handleDirections} style={styles.button}>
-            <Ionicons
-              name="location-outline"
-              size={16}
-              color={Colors.light.text}
-            />
-            <CustomText style={styles.buttonText}>Get Directions</CustomText>
-          </TouchableOpacity>
+          {booking.service &&
+            booking.service.map((serv) => {
+              return (
+                <View
+                  style={{ flexDirection: "row", gap: 4 }}
+                  key={serv.serviceTitle}
+                >
+                  <CustomText style={styles.service}>
+                    MX${serv.price} {"•"}
+                  </CustomText>
+                  <CustomText style={styles.service}>
+                    {serv.serviceTitle} {"•"}
+                  </CustomText>
+                  {serv.staff && (
+                    <CustomText style={styles.service}>
+                      with {serv.staff}
+                    </CustomText>
+                  )}
+                </View>
+              );
+            })}
 
-          <TouchableOpacity onPress={handleCalendar} style={styles.button}>
-            <Ionicons
-              name="calendar-outline"
-              size={16}
-              color={Colors.light.text}
-            />
-            <CustomText style={styles.buttonText}>Add to Calendar</CustomText>
-          </TouchableOpacity>
+          <View style={styles.buttons}>
+            <TouchableOpacity onPress={handleDirections} style={styles.button}>
+              <Ionicons
+                name="location-outline"
+                size={16}
+                color={Colors.light.text}
+              />
+              <CustomText style={styles.buttonText}>Get Directions</CustomText>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleCalendar} style={styles.button}>
+              <Ionicons
+                name="calendar-outline"
+                size={16}
+                color={Colors.light.text}
+              />
+              <CustomText style={styles.buttonText}>Add to Calendar</CustomText>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.light.white,
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.05)",
+    borderWidth: 0.5,
+    borderColor: "#E7E7E7",
     borderRadius: 16,
     overflow: "hidden",
     marginBottom: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 2,
+    shadowColor: "#E7E7E7",
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 1,
   },
   image: {
     width: "100%",
@@ -89,10 +122,16 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontWeight: "600",
+    fontFamily: "Satoshi-Bold",
     color: Colors.light.text,
   },
   dateTime: {
+    fontFamily: "CarosSoftMedium",
+    fontSize: 14,
+    color: Colors.light.textSecondary,
+  },
+  service: {
+    fontFamily: "CarosSoftLight",
     fontSize: 14,
     color: Colors.light.textSecondary,
   },
@@ -100,6 +139,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
     gap: 12,
+    width: "100%",
+    justifyContent: "space-between",
   },
   button: {
     flexDirection: "row",
@@ -108,6 +149,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 14,
-    color: Colors.light.text,
+    color: Colors.light.black,
+    fontFamily: "CarosSoftBold",
   },
 });

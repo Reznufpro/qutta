@@ -63,13 +63,13 @@ export const marketingHome: marketingCards[] = [
     title: "Appointments Made Easy",
     subtitle: "Wait in comfort",
     extra: "Browse and book at anytime.",
-    img: require("../assets/onBoarding/book.png"),
+    img: require("../assets/onBoarding/book1.png"),
   },
   {
     title: "Discover Trusted Businesses",
     subtitle: "Local and verified",
     extra: "Find top-rated services near you from barbers to pilates.",
-    img: require("../assets/onBoarding/book.png"),
+    img: require("../assets/onBoarding/discover.png"),
   },
 ];
 
@@ -89,6 +89,11 @@ export interface bookingClientCardT {
   time: string; // e.g., "4:30 PM"
   location?: string; // For "Get Directions"
   calendarUrl?: string; // Deep link or ICS generator
+  service?: {
+    price?: string;
+    serviceTitle?: string;
+    staff?: string;
+  }[];
 }
 
 export const mockClientBookings: bookingClientCardT[] = [
@@ -99,6 +104,9 @@ export const mockClientBookings: bookingClientCardT[] = [
     date: "July 25",
     time: "4:30 PM",
     location: "Av. Reforma 123, CDMX",
+    service: [
+      { serviceTitle: "Corte Clasico", price: "230", staff: "Santiago" },
+    ],
     calendarUrl: "https://calendar.google.com/event?eid=abc123",
   },
   {
@@ -111,6 +119,19 @@ export const mockClientBookings: bookingClientCardT[] = [
     calendarUrl: "https://calendar.google.com/event?eid=def456",
   },
 ];
+
+export interface bookingT extends bookingClientCardT {}
+
+export const mockBooking: bookingT = {
+  id: "1",
+  businessName: "Glow Hair Studio",
+  img: require("../assets/onBoarding/barber.jpg"),
+  date: "July 25",
+  time: "4:30 PM",
+  location: "Av. Reforma 123, CDMX",
+  service: [{ serviceTitle: "Corte Clasico", price: "230", staff: "Santiago" }],
+  calendarUrl: "https://calendar.google.com/event?eid=abc123",
+};
 
 export const user = {
   name: "Emmanuel Okeke",

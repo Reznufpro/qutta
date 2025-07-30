@@ -2,7 +2,6 @@ import { ProfileCard } from "@/components/core/profile/profileCard";
 import { BackButton } from "@/components/ui/backButton";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
-import { Colors } from "@/constants/Colors";
 import { getLegal } from "@/utils";
 import { useRouter } from "expo-router";
 import { FlatList, StyleSheet, View } from "react-native";
@@ -14,7 +13,7 @@ export default function LegalScreen() {
   return (
     <ScreenContainer>
       <View style={styles.iconRow}>
-        <BackButton style={{ backgroundColor: Colors.light.muted }} />
+        <BackButton />
       </View>
 
       <Header headerTitle="Legal" style={{ marginTop: 12, marginBottom: 18 }} />
@@ -47,7 +46,5 @@ const styles = StyleSheet.create({
   },
   iconRow: {
     flexDirection: "row",
-    gap: 20,
-    alignItems: "center",
   },
 });

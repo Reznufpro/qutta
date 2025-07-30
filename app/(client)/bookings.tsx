@@ -25,7 +25,7 @@ export default function BookingsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {mockClientBookings && mockClientBookings.length < 0 ? (
+        {mockClientBookings && mockClientBookings.length > 0 ? (
           mockClientBookings.map((booking) => (
             <ClientBookingCard key={booking.id} booking={booking} />
           ))

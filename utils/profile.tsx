@@ -18,13 +18,13 @@ export const getProfileTop = (): profileT[] => [
   {
     label: "View profile",
     icon: "person-outline",
-    link: "/",
+    link: "/profile/",
     iconRight: "chevron-forward-outline",
   },
   {
     label: "History",
     icon: "time-outline",
-    link: "/",
+    link: "/history/",
     iconRight: "chevron-forward-outline",
   },
 ];

@@ -24,6 +24,14 @@ export default function HomeScreen() {
           heading="Comfort"
         />
 
+        <HeroCardBig
+          img={marketingHome[1].img}
+          title={marketingHome[1].title}
+          subtitle={marketingHome[1].subtitle}
+          extra={marketingHome[1].extra}
+          heading="Explore"
+        />
+
         <HomeSection heading="Top picks" business={featuredBusinesses} />
       </ScrollView>
     </ScreenContainer>
