@@ -7,7 +7,7 @@ export interface businessType {
   rating: number;
   location?: string;
   tag?: "Recommended" | "New" | "Popular" | "Open Now";
-  image: any;
+  image: any[];
 }
 
 export const featuredBusinesses: businessType[] = [
@@ -18,7 +18,7 @@ export const featuredBusinesses: businessType[] = [
     rating: 4.6,
     tag: "Recommended",
     location: "San Pedro, Monterrey",
-    image: require("../assets/onBoarding/barber.jpg"),
+    image: [require("../assets/onBoarding/barber.jpg")],
   },
   {
     id: "2",
@@ -36,7 +36,7 @@ export const featuredBusinesses: businessType[] = [
     rating: 4.3,
     tag: "New",
     location: "San Nicolas, Monterrey",
-    image: require("../assets/onBoarding/spa1.jpg"),
+    image: [require("../assets/onBoarding/spa1.jpg")],
   },
   {
     id: "4",
@@ -45,7 +45,7 @@ export const featuredBusinesses: businessType[] = [
     rating: 4.0,
     tag: "Open Now",
     location: "Apodaca, Monterrey",
-    image: require("../assets/onBoarding/therapy.jpg"),
+    image: [require("../assets/onBoarding/therapy.jpg")],
   },
 ];
 
@@ -139,6 +139,25 @@ export const mockBooking: bookingT = {
     { serviceTitle: "Barba", price: "330", staff: "Collins" },
   ],
   calendarUrl: "https://calendar.google.com/event?eid=abc123",
+};
+
+export interface fullBusinessT extends businessType {
+  openTime: string;
+}
+
+export const mockBusiness: fullBusinessT = {
+  id: "1",
+  image: [
+    require("../assets/onBoarding/barber.jpg"),
+    require("../assets/onBoarding/wellness.jpg"),
+    require("../assets/onBoarding/spa1.jpg"),
+  ],
+  name: "Fade & Blade Barbers",
+  distance: "1.2 km",
+  rating: 4.6,
+  tag: "New",
+  openTime: "1:30pm",
+  location: "San Pedro, Monterrey",
 };
 
 export const user = {

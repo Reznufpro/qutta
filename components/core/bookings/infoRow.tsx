@@ -27,6 +27,12 @@ export const confirmed: itemDetails[] = [
   { ionicon: "business-outline", title: "Business details" },
 ];
 
+export const businessCards: itemDetails[] = [
+  { ionicon: "location-sharp", title: "Getting there" },
+  { ionicon: "time-outline", title: "Open until" },
+  { ionicon: "heart-outline", title: "Add to favorites" },
+];
+
 export const otherStatus: itemDetails[] = [
   {
     ionicon: "add-circle-outline",

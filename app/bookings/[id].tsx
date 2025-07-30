@@ -21,8 +21,10 @@ const { height } = Dimensions.get("window");
 export default function BookingsItemScreen() {
   const { id } = useLocalSearchParams();
 
+  const { businessName, location, img, service, time } = mockBooking;
+
   const total = useMemo(() => {
-    const prices = mockBooking.service?.map((s) => Number(s.price) || 0);
+    const prices = service?.map((s) => Number(s.price) || 0);
     return prices?.reduce((acc, curr) => acc + curr, 0);
   }, []);
 
@@ -45,7 +47,7 @@ export default function BookingsItemScreen() {
   return (
     <>
       <View style={styles.imageContainer}>
-        <Image source={mockBooking.img} style={styles.image} />
+        <Image source={img} style={styles.image} />
 
         <View style={styles.iconRow}>
           <BackButton />
@@ -55,6 +57,8 @@ export default function BookingsItemScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <InnerContainer style={{ gap: 24 }}>
           <View style={styles.status}>
+            <CustomText style={styles.headerTitle}>{businessName}</CustomText>
+
             <View
               style={[styles.statusContainer, { backgroundColor: statusColor }]}
             >
@@ -67,20 +71,18 @@ export default function BookingsItemScreen() {
                 {capitalize(status)}
               </CustomText>
             </View>
-
-            <CustomText style={styles.time}>
-              Today at {mockBooking.time}
-            </CustomText>
           </View>
+
+          <CustomText style={styles.time}>Today at {time}</CustomText>
 
           <View>
             {status === "confirmed"
               ? confirmed.map((item, i) => {
                   const subtitleItem =
                     item.title === "Getting there"
-                      ? mockBooking.location
+                      ? location
                       : i === confirmed.length - 1
-                      ? mockBooking.businessName
+                      ? businessName
                       : item.subtitle;
 
                   return (
@@ -107,9 +109,7 @@ export default function BookingsItemScreen() {
                 })
               : otherStatus.map((item, i) => {
                   const subtitleItem =
-                    i === otherStatus.length - 1
-                      ? mockBooking.businessName
-                      : item.subtitle;
+                    i === otherStatus.length - 1 ? businessName : item.subtitle;
 
                   return (
                     <MotiView
@@ -138,7 +138,7 @@ export default function BookingsItemScreen() {
             <CustomText style={styles.sectionTitle}>Overview</CustomText>
 
             <View>
-              {mockBooking.service?.map((s) => (
+              {service?.map((s) => (
                 <ServiceSummary
                   key={`${s.serviceTitle}-${s.staff}`}
                   serviceTitle={s.serviceTitle}
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: height / 2.5,
+    height: height / 2.6,
     position: "relative",
   },
   image: {
@@ -183,8 +183,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  headerTitle: {
+    fontSize: 25,
+    fontFamily: "Satoshi-Bold",
+  },
   status: {
-    gap: 24,
+    gap: 12,
   },
   statusContainer: {
     borderRadius: 999,
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
     color: Colors.light.white,
   },
   time: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "Satoshi-Bold",
   },
   subText: {

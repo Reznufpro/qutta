@@ -73,8 +73,6 @@ const styles = StyleSheet.create({
   image: {
     width: width,
     height: height / 2.5,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
   },
   indicator: {
     position: "absolute",

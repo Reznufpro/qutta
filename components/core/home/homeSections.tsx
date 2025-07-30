@@ -2,7 +2,8 @@ import CustomHeading from "@/components/ui/customHeading";
 import { Colors } from "@/constants/Colors";
 import { businessType } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { FlatList, StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { HomeCard } from "./homeCard";
 
 interface HomeSectionT {
@@ -11,6 +12,12 @@ interface HomeSectionT {
 }
 
 export const HomeSection = ({ heading, business }: HomeSectionT) => {
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push("/clientBusiness/[id]");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -38,13 +45,15 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <HomeCard
-            img={item.image}
-            name={item.name}
-            rating={item.rating}
-            distance={item.distance}
-            tag={item.tag}
-          />
+          <TouchableOpacity onPress={handlePress}>
+            <HomeCard
+              img={item.image}
+              name={item.name}
+              rating={item.rating}
+              distance={item.distance}
+              tag={item.tag}
+            />
+          </TouchableOpacity>
         )}
       />
     </View>
