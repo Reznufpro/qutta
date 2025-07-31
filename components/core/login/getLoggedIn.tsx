@@ -159,7 +159,12 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal }) => {
 
       console.log("Logged in", user);
       closeModal();
-      router.push("/home");
+
+      if (user.role === "Client") {
+        router.replace("/(client)/home");
+      } else {
+        router.replace("/(business)/dashboard");
+      }
     } catch (error) {
       console.log("Error: logging in", error);
     }
@@ -255,6 +260,7 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal }) => {
                       focusedString="email"
                       setFocusedInput={setFocusedInput}
                       handleInputChange={handleInputChange}
+                      setEmailExists={setEmailExists}
                       setErrors={setErrors}
                     />
 

@@ -1,4 +1,5 @@
 import { BookingProvider } from "@/context/bookingContext";
+import { BusinessFormProvider } from "@/context/businessContext";
 import { UserProvider } from "@/context/userContext";
 import { useTheme } from "@/hooks/userThemeContext";
 import {
@@ -41,19 +42,21 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
-        <BookingProvider>
-          <UserProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                gestureEnabled: false,
-              }}
-            >
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </UserProvider>
-        </BookingProvider>
+        <BusinessFormProvider>
+          <BookingProvider>
+            <UserProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  gestureEnabled: false,
+                }}
+              >
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </UserProvider>
+          </BookingProvider>
+        </BusinessFormProvider>
         <StatusBar style="auto" />
       </ThemeProvider>
     </QueryClientProvider>

@@ -66,7 +66,10 @@ export default function IntroScreen() {
   const { userData } = useUserData();
 
   const onboardingData = useMemo(
-    () => (userData.role === "Client" ? clientOnboardingData : businessOnboardingData),
+    () =>
+      userData.role === "Client"
+        ? clientOnboardingData
+        : businessOnboardingData,
     [userData.role]
   );
 
@@ -82,7 +85,11 @@ export default function IntroScreen() {
     if (currentIndex < totalIntro - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      router.push("/home");
+      if (userData.role === "Client") {
+        router.push("/(client)/home");
+      } else {
+        router.push("/(business)/dashboard");
+      }
     }
   };
 
