@@ -5,6 +5,7 @@ export type bookingData = {
     name: string;
     image: any[];
     date?: string;
+    rating: number;
     coordinates?: {
       latitude?: number;
       longitude?: number;
@@ -31,6 +32,7 @@ export const initialBookingData: bookingData = {
     name: "",
     image: [],
     date: "",
+    rating: 0,
     coordinates: {
       location: "",
       latitude: 0,

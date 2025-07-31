@@ -154,7 +154,7 @@ export const mockBooking: bookingT = {
 };
 
 export interface fullBusinessT extends businessType {
-  openTime: string;
+  closeTime: string;
   about: string;
   staff: {
     id: string;
@@ -188,7 +188,7 @@ export const mockBusiness: fullBusinessT = {
   distance: "1.2 km",
   rating: 4.6,
   tag: "New",
-  openTime: "1:30pm",
+  closeTime: "1:30pm",
   coordinates: {
     latitude: 25.7167,
     longitude: -100.3625,

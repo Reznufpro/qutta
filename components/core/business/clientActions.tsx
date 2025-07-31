@@ -1,5 +1,5 @@
 import { InnerContainer } from "@/components/ui/innerContainer";
-import { fullBusinessT } from "@/utils";
+import { fullBusinessT, handleDirections } from "@/utils";
 import { MotiView } from "moti";
 import { FlatList } from "react-native";
 import { businessCards, InfoRow } from "../bookings/infoRow";
@@ -14,7 +14,7 @@ export const ClientActions = ({
   mockBusiness,
 }: ClientActionsProps) => {
   return (
-    <InnerContainer style={{ marginVertical: 20 }}>
+    <InnerContainer style={{ paddingBottom: 20 }}>
       <FlatList
         data={businessCards}
         scrollEnabled={false}
@@ -23,7 +23,7 @@ export const ClientActions = ({
             item.title === "Getting there"
               ? mockBusiness.coordinates?.location
               : item.title === "Open until"
-              ? mockBusiness.openTime
+              ? mockBusiness.closeTime
               : item.subtitle;
 
           return (
@@ -44,6 +44,14 @@ export const ClientActions = ({
                 subtitle={subtitleItem}
                 index={index}
                 item={businessCards}
+                onPress={() => {
+                  if (item.link)
+                    handleDirections({
+                      location: mockBusiness.coordinates?.location,
+                    });
+                  else if (item.favorite) console.log("favorited");
+                  else if (item.calendar) console.log("calendar");
+                }}
               />
             </MotiView>
           );

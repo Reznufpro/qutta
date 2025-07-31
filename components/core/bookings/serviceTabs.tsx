@@ -40,7 +40,6 @@ export const ServiceTabs = ({
   const toggle = (i: number) => {
     setOpenIndex((prev) => (prev === i ? null : i));
   };
-  const [selectedItem, setSelectedItem] = useState<item[] | null>(null);
 
   const currentServices = tabData[selectedTab].service.slice(0, visibleCount);
   const hasMore = visibleCount < tabData[selectedTab].service.length;
@@ -74,7 +73,6 @@ export const ServiceTabs = ({
         (acc, curr) => acc + curr.price,
         0
       );
-      setSelectedItem(updatedServices);
 
       return {
         ...prev,

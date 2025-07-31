@@ -35,6 +35,7 @@ export const ClientBooking = ({
       business: {
         name: mockBusiness.name,
         image: mockBusiness.image,
+        rating: mockBusiness.rating,
         coordinates: {
           location: mockBusiness.coordinates?.location ?? "",
           latitude: mockBusiness.coordinates?.latitude ?? 0,

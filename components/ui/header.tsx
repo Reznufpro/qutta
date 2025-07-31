@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: "Satoshi-Bold",
     color: Colors.light.text,
-    textTransform: "capitalize",
+    textTransform: "none",
     fontSize: 26,
   },
   text: {

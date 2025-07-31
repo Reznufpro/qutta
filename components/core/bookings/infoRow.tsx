@@ -2,13 +2,17 @@ import { CustomDivider } from "@/components/ui/customDivider";
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 interface itemDetails {
   ionicon?: keyof typeof Ionicons.glyphMap;
   materialicon?: keyof typeof MaterialIcons.glyphMap;
   title: string;
   subtitle?: string;
+  link?: boolean;
+  favorite?: boolean;
+  calendar?: boolean;
+  bookAgain?: boolean;
 }
 
 export const confirmed: itemDetails[] = [
@@ -16,21 +20,22 @@ export const confirmed: itemDetails[] = [
     materialicon: "calendar-today",
     title: "Add to calendar",
     subtitle: "Set yourself a reminder",
+    calendar: true,
   },
-  { ionicon: "location-sharp", title: "Getting there" },
-  { ionicon: "heart-outline", title: "Add to favorites" },
+  { ionicon: "location-sharp", title: "Getting there", link: true },
+  { ionicon: "heart-outline", title: "Add to favorites", favorite: true },
   {
     materialicon: "edit-calendar",
     title: "Manage appointment",
-    subtitle: "Reschedule or cancel",
+    subtitle: "Cancel",
   },
   { ionicon: "business-outline", title: "Business details" },
 ];
 
 export const businessCards: itemDetails[] = [
-  { ionicon: "location-sharp", title: "Getting there" },
+  { ionicon: "location-sharp", title: "Getting there", link: true },
   { ionicon: "time-outline", title: "Open until" },
-  { ionicon: "heart-outline", title: "Add to favorites" },
+  { ionicon: "heart-outline", title: "Add to favorites", favorite: true },
 ];
 
 export const otherStatus: itemDetails[] = [
@@ -38,8 +43,9 @@ export const otherStatus: itemDetails[] = [
     ionicon: "add-circle-outline",
     title: "Book again",
     subtitle: "Book your next appointment",
+    bookAgain: true,
   },
-  { ionicon: "heart-outline", title: "Add to favorites" },
+  { ionicon: "heart-outline", title: "Add to favorites", favorite: true },
   {
     ionicon: "business-outline",
     title: "Business details",
@@ -50,6 +56,7 @@ export const InfoRow = ({
   materialicon,
   iconColor,
   ionicon,
+  onPress,
   title,
   subtitle,
   index,
@@ -62,8 +69,12 @@ export const InfoRow = ({
   index: number;
   item: itemDetails[];
   iconColor?: string;
+  onPress?: () => void;
 }) => (
-  <View style={styles.container}>
+  <Pressable
+    style={({ pressed }) => [styles.container, pressed && { opacity: 0.5 }]}
+    onPress={onPress}
+  >
     <View style={styles.row}>
       {materialicon ? (
         <View style={styles.iconContainer}>
@@ -92,7 +103,7 @@ export const InfoRow = ({
     </View>
 
     {index === item.length - 1 ? "" : <CustomDivider style={styles.divider} />}
-  </View>
+  </Pressable>
 );
 
 const styles = StyleSheet.create({

@@ -7,13 +7,7 @@ import { Colors } from "@/constants/Colors";
 import { featuredBusinesses } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 export default function FavoritesScreen() {
   const router = useRouter();
@@ -40,7 +34,7 @@ export default function FavoritesScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={handlePress}>
+          <Pressable onPress={handlePress}>
             <HeroCardBig
               img={item.image}
               title={item.name}
@@ -55,7 +49,7 @@ export default function FavoritesScreen() {
               extra={`${item.coordinates?.location} • ${item.distance}`}
               style={{ marginBottom: 0, paddingTop: 0 }}
             />
-          </TouchableOpacity>
+          </Pressable>
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>

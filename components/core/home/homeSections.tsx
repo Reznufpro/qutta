@@ -3,7 +3,7 @@ import { Colors } from "@/constants/Colors";
 import { businessType } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { HomeCard } from "./homeCard";
 
 interface HomeSectionT {
@@ -45,7 +45,7 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={handlePress}>
+          <Pressable onPress={handlePress}>
             <HomeCard
               img={item.image}
               name={item.name}
@@ -53,7 +53,7 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
               distance={item.distance}
               tag={item.tag}
             />
-          </TouchableOpacity>
+          </Pressable>
         )}
       />
     </View>

@@ -8,7 +8,7 @@ import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
-import { capitalize, mockBooking } from "@/utils";
+import { capitalize, handleDirections, mockBooking } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
@@ -103,6 +103,12 @@ export default function BookingsItemScreen() {
                         subtitle={subtitleItem}
                         index={i}
                         item={confirmed}
+                        onPress={() => {
+                          if (item.link)
+                            handleDirections({ location: location });
+                          else if (item.favorite) console.log("favorited");
+                          else if (item.calendar) console.log("calendar");
+                        }}
                       />
                     </MotiView>
                   );
@@ -128,6 +134,12 @@ export default function BookingsItemScreen() {
                         subtitle={subtitleItem}
                         index={i}
                         item={otherStatus}
+                        onPress={() => {
+                          if (item.link)
+                            handleDirections({ location: location });
+                          else if (item.favorite) console.log("favorited");
+                          else if (item.calendar) console.log("calendar");
+                        }}
                       />
                     </MotiView>
                   );

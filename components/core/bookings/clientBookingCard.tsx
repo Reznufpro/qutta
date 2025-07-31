@@ -1,6 +1,6 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
-import { bookingClientCardT, capitalize } from "@/utils";
+import { bookingClientCardT, capitalize, handleDirections } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
@@ -18,15 +18,6 @@ interface Props {
 
 export const ClientBookingCard = ({ booking }: Props) => {
   const router = useRouter();
-
-  const handleDirections = () => {
-    if (booking.location) {
-      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        booking.location
-      )}`;
-      Linking.openURL(url);
-    }
-  };
 
   const handleCalendar = () => {
     if (booking.calendarUrl) {
@@ -83,7 +74,10 @@ export const ClientBookingCard = ({ booking }: Props) => {
           <CustomText style={styles.totalLabel}>Total: MX${total}</CustomText>
 
           <View style={styles.buttons}>
-            <TouchableOpacity onPress={handleDirections} style={styles.button}>
+            <TouchableOpacity
+              onPress={() => handleDirections({ location: booking.location })}
+              style={styles.button}
+            >
               <Ionicons
                 name="location-outline"
                 size={16}

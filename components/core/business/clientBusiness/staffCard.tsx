@@ -5,7 +5,6 @@ import { fullBusinessT, getInitials } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { MotiView } from "moti";
-import { useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 interface StaffCardProps {
@@ -26,16 +25,10 @@ export const StaffCard = ({
   bookingData,
   setBookingData,
 }: StaffCardProps) => {
-  const [selectedStaff, setSelectedStaff] = useState<item | undefined>(
-    undefined
-  );
-
   const handleSelected = (selected: item) => {
     setBookingData((prev) => {
       const isSameStaff = prev.staff?.id === selected.id;
       const newStaff = isSameStaff ? initialBookingData["staff"] : selected;
-
-      setSelectedStaff(newStaff);
 
       return {
         ...prev,
@@ -73,10 +66,12 @@ export const StaffCard = ({
             </CustomText>
           )}
 
-          <View style={styles.rating}>
-            <CustomText style={styles.ratingText}>{rating}</CustomText>
-            <Ionicons name="star" color={Colors.light.black} />
-          </View>
+          {rating && rating > 0 && (
+            <View style={styles.rating}>
+              <CustomText style={styles.ratingText}>{rating}</CustomText>
+              <Ionicons name="star" color={Colors.light.black} />
+            </View>
+          )}
         </Pressable>
 
         <View style={{ paddingTop: 10 }}>
@@ -148,7 +143,7 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     color: "#000",
-    fontSize: 12,
+    fontSize: 13,
     marginLeft: 4,
     fontFamily: "CarosSoftBold",
   },

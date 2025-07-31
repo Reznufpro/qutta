@@ -26,6 +26,15 @@ export const getInitials = (name: string) => {
     .toUpperCase();
 };
 
+export const trimTextToOneLine = (text: string, maxLength: number): string => {
+  if (text.length <= maxLength) return text;
+
+  const trimmed = text.slice(0, maxLength);
+  const lastSpace = trimmed.lastIndexOf(" ");
+
+  return trimmed.slice(0, lastSpace) + "…";
+};
+
 export const getShortLocation = (address: string): string => {
   const parts = address.split(",").map((part) => part.trim());
 
