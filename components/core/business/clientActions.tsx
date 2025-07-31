@@ -1,7 +1,7 @@
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { fullBusinessT } from "@/utils";
 import { MotiView } from "moti";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 import { businessCards, InfoRow } from "../bookings/infoRow";
 
 interface ClientActionsProps {
@@ -21,7 +21,7 @@ export const ClientActions = ({
         renderItem={({ item, index }) => {
           const subtitleItem =
             item.title === "Getting there"
-              ? mockBusiness.location
+              ? mockBusiness.coordinates?.location
               : item.title === "Open until"
               ? mockBusiness.openTime
               : item.subtitle;
@@ -52,5 +52,3 @@ export const ClientActions = ({
     </InnerContainer>
   );
 };
-
-const styles = StyleSheet.create({});

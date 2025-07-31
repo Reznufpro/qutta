@@ -52,7 +52,7 @@ export default function FavoritesScreen() {
                   <Ionicons name="star" size={14} color={Colors.light.white} />
                 </View>
               }
-              extra={`${item.location} • ${item.distance}`}
+              extra={`${item.coordinates?.location} • ${item.distance}`}
               style={{ marginBottom: 0, paddingTop: 0 }}
             />
           </TouchableOpacity>

@@ -12,7 +12,7 @@ interface BackIconProps {
   size?: number;
   iconName?: keyof typeof Ionicons.glyphMap;
   style?: StyleProp<ViewStyle>;
-  func?: boolean;
+  func?: () => void;
 }
 
 export const BackButton = ({
@@ -26,6 +26,9 @@ export const BackButton = ({
 
   const handleBack = () => {
     router.back();
+    if (func) {
+      func();
+    }
   };
 
   return (

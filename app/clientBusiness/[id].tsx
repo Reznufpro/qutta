@@ -1,15 +1,20 @@
 import { ServiceTabs } from "@/components/core/bookings/serviceTabs";
 import { ClientActions } from "@/components/core/business/clientActions";
+import { ClientBooking } from "@/components/core/business/clientBooking";
+import { AboutBusiness } from "@/components/core/business/clientBusiness/about";
+import { BusinessMap } from "@/components/core/business/clientBusiness/businessMap";
 import { ItemImagesCarousel } from "@/components/core/business/clientBusiness/itemImgCarousel";
+import { StaffCard } from "@/components/core/business/clientBusiness/staffCard";
 import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
 import { FlexibleModal } from "@/components/ui/flexibleModal";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
+import { useBooking } from "@/context/bookingContext";
 import { mockBusiness } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dimensions,
   Pressable,
@@ -22,10 +27,31 @@ const { height } = Dimensions.get("window");
 
 export default function ClientBusinessScreen() {
   const { id } = useLocalSearchParams();
-  const { image, name, rating, distance, services } = mockBusiness;
+  const { image, name, rating, distance, services, staff, about, coordinates } =
+    mockBusiness;
+  const { bookingData, setBookingData, resetBookingData } = useBooking();
 
   const [modalVisible, setModalVisible] = useState(false);
-  const openModal = () => setModalVisible(true);
+  const [content, setContent] = useState("");
+  const openModal = (content: string) => {
+    setModalVisible(true);
+    setContent(content);
+  };
+
+  const [open, setOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const staffMembers = staff.slice(0, visibleCount);
+  const staffToggle = () => {
+    setOpen((prev) => !prev);
+    setVisibleCount((prev) =>
+      prev >= staff.length ? 3 : Math.min(prev + 3, staff.length)
+    );
+  };
+
+  const showSubmit = useMemo(() => {
+    const check = bookingData.service.length > 0;
+    return check;
+  }, [bookingData.service]);
 
   return (
     <>
@@ -33,7 +59,7 @@ export default function ClientBusinessScreen() {
         <ItemImagesCarousel images={image} />
 
         <View style={styles.iconRow}>
-          <BackButton />
+          <BackButton func={resetBookingData} />
         </View>
       </View>
 
@@ -50,7 +76,12 @@ export default function ClientBusinessScreen() {
                 <Ionicons name="star" size={14} color={Colors.light.black} />
               </View>
 
-              <Pressable style={styles.itemsContainer} onPress={openModal}>
+              <Pressable
+                style={styles.itemsContainer}
+                onPress={() => {
+                  openModal("details");
+                }}
+              >
                 <CustomText style={styles.itemText}>{distance}</CustomText>
                 <Ionicons
                   name="chevron-forward-outline"
@@ -62,7 +93,36 @@ export default function ClientBusinessScreen() {
 
           <View>
             <CustomText style={styles.itemHeader}>Services</CustomText>
-            <ServiceTabs services={services} />
+            <ServiceTabs
+              services={services}
+              bookingData={bookingData}
+              setBookingData={setBookingData}
+            />
+          </View>
+
+          <View>
+            <Pressable style={styles.itemsContainer} onPress={staffToggle}>
+              <CustomText style={styles.itemHeader}>Choose Staff</CustomText>
+              <Ionicons
+                name={open ? "chevron-down-outline" : "chevron-forward-outline"}
+                color={Colors.light.textSecondary}
+              />
+            </Pressable>
+
+            <StaffCard
+              staff={staffMembers}
+              bookingData={bookingData}
+              setBookingData={setBookingData}
+            />
+          </View>
+
+          <View>
+            <CustomText style={styles.itemHeader}>About</CustomText>
+            <AboutBusiness about={about} />
+          </View>
+
+          <View>
+            <BusinessMap coordinates={coordinates} rating={rating} />
           </View>
         </InnerContainer>
       </ScrollView>
@@ -72,11 +132,21 @@ export default function ClientBusinessScreen() {
         closeModal={() => setModalVisible(false)}
         styles={{ backgroundColor: Colors.light.white }}
       >
-        <ClientActions
-          mockBusiness={mockBusiness}
-          closeModal={() => setModalVisible(false)}
-        />
+        {content === "details" && (
+          <ClientActions
+            mockBusiness={mockBusiness}
+            closeModal={() => setModalVisible(false)}
+          />
+        )}
       </FlexibleModal>
+
+      {showSubmit && (
+        <ClientBooking
+          bookingData={bookingData}
+          setBookingData={setBookingData}
+          mockBusiness={mockBusiness}
+        />
+      )}
     </>
   );
 }
@@ -129,5 +199,17 @@ const styles = StyleSheet.create({
   itemHeader: {
     fontSize: 20,
     fontFamily: "Satoshi-Bold",
+  },
+  button: {
+    backgroundColor: Colors.light.black,
+    paddingVertical: 14,
+    alignItems: "center",
+    borderRadius: 5,
+    paddingHorizontal: 16,
+  },
+  buttonText: {
+    color: Colors.light.white,
+    fontFamily: "Satoshi-Bold",
+    fontSize: 14,
   },
 });

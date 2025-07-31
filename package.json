@@ -41,7 +41,8 @@
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
     "expo-apple-authentication": "~7.2.4",
-    "expo-secure-store": "~14.2.3"
+    "expo-secure-store": "~14.2.3",
+    "react-native-maps": "1.20.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

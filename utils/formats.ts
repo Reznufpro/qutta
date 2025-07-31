@@ -18,6 +18,14 @@ export const getFirstName = (name: string): string => {
   return name.trim().split(" ")[0];
 };
 
+export const getInitials = (name: string) => {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+};
+
 export const getShortLocation = (address: string): string => {
   const parts = address.split(",").map((part) => part.trim());
 

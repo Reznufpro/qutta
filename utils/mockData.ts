@@ -5,7 +5,11 @@ export interface businessType {
   name: string;
   distance: string;
   rating: number;
-  location?: string;
+  coordinates?: {
+    latitude?: number;
+    longitude?: number;
+    location: string;
+  };
   tag?: "Recommended" | "New" | "Popular" | "Open Now";
   image: any[];
 }
@@ -17,7 +21,9 @@ export const featuredBusinesses: businessType[] = [
     distance: "1.2 km",
     rating: 4.6,
     tag: "Recommended",
-    location: "San Pedro, Monterrey",
+    coordinates: {
+      location: "San Pedro, Monterrey",
+    },
     image: [require("../assets/onBoarding/barber.jpg")],
   },
   {
@@ -26,7 +32,9 @@ export const featuredBusinesses: businessType[] = [
     distance: "2.9 km",
     rating: 4.8,
     tag: "Popular",
-    location: "San Jeronimo, Monterrey",
+    coordinates: {
+      location: "San Jeronimo, Monterrey",
+    },
     image: require("../assets/onBoarding/wellness.jpg"),
   },
   {
@@ -35,7 +43,9 @@ export const featuredBusinesses: businessType[] = [
     distance: "0.8 km",
     rating: 4.3,
     tag: "New",
-    location: "San Nicolas, Monterrey",
+    coordinates: {
+      location: "San Nicolas, Monterrey",
+    },
     image: [require("../assets/onBoarding/spa1.jpg")],
   },
   {
@@ -44,7 +54,9 @@ export const featuredBusinesses: businessType[] = [
     distance: "3.5 km",
     rating: 4.0,
     tag: "Open Now",
-    location: "Apodaca, Monterrey",
+    coordinates: {
+      location: "Apodaca, Monterrey",
+    },
     image: [require("../assets/onBoarding/therapy.jpg")],
   },
 ];
@@ -143,6 +155,13 @@ export const mockBooking: bookingT = {
 
 export interface fullBusinessT extends businessType {
   openTime: string;
+  about: string;
+  staff: {
+    id: string;
+    name: string;
+    rating?: number;
+    image?: any;
+  }[];
   services: {
     [key: number]: {
       title: string;
@@ -164,11 +183,55 @@ export const mockBusiness: fullBusinessT = {
     require("../assets/onBoarding/spa1.jpg"),
   ],
   name: "Fade & Blade Barbers",
+  about:
+    "At Leones, we believe every client deserves precision, care, and consistency. Our barbers are trained professionals committed to delivering high-quality grooming services in a welcoming environment.",
   distance: "1.2 km",
   rating: 4.6,
   tag: "New",
   openTime: "1:30pm",
-  location: "San Pedro, Monterrey",
+  coordinates: {
+    latitude: 25.7167,
+    longitude: -100.3625,
+    location:
+      "Avenida Paseo de los Leones 157, Local 17, Cumbres Elite, Monterrey, Nuevo León",
+  },
+  staff: [
+    {
+      id: "101",
+      name: "Emmanuel Okeke",
+      rating: 4.5,
+      image: require("../assets/images/yo.jpeg"),
+    },
+    {
+      id: "102",
+      name: "Chidindu Okeks",
+      rating: 5,
+      image: require("../assets/images/yo.jpeg"),
+    },
+    {
+      id: "103",
+      name: "Chidera Okeke",
+      rating: 5,
+      image: require("../assets/images/yo.jpeg"),
+    },
+    {
+      id: "104",
+      name: "Okeks",
+      rating: 5,
+      image: require("../assets/images/yo.jpeg"),
+    },
+    {
+      id: "105",
+      name: "Test",
+      rating: 5,
+      image: require("../assets/images/yo.jpeg"),
+    },
+    {
+      id: "106",
+      name: "Random Staff",
+      rating: 5,
+    },
+  ],
   services: {
     0: {
       title: "Barbering",
@@ -183,13 +246,13 @@ export const mockBusiness: fullBusinessT = {
           title: "Express cut",
           time: "15 mins",
           price: 150,
-          description: "Line up the hair, fresh and new.",
+          description: "Line up the hair",
         },
         {
           title: "Cut",
           time: "15 mins",
           price: 150,
-          description: "Line up the hair, fresh and new.",
+          description: "fresh and new.",
         },
         {
           title: "Fresher",

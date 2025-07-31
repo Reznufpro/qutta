@@ -1,10 +1,13 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
+import { bookingData } from "@/context/bookingContext";
 import { fullBusinessT } from "@/utils";
+import { Ionicons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import React, { useState } from "react";
 import {
   FlatList,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -13,12 +16,31 @@ import {
 
 interface ServiceTabsProps {
   services: fullBusinessT["services"];
+  bookingData: bookingData;
+  setBookingData: React.Dispatch<React.SetStateAction<bookingData>>;
 }
 
-export const ServiceTabs = ({ services }: ServiceTabsProps) => {
+type item = {
+  title: string;
+  time: string;
+  price: number;
+  description?: string;
+};
+
+export const ServiceTabs = ({
+  services,
+  bookingData,
+  setBookingData,
+}: ServiceTabsProps) => {
   const tabData = Object.values(services);
   const [selectedTab, setSelectedTab] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
+
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const toggle = (i: number) => {
+    setOpenIndex((prev) => (prev === i ? null : i));
+  };
+  const [selectedItem, setSelectedItem] = useState<item[] | null>(null);
 
   const currentServices = tabData[selectedTab].service.slice(0, visibleCount);
   const hasMore = visibleCount < tabData[selectedTab].service.length;
@@ -27,36 +49,98 @@ export const ServiceTabs = ({ services }: ServiceTabsProps) => {
     setVisibleCount((prev) => prev + 4);
   };
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
-    item: {
-      title: string;
-      time: string;
-      price: number;
-      description?: string;
-    };
-    index: number;
-  }) => (
-    <MotiView
-      from={{ opacity: 0, translateY: 10 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      transition={{ delay: index * 100 }}
-      style={styles.card}
-    >
-      <View style={{ flex: 1, gap: 12 }}>
-        <View>
-          <CustomText style={styles.serviceTitle}>{item.title}</CustomText>
-          <CustomText style={styles.serviceTime}>{item.time}</CustomText>
+  const handleSelect = (selectedService: item) => {
+    setBookingData((prev) => {
+      const exists = prev.service.some(
+        (s) =>
+          s.title === selectedService.title && s.price === selectedService.price
+      );
+
+      let updatedServices;
+      if (exists) {
+        // Remove if already selected
+        updatedServices = prev.service.filter(
+          (s) =>
+            !(
+              s.title === selectedService.title &&
+              s.price === selectedService.price
+            )
+        );
+      } else {
+        updatedServices = [...prev.service, selectedService];
+      }
+
+      const newTotal = updatedServices.reduce(
+        (acc, curr) => acc + curr.price,
+        0
+      );
+      setSelectedItem(updatedServices);
+
+      return {
+        ...prev,
+        service: updatedServices,
+        total: newTotal,
+      };
+    });
+  };
+
+  const renderItem = ({ item, index }: { item: item; index: number }) => {
+    const isOpen = openIndex === index;
+    const isSelected = bookingData.service.some(
+      (s) =>
+        s.title === item.title && s.price === item.price && s.time === item.time
+    );
+
+    return (
+      <MotiView
+        from={{ opacity: 0, translateY: 10 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{ delay: index * 100 }}
+        style={styles.card}
+      >
+        <View style={{ flex: 1, gap: 12 }}>
+          <View>
+            <Pressable
+              style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
+              onPress={() => toggle(index)}
+            >
+              <CustomText style={styles.serviceTitle}>{item.title}</CustomText>
+              <Ionicons
+                name={
+                  isOpen ? "chevron-down-outline" : "chevron-forward-outline"
+                }
+                color={Colors.light.textSecondary}
+              />
+            </Pressable>
+
+            {isOpen && item.description && (
+              <CustomText style={[styles.serviceTime, { paddingBottom: 5 }]}>
+                {item.description}
+              </CustomText>
+            )}
+            <CustomText style={styles.serviceTime}>{item.time}</CustomText>
+          </View>
+          <CustomText style={styles.servicePrice}>MX${item.price}</CustomText>
         </View>
-        <CustomText style={styles.servicePrice}>MX${item.price}</CustomText>
-      </View>
-      <TouchableOpacity style={styles.bookButton}>
-        <CustomText style={styles.bookButtonText}>Book</CustomText>
-      </TouchableOpacity>
-    </MotiView>
-  );
+        <TouchableOpacity
+          style={styles.bookButton}
+          onPress={() => handleSelect(item)}
+        >
+          <CustomText style={styles.bookButtonText}>
+            {isSelected ? (
+              <Ionicons
+                name="checkmark-done-circle-outline"
+                size={24}
+                color={Colors.light.white}
+              />
+            ) : (
+              "Book"
+            )}
+          </CustomText>
+        </TouchableOpacity>
+      </MotiView>
+    );
+  };
 
   return (
     <View style={styles.container}>
