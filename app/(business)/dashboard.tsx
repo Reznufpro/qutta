@@ -29,9 +29,7 @@ export default function DashboardScreen() {
           <CustomText>Logout</CustomText>
         </Pressable>
 
-        <Pressable
-          onPress={() => router.push("/onboarding/business/selectImages")}
-        >
+        <Pressable onPress={() => router.push("/onboarding/business/intro")}>
           <CustomText>Onboarding</CustomText>
         </Pressable>
 

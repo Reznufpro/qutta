@@ -22,7 +22,7 @@ import {
   View,
 } from "react-native";
 
-export default function SelectImages() {
+export default function SelectImagesScreen() {
   const { form, updateForm } = useBusinessForm();
   const router = useRouter();
   const introUtils = introSlides();
@@ -82,10 +82,26 @@ export default function SelectImages() {
     }
   }, [images]);
 
-  const handleBack = () => router.back();
+  const handleBack = () => {
+    updateForm("current_step", form.current_step - 1);
+    router.back();
+  };
 
   const handleNext = () => {
-    //   updateForm("current_step", form.current_step + 1);
+    if (disabled) return;
+
+    try {
+      updateForm(
+        "images",
+        images.map((img) => img.uri)
+      );
+      updateForm("current_step", form.current_step + 1);
+
+      console.log(form.images);
+      router.push("/onboarding/business/services");
+    } catch (error) {
+      console.log("Select Images Error:", error);
+    }
   };
 
   const renderImageCard = (uri: string, index: number) => (
@@ -101,8 +117,6 @@ export default function SelectImages() {
       </Pressable>
     </View>
   );
-
-  console.log(images);
 
   return (
     <ScreenContainerWithoutAnimation innerStyle={styles.container}>
@@ -125,7 +139,7 @@ export default function SelectImages() {
 
             <AnimatePresence>
               <MotiView
-                key="location"
+                key="imageSelect"
                 from={{ opacity: 0, translateY: 20 }}
                 animate={{ opacity: 1, translateY: 0 }}
                 exit={{ opacity: 0, translateY: 20 }}
@@ -174,6 +188,7 @@ export default function SelectImages() {
           <ListingButtons
             handleBack={handleBack}
             handleNext={handleNext}
+            disabled={disabled}
             backBtnTitle="Back"
             styleContainer={{ marginBottom: 0 }}
           />

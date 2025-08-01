@@ -47,7 +47,7 @@ const defaultForm: BusinessForm = {
   staff: [],
   categories: [],
   current_step: 1,
-  total_steps: 5,
+  total_steps: 6,
 };
 
 const BusinessFormContext = createContext<BusinessFormContextType | undefined>(

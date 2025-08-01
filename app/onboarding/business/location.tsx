@@ -66,12 +66,20 @@ export default function BusinessLocationScreen() {
     }
   }, [selectedLocation]);
 
-  const handleBack = () => router.back();
+  const handleBack = () => {
+    updateForm("current_step", form.current_step - 1);
+    router.back();
+  };
 
   const handleNext = () => {
-    if (form.coordinates?.location) {
+    if (!form.coordinates?.location) return;
+
+    try {
       console.log(form.coordinates);
-    //   updateForm("current_step", form.current_step + 1);
+      updateForm("current_step", form.current_step + 1);
+      router.push("/onboarding/business/selectImages");
+    } catch (error) {
+      console.log("Coordinates Error", error);
     }
   };
 
@@ -136,7 +144,9 @@ export default function BusinessLocationScreen() {
                           style={styles.dropdownItem}
                           onPress={() => handleSelect(item)}
                         >
-                          <CustomText>{item.full_address}</CustomText>
+                          <CustomText>
+                            {item.name} {item.full_address}
+                          </CustomText>
                         </Pressable>
                       )}
                     />

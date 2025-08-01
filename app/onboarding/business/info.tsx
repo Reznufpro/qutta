@@ -46,7 +46,8 @@ export default function BusinessInfoScreen() {
   const handleNext = () => {
     if (emptyForm) return;
     console.log("Submitting form:", form.name, form.about);
-    // updateForm("current_step", form.current_step + 1);
+    updateForm("current_step", form.current_step + 1);
+    router.push("/onboarding/business/location");
   };
 
   return (
