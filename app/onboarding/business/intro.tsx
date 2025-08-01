@@ -14,7 +14,7 @@ export default function IntroScreen() {
   const introUtils = introSlides();
 
   const handleContinue = () => {
-    // navigation or logic here
+    router.push("/onboarding/business/info");
   };
 
   return (

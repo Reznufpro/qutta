@@ -7,6 +7,7 @@ export interface BusinessForm {
     longitude?: number;
     location: string;
   };
+  tag?: "Recommended" | "New" | "Popular" | "Open Now";
   about?: string;
   images: string[];
   staff: {
@@ -28,8 +29,9 @@ export interface BusinessForm {
 
 interface BusinessFormContextType {
   form: BusinessForm;
-  updateForm: (data: Partial<BusinessForm>) => void;
+  updateForm: (key: keyof BusinessForm, value: any) => void;
   resetForm: () => void;
+  setForm: React.Dispatch<React.SetStateAction<BusinessForm>>;
 }
 
 const defaultForm: BusinessForm = {
@@ -39,12 +41,13 @@ const defaultForm: BusinessForm = {
     latitude: 0,
     longitude: 0,
   },
+  tag: "New",
   about: "",
   images: [],
   staff: [],
   categories: [],
   current_step: 1,
-  total_steps: 6,
+  total_steps: 5,
 };
 
 const BusinessFormContext = createContext<BusinessFormContextType | undefined>(
@@ -54,8 +57,11 @@ const BusinessFormContext = createContext<BusinessFormContextType | undefined>(
 export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
   const [form, setForm] = useState<BusinessForm>(defaultForm);
 
-  const updateForm = (data: Partial<BusinessForm>) => {
-    setForm((prev) => ({ ...prev, ...data }));
+  const updateForm = <K extends keyof BusinessForm>(
+    key: K,
+    value: BusinessForm[K]
+  ) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
   const resetForm = () => {
@@ -63,7 +69,9 @@ export const BusinessFormProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <BusinessFormContext.Provider value={{ form, updateForm, resetForm }}>
+    <BusinessFormContext.Provider
+      value={{ form, updateForm, resetForm, setForm }}
+    >
       {children}
     </BusinessFormContext.Provider>
   );

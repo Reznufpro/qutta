@@ -50,7 +50,7 @@ export const ScreenContainerWithoutAnimation: FC<Props> = ({
       <StatusBar style="dark" />
 
       <InnerContainer
-        style={[{ gap: 12, marginTop: 20, paddingBottom: 70 }, innerStyle]}
+        style={[{ gap: 12, marginTop: 20, paddingBottom: 30 }, innerStyle]}
       >
         {children}
       </InnerContainer>

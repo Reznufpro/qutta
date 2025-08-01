@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
     textTransform: "none",
     fontSize: 26,
+    maxWidth: 300,
   },
   text: {
     fontFamily: "CarosSoftLight",

@@ -18,7 +18,7 @@ export default function DashboardScreen() {
   const { logout } = useLogout();
   const router = useRouter();
 
-  console.log(userData);
+  console.log(userData.lastName);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
@@ -29,7 +29,9 @@ export default function DashboardScreen() {
           <CustomText>Logout</CustomText>
         </Pressable>
 
-        <Pressable onPress={() => router.push("/onboarding/business/intro")}>
+        <Pressable
+          onPress={() => router.push("/onboarding/business/selectImages")}
+        >
           <CustomText>Onboarding</CustomText>
         </Pressable>
 

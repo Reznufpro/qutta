@@ -18,7 +18,7 @@ export const CustomProgressBar = ({
 const styles = StyleSheet.create({
   progressBarContainer: {
     height: 8,
-    backgroundColor: Colors.light.textSecondary,
+    backgroundColor: "#E0E0E0",
     overflow: "hidden",
     marginTop: 10,
   },

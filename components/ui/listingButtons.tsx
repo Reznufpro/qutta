@@ -5,6 +5,7 @@ import {
   TextStyle,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from "react-native";
 import CustomText from "./customText";
 
@@ -16,6 +17,7 @@ interface ListingButtonsProps {
   nextBtnTitle?: string;
   backBtnTitle?: string;
   styleBackText?: StyleProp<TextStyle>;
+  styleContainer?: StyleProp<ViewStyle>;
 }
 
 export const ListingButtons = ({
@@ -26,9 +28,10 @@ export const ListingButtons = ({
   nextBtnTitle = "Next",
   backBtnTitle = "Skip",
   styleBackText,
+  styleContainer,
 }: ListingButtonsProps) => {
   return (
-    <View style={styles.btnContainer}>
+    <View style={[styles.btnContainer, styleContainer]}>
       <TouchableOpacity onPress={handleBack} disabled={disabledBack}>
         <CustomText style={[styles.backText, styleBackText]}>
           {backBtnTitle}
@@ -72,6 +75,6 @@ const styles = StyleSheet.create({
     color: Colors.light.white,
   },
   disabledButton: {
-    backgroundColor: Colors.light.tabIconDefault,
+    backgroundColor: Colors.light.muted,
   },
 });

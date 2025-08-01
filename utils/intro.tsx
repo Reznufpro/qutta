@@ -8,7 +8,7 @@ export type IntroUtilsT = {
 export const introSlides = (): IntroUtilsT => [
   {
     key: "intro1",
-    title: "Tell Us About Your Business",
+    title: "Tell Us About Your Business.",
     desc: "Share your story, location, and what makes your services unique. We'll help you turn that into a beautiful, easy-to-discover profile.",
     image: require("../assets/onBoarding/business/chat.png"),
   },

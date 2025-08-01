@@ -36,6 +36,18 @@
         }
       ],
       [
+        "expo-calendar",
+        {
+          "calendarPermission": "Qutta uses your calendar to help set reminders for your appointments."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Qutta accesses your photos to let you share them with your clients."
+        }
+      ],
+      [
         "expo-apple-authentication"
       ],
       "expo-font",
