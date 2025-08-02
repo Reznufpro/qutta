@@ -1,18 +1,15 @@
-import {
-  addToFavorites,
-  getFavorites,
-  removeFromFavorites,
-} from "@/utils/api/favorites";
+import { addToFavorites, getFavorites, removeFromFavorites } from "@/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Get favorites
-export const useFavorites = () =>
-  useQuery({
+export const useFavorites = () => {
+  return useQuery({
     queryKey: ["favorites"],
     queryFn: getFavorites,
     staleTime: 3600000, // Cache data for 1 hour
     refetchOnWindowFocus: false,
   });
+};
 
 // Add favorite
 export const useAddFavorite = () => {

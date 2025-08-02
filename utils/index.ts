@@ -1,5 +1,7 @@
 export * from "./api/auth";
 export * from "./api/business";
+export * from "./api/businessAvailability";
+export * from "./api/favorites";
 export * from "./api/mapbox";
 export * from "./calculateDistance";
 export * from "./formats";

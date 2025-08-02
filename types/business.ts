@@ -36,3 +36,10 @@ export interface ServiceEntity {
   price: number;
   description?: string;
 }
+
+export interface AvailabilityEntry {
+  day: string;
+  is_closed: boolean;
+  open_time?: string; // "HH:mm:ss"
+  close_time?: string; // "HH:mm:ss"
+}

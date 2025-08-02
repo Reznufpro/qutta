@@ -61,7 +61,9 @@ export default function BusinessItemScreen() {
 
             <View style={styles.ratingContainer}>
               <View style={styles.itemsContainer}>
-                <CustomText style={styles.text}>{data?.rating}</CustomText>
+                <CustomText style={styles.text}>
+                  {data?.rating === 0 ? "No ratings yet" : data?.rating}
+                </CustomText>
                 <Ionicons name="star" size={14} color={Colors.light.black} />
               </View>
             </View>

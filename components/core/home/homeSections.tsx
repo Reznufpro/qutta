@@ -1,7 +1,7 @@
 import CustomHeading from "@/components/ui/customHeading";
 import { Colors } from "@/constants/Colors";
 import { BusinessData } from "@/types";
-import { getShortLocation } from "@/utils";
+import { getShortLocation, trimTextToOneLine } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
@@ -19,19 +19,12 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
     router.push({ pathname: "/clientBusiness/[id]", params: { id: id } });
   };
 
+  const showLimit = business?.slice(0, 3);
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <CustomHeading
-          style={{
-            fontFamily: "CarosSoftLight",
-            fontSize: 24,
-            textTransform: "capitalize",
-            color: Colors.light.textSecondary,
-          }}
-        >
-          {heading}
-        </CustomHeading>
+        <CustomHeading style={styles.headerText}>{heading}</CustomHeading>
         <Ionicons
           name="chevron-forward-outline"
           size={12}
@@ -40,7 +33,7 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
       </View>
 
       <FlatList
-        data={business}
+        data={showLimit}
         keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -49,7 +42,7 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
           <Pressable onPress={() => handlePress(item.id)}>
             <HomeCard
               img={item.image}
-              name={item.name}
+              name={trimTextToOneLine(item.name, 16)}
               rating={item.rating}
               location={getShortLocation(item.coordinates.location)}
               tag={item.tag}
@@ -72,6 +65,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
+  },
+  headerText: {
+    fontFamily: "CarosSoftLight",
+    fontSize: 24,
+    textTransform: "capitalize",
+    color: Colors.light.textSecondary,
   },
   listContent: {
     gap: 15,

@@ -247,10 +247,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   nameText: {
-    color: Colors.light.white,
-    fontFamily: "CormorantGaramond-Light",
+    fontFamily: "CormorantGaramond-Bold",
     fontSize: 28,
     lineHeight: 30,
+    color: Colors.light.white,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
