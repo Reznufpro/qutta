@@ -7,6 +7,8 @@ import { InnerContainer } from "@/components/ui/innerContainer";
 import { ListingButtons } from "@/components/ui/listingButtons";
 import { ScreenContainerWithoutAnimation } from "@/components/ui/screenContainer";
 import { useBusinessForm } from "@/context/businessContext";
+import { useUserData } from "@/context/userContext";
+import { useCreateBusiness } from "@/hooks/useCreateBusiness";
 import { introSlides } from "@/utils";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -21,9 +23,18 @@ import {
 } from "react-native";
 
 export default function BusinessReviewScreen() {
-  const { form, updateForm } = useBusinessForm();
+  const { form, updateForm, resetForm } = useBusinessForm();
+  const { userData } = useUserData();
+
+  console.log(userData.lastName);
   const router = useRouter();
   const introUtils = introSlides();
+  const {
+    mutateAsync: submitBusiness,
+    isSuccess,
+    error,
+    isPending,
+  } = useCreateBusiness();
 
   const progressPercentage: DimensionValue = `${
     (form.current_step / form.total_steps) * 100
@@ -44,16 +55,59 @@ export default function BusinessReviewScreen() {
     router.back();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isFormValid) {
       alert("Please complete all sections before submitting.");
       return;
     }
-    // validate no item thats needed in the form is empty
-    console.log("Submitting business form", form);
+
     try {
-      // append and make api request to the backend
-      // navigate to home screen
+      // validate no item thats needed in the form is empty
+      console.log("Submitting business form", form);
+
+      const formData = new FormData();
+
+      // 1. Business images
+      form.images.forEach((uri: string, index: number) => {
+        const fileName = uri.split("/").pop() || `image_${index}.jpg`;
+        const fileType = fileName.endsWith(".png") ? "image/png" : "image/jpeg";
+
+        formData.append("images", {
+          uri,
+          name: fileName,
+          type: fileType,
+        } as any);
+
+        console.log("Uploading image:", uri, fileType, fileName);
+      });
+
+      // 2. Staff images
+      form.staff.forEach((staff: any) => {
+        if (staff.image) {
+          formData.append("staffImages", {
+            uri: staff.image,
+            name: staff.image.split("/").pop() || "staff.jpg",
+            type: "image/jpeg",
+          } as any);
+        }
+      });
+
+      // 3. Other form fields
+      formData.append("name", form.name);
+      formData.append("tag", form.tag || "");
+      formData.append("about", form.about || "");
+      formData.append("coordinates", JSON.stringify(form.coordinates));
+      formData.append(
+        "staff",
+        JSON.stringify(form.staff.map(({ name }) => ({ name })))
+      );
+      formData.append("categories", JSON.stringify(form.categories));
+
+      await submitBusiness(formData);
+
+      console.log("Business submitted successfully");
+      resetForm();
+      router.push("/onboarding/business/success");
     } catch (error) {
       console.log("Submit error", error);
     }
@@ -190,7 +244,9 @@ export default function BusinessReviewScreen() {
         <InnerContainer style={styles.btnContainer}>
           <ListingButtons
             backBtnTitle="Back"
-            nextBtnTitle="Submit"
+            disabledBack={isPending}
+            disabled={!isFormValid || isPending}
+            nextBtnTitle={isPending ? "Submitting..." : "Submit"}
             handleBack={handleBack}
             handleNext={handleSubmit}
           />

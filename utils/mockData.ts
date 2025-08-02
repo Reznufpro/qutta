@@ -67,6 +67,7 @@ export interface marketingCards {
   subtitle: string | number | React.ReactNode;
   extra?: string;
   heading?: string;
+  tag?: React.ReactNode | string;
   style?: StyleProp<ViewStyle>;
 }
 

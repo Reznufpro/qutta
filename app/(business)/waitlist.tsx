@@ -8,7 +8,7 @@ export default function WaitlistScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <InnerContainer style={{ gap: 12, marginTop: 20 }}>
-        <Header headerTitle="Waitlist" style={{ marginBottom: 12 }} />
+        <Header headerTitle="Client list" style={{ marginBottom: 12 }} />
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}

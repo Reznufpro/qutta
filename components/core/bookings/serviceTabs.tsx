@@ -16,8 +16,9 @@ import {
 
 interface ServiceTabsProps {
   services: fullBusinessT["services"];
-  bookingData: bookingData;
-  setBookingData: React.Dispatch<React.SetStateAction<bookingData>>;
+  preview?: boolean;
+  bookingData?: bookingData;
+  setBookingData?: React.Dispatch<React.SetStateAction<bookingData>>;
 }
 
 type item = {
@@ -29,6 +30,7 @@ type item = {
 
 export const ServiceTabs = ({
   services,
+  preview,
   bookingData,
   setBookingData,
 }: ServiceTabsProps) => {
@@ -49,42 +51,45 @@ export const ServiceTabs = ({
   };
 
   const handleSelect = (selectedService: item) => {
-    setBookingData((prev) => {
-      const exists = prev.service.some(
-        (s) =>
-          s.title === selectedService.title && s.price === selectedService.price
-      );
-
-      let updatedServices;
-      if (exists) {
-        // Remove if already selected
-        updatedServices = prev.service.filter(
+    if (setBookingData) {
+      setBookingData((prev) => {
+        const exists = prev.service.some(
           (s) =>
-            !(
-              s.title === selectedService.title &&
-              s.price === selectedService.price
-            )
+            s.title === selectedService.title &&
+            s.price === selectedService.price
         );
-      } else {
-        updatedServices = [...prev.service, selectedService];
-      }
 
-      const newTotal = updatedServices.reduce(
-        (acc, curr) => acc + curr.price,
-        0
-      );
+        let updatedServices;
+        if (exists) {
+          // Remove if already selected
+          updatedServices = prev.service.filter(
+            (s) =>
+              !(
+                s.title === selectedService.title &&
+                s.price === selectedService.price
+              )
+          );
+        } else {
+          updatedServices = [...prev.service, selectedService];
+        }
 
-      return {
-        ...prev,
-        service: updatedServices,
-        total: newTotal,
-      };
-    });
+        const newTotal = updatedServices.reduce(
+          (acc, curr) => acc + curr.price,
+          0
+        );
+
+        return {
+          ...prev,
+          service: updatedServices,
+          total: newTotal,
+        };
+      });
+    }
   };
 
   const renderItem = ({ item, index }: { item: item; index: number }) => {
     const isOpen = openIndex === index;
-    const isSelected = bookingData.service.some(
+    const isSelected = bookingData?.service.some(
       (s) =>
         s.title === item.title && s.price === item.price && s.time === item.time
     );
@@ -120,22 +125,25 @@ export const ServiceTabs = ({
           </View>
           <CustomText style={styles.servicePrice}>MX${item.price}</CustomText>
         </View>
-        <TouchableOpacity
-          style={styles.bookButton}
-          onPress={() => handleSelect(item)}
-        >
-          <CustomText style={styles.bookButtonText}>
-            {isSelected ? (
-              <Ionicons
-                name="checkmark-done-circle-outline"
-                size={24}
-                color={Colors.light.white}
-              />
-            ) : (
-              "Book"
-            )}
-          </CustomText>
-        </TouchableOpacity>
+
+        {!preview && (
+          <TouchableOpacity
+            style={styles.bookButton}
+            onPress={() => handleSelect(item)}
+          >
+            <CustomText style={styles.bookButtonText}>
+              {isSelected ? (
+                <Ionicons
+                  name="checkmark-done-circle-outline"
+                  size={24}
+                  color={Colors.light.white}
+                />
+              ) : (
+                "Book"
+              )}
+            </CustomText>
+          </TouchableOpacity>
+        )}
       </MotiView>
     );
   };

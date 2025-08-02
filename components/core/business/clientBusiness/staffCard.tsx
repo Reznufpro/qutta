@@ -9,8 +9,9 @@ import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 interface StaffCardProps {
   staff: fullBusinessT["staff"];
-  bookingData: bookingData;
-  setBookingData: React.Dispatch<React.SetStateAction<bookingData>>;
+  preview?: boolean;
+  bookingData?: bookingData;
+  setBookingData?: React.Dispatch<React.SetStateAction<bookingData>>;
 }
 
 interface item {
@@ -22,25 +23,26 @@ interface item {
 
 export const StaffCard = ({
   staff,
+  preview,
   bookingData,
   setBookingData,
 }: StaffCardProps) => {
   const handleSelected = (selected: item) => {
-    setBookingData((prev) => {
-      const isSameStaff = prev.staff?.id === selected.id;
-      const newStaff = isSameStaff ? initialBookingData["staff"] : selected;
+    if (setBookingData) {
+      setBookingData((prev) => {
+        const isSameStaff = prev.staff?.id === selected.id;
+        const newStaff = isSameStaff ? initialBookingData["staff"] : selected;
 
-      return {
-        ...prev,
-        staff: newStaff,
-      };
-    });
+        return {
+          ...prev,
+          staff: newStaff,
+        };
+      });
+    }
   };
 
   const renderItem = ({ item, index }: { item: item; index: number }) => {
-    const { name, image, rating } = item;
-
-    const selected = bookingData.staff?.id === item?.id;
+    const selected = bookingData && bookingData?.staff?.id === item?.id;
 
     return (
       <MotiView
@@ -55,27 +57,27 @@ export const StaffCard = ({
             handleSelected(item);
           }}
         >
-          {image ? (
+          {item.image ? (
             <Image
-              source={image}
+              source={item.image}
               style={[styles.avatarImg, selected && styles.selected]}
             />
           ) : (
             <CustomText style={styles.avatarText}>
-              {getInitials(name || "")}
+              {item.name && getInitials(item.name || "")}
             </CustomText>
           )}
 
-          {rating && rating > 0 && (
-            <View style={styles.rating}>
-              <CustomText style={styles.ratingText}>{rating}</CustomText>
-              <Ionicons name="star" color={Colors.light.black} />
-            </View>
-          )}
+          <View style={styles.rating}>
+            <CustomText style={styles.ratingText}>{item.rating}</CustomText>
+            <Ionicons name="star" color={Colors.light.black} />
+          </View>
         </Pressable>
 
         <View style={{ paddingTop: 10 }}>
-          <CustomText style={styles.staffText}>{name}</CustomText>
+          {item.name && (
+            <CustomText style={styles.staffText}>{item.name}</CustomText>
+          )}
         </View>
       </MotiView>
     );

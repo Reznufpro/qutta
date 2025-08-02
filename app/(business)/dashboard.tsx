@@ -18,7 +18,6 @@ export default function DashboardScreen() {
   const { logout } = useLogout();
   const router = useRouter();
 
-  console.log(userData.lastName);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
