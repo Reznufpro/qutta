@@ -54,3 +54,21 @@ export const getBusinessById = async (id: string): Promise<BusinessData> => {
 
   return res.json();
 };
+
+export const getAllBusinesses = async (): Promise<BusinessData[]> => {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${BASE_URL}business/businesses`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error || "Failed to fetch business");
+  }
+
+  const response: BusinessData[] = await res.json();
+
+  return response;
+};

@@ -3,7 +3,7 @@ import { HoverButton } from "@/components/ui/hoverButton";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
 import { bookingData } from "@/context/bookingContext";
-import { fullBusinessT } from "@/utils";
+import { BusinessData } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
@@ -11,13 +11,13 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface ClientBookingProps {
   bookingData: bookingData;
-  mockBusiness: fullBusinessT;
+  businessData: BusinessData;
   setBookingData: React.Dispatch<React.SetStateAction<bookingData>>;
 }
 
 export const ClientBooking = ({
   bookingData,
-  mockBusiness,
+  businessData,
   setBookingData,
 }: ClientBookingProps) => {
   const router = useRouter();
@@ -33,13 +33,13 @@ export const ClientBooking = ({
     setBookingData((prev) => ({
       ...prev,
       business: {
-        name: mockBusiness.name,
-        image: mockBusiness.image,
-        rating: mockBusiness.rating,
+        name: businessData.name,
+        image: businessData.image,
+        rating: businessData.rating,
         coordinates: {
-          location: mockBusiness.coordinates?.location ?? "",
-          latitude: mockBusiness.coordinates?.latitude ?? 0,
-          longitude: mockBusiness.coordinates?.longitude ?? 0,
+          location: businessData.coordinates?.location ?? "",
+          latitude: businessData.coordinates?.latitude ?? 0,
+          longitude: businessData.coordinates?.longitude ?? 0,
         },
       },
     }));

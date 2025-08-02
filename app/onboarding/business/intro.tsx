@@ -1,9 +1,11 @@
 import { IntroCardListing } from "@/components/core/business/introBusiness/introCard";
+import { BackButton } from "@/components/ui/backButton";
 import { CustomDivider } from "@/components/ui/customDivider";
 import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
 import { ScreenContainerWithoutAnimation } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
+import { useBusinessForm } from "@/context/businessContext";
 import { introSlides } from "@/utils";
 import { useRouter } from "expo-router";
 import { MotiView } from "moti";
@@ -12,6 +14,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 export default function IntroScreen() {
   const router = useRouter();
   const introUtils = introSlides();
+  const { resetForm } = useBusinessForm();
 
   const handleContinue = () => {
     router.push("/onboarding/business/info");
@@ -19,6 +22,10 @@ export default function IntroScreen() {
 
   return (
     <ScreenContainerWithoutAnimation innerStyle={styles.container}>
+      <View style={styles.iconRow}>
+        <BackButton func={() => resetForm} />
+      </View>
+
       <View style={styles.inner}>
         <View>
           <Header
@@ -65,6 +72,9 @@ export default function IntroScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  iconRow: {
+    flexDirection: "row",
   },
   inner: {
     flex: 1,

@@ -1,17 +1,18 @@
 import { InnerContainer } from "@/components/ui/innerContainer";
-import { fullBusinessT, handleDirections } from "@/utils";
+import { BusinessData } from "@/types";
+import { handleDirections } from "@/utils";
 import { MotiView } from "moti";
 import { FlatList } from "react-native";
 import { businessCards, InfoRow } from "../bookings/infoRow";
 
 interface ClientActionsProps {
   closeModal: () => void;
-  mockBusiness: fullBusinessT;
+  businessData: BusinessData;
 }
 
 export const ClientActions = ({
   closeModal,
-  mockBusiness,
+  businessData,
 }: ClientActionsProps) => {
   return (
     <InnerContainer style={{ paddingBottom: 20 }}>
@@ -21,9 +22,9 @@ export const ClientActions = ({
         renderItem={({ item, index }) => {
           const subtitleItem =
             item.title === "Getting there"
-              ? mockBusiness.coordinates?.location
+              ? businessData.coordinates?.location
               : item.title === "Open until"
-              ? mockBusiness.closeTime
+              ? businessData.closeTime
               : item.subtitle;
 
           return (
@@ -47,7 +48,7 @@ export const ClientActions = ({
                 onPress={() => {
                   if (item.link)
                     handleDirections({
-                      location: mockBusiness.coordinates?.location,
+                      location: businessData.coordinates?.location,
                     });
                   else if (item.favorite) console.log("favorited");
                   else if (item.calendar) console.log("calendar");

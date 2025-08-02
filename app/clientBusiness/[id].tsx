@@ -11,7 +11,7 @@ import { FlexibleModal } from "@/components/ui/flexibleModal";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
 import { useBooking } from "@/context/bookingContext";
-import { mockBusiness } from "@/utils";
+import { useGetBusinessById } from "@/hooks/useCreateBusiness";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
@@ -27,8 +27,8 @@ const { height } = Dimensions.get("window");
 
 export default function ClientBusinessScreen() {
   const { id } = useLocalSearchParams();
-  const { image, name, rating, distance, services, staff, about, coordinates } =
-    mockBusiness;
+  const { data, isLoading, error } = useGetBusinessById(id as string);
+
   const { bookingData, setBookingData, resetBookingData } = useBooking();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -40,11 +40,12 @@ export default function ClientBusinessScreen() {
 
   const [open, setOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(3);
-  const staffMembers = staff.slice(0, visibleCount);
+  const staffMembers = data?.staff.slice(0, visibleCount);
   const staffToggle = () => {
+    if (!data?.staff) return;
     setOpen((prev) => !prev);
     setVisibleCount((prev) =>
-      prev >= staff.length ? 3 : Math.min(prev + 3, staff.length)
+      prev >= data?.staff.length ? 3 : Math.min(prev + 3, data.staff.length)
     );
   };
 
@@ -56,7 +57,7 @@ export default function ClientBusinessScreen() {
   return (
     <>
       <View style={styles.imageContainer}>
-        <ItemImagesCarousel images={image} />
+        <ItemImagesCarousel images={data?.image} />
 
         <View style={styles.iconRow}>
           <BackButton func={resetBookingData} />
@@ -67,12 +68,14 @@ export default function ClientBusinessScreen() {
         <InnerContainer style={{ gap: 40 }}>
           <View style={{ gap: 12 }}>
             <View style={styles.headerContent}>
-              <CustomText style={styles.headerTitle}>{name}</CustomText>
+              <CustomText style={styles.headerTitle}>{data?.name}</CustomText>
             </View>
 
             <View style={styles.ratingContainer}>
               <View style={styles.itemsContainer}>
-                <CustomText style={styles.text}>{rating}</CustomText>
+                <CustomText style={styles.text}>
+                  {data?.rating === 0 ? "New" : data?.rating}
+                </CustomText>
                 <Ionicons name="star" size={14} color={Colors.light.black} />
               </View>
 
@@ -82,7 +85,7 @@ export default function ClientBusinessScreen() {
                   openModal("details");
                 }}
               >
-                <CustomText style={styles.itemText}>{distance}</CustomText>
+                <CustomText style={styles.itemText}>2.6km</CustomText>
                 <Ionicons
                   name="chevron-forward-outline"
                   color={Colors.light.textSecondary}
@@ -93,11 +96,13 @@ export default function ClientBusinessScreen() {
 
           <View>
             <CustomText style={styles.itemHeader}>Services</CustomText>
-            <ServiceTabs
-              services={services}
-              bookingData={bookingData}
-              setBookingData={setBookingData}
-            />
+            {data?.services && (
+              <ServiceTabs
+                services={data.services}
+                bookingData={bookingData}
+                setBookingData={setBookingData}
+              />
+            )}
           </View>
 
           <View>
@@ -109,20 +114,25 @@ export default function ClientBusinessScreen() {
               />
             </Pressable>
 
-            <StaffCard
-              staff={staffMembers}
-              bookingData={bookingData}
-              setBookingData={setBookingData}
-            />
+            {staffMembers && staffMembers.length > 0 && (
+              <StaffCard
+                staff={staffMembers}
+                bookingData={bookingData}
+                setBookingData={setBookingData}
+              />
+            )}
           </View>
 
           <View>
             <CustomText style={styles.itemHeader}>About</CustomText>
-            <AboutBusiness about={about} />
+            {data?.about && <AboutBusiness about={data?.about} />}
           </View>
 
           <View>
-            <BusinessMap coordinates={coordinates} rating={rating} />
+            <BusinessMap
+              coordinates={data?.coordinates}
+              rating={data?.rating}
+            />
           </View>
         </InnerContainer>
       </ScrollView>
@@ -132,19 +142,19 @@ export default function ClientBusinessScreen() {
         closeModal={() => setModalVisible(false)}
         styles={{ backgroundColor: Colors.light.white }}
       >
-        {content === "details" && (
+        {content === "details" && data && (
           <ClientActions
-            mockBusiness={mockBusiness}
+            businessData={data}
             closeModal={() => setModalVisible(false)}
           />
         )}
       </FlexibleModal>
 
-      {showSubmit && (
+      {showSubmit && data && (
         <ClientBooking
           bookingData={bookingData}
           setBookingData={setBookingData}
-          mockBusiness={mockBusiness}
+          businessData={data}
         />
       )}
     </>

@@ -1,4 +1,6 @@
 import { ServiceTabs } from "@/components/core/bookings/serviceTabs";
+import { AboutBusiness } from "@/components/core/business/clientBusiness/about";
+import { BusinessMap } from "@/components/core/business/clientBusiness/businessMap";
 import { ItemImagesCarousel } from "@/components/core/business/clientBusiness/itemImgCarousel";
 import { StaffCard } from "@/components/core/business/clientBusiness/staffCard";
 import { BackButton } from "@/components/ui/backButton";
@@ -88,6 +90,18 @@ export default function BusinessItemScreen() {
             {staffMembers && staffMembers.length > 0 && (
               <StaffCard staff={staffMembers} preview />
             )}
+          </View>
+
+          <View>
+            <CustomText style={styles.itemHeader}>About</CustomText>
+            {data?.about && <AboutBusiness about={data?.about} />}
+          </View>
+
+          <View>
+            <BusinessMap
+              coordinates={data?.coordinates}
+              rating={data?.rating}
+            />
           </View>
         </InnerContainer>
       </ScrollView>

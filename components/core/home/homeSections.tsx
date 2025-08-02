@@ -1,6 +1,7 @@
 import CustomHeading from "@/components/ui/customHeading";
 import { Colors } from "@/constants/Colors";
-import { businessType } from "@/utils";
+import { BusinessData } from "@/types";
+import { getShortLocation } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
@@ -8,14 +9,14 @@ import { HomeCard } from "./homeCard";
 
 interface HomeSectionT {
   heading: string;
-  business: businessType[];
+  business: BusinessData[] | undefined;
 }
 
 export const HomeSection = ({ heading, business }: HomeSectionT) => {
   const router = useRouter();
 
-  const handlePress = () => {
-    router.push("/clientBusiness/[id]");
+  const handlePress = (id: string) => {
+    router.push({ pathname: "/clientBusiness/[id]", params: { id: id } });
   };
 
   return (
@@ -45,12 +46,12 @@ export const HomeSection = ({ heading, business }: HomeSectionT) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <Pressable onPress={handlePress}>
+          <Pressable onPress={() => handlePress(item.id)}>
             <HomeCard
               img={item.image}
               name={item.name}
               rating={item.rating}
-              distance={item.distance}
+              location={getShortLocation(item.coordinates.location)}
               tag={item.tag}
             />
           </Pressable>

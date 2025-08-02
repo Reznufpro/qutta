@@ -1,7 +1,7 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
 import { bookingData } from "@/context/bookingContext";
-import { fullBusinessT } from "@/utils";
+import { BusinessData } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import React, { useState } from "react";
@@ -15,7 +15,7 @@ import {
 } from "react-native";
 
 interface ServiceTabsProps {
-  services: fullBusinessT["services"];
+  services: BusinessData["services"];
   preview?: boolean;
   bookingData?: bookingData;
   setBookingData?: React.Dispatch<React.SetStateAction<bookingData>>;
@@ -74,7 +74,7 @@ export const ServiceTabs = ({
         }
 
         const newTotal = updatedServices.reduce(
-          (acc, curr) => acc + curr.price,
+          (acc, curr) => acc + Number(curr.price),
           0
         );
 

@@ -57,8 +57,9 @@ export default function BusinessScreen() {
                     subtitle={
                       <View style={styles.arrange}>
                         <CustomText style={styles.text}>
-                          {item.rating}
+                          {item.rating === 0 ? "New" : item.rating}
                         </CustomText>
+
                         <Ionicons
                           name="star"
                           size={14}

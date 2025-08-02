@@ -10,10 +10,10 @@ import { Dimensions, StyleSheet, View } from "react-native";
 const { width } = Dimensions.get("window");
 
 interface HomeCardT {
-  img: any;
+  img: string[];
   name: string;
   location?: string;
-  distance: string;
+  distance?: string | undefined;
   tag?: "Recommended" | "New" | "Popular" | "Open Now";
   rating?: number;
 }
@@ -23,16 +23,16 @@ export const HomeCard = ({
   name,
   rating = 4.5,
   distance = "3km away",
-  location = "San Pedro, Monterrey",
-  tag = "Recommended",
+  location,
+  tag,
 }: HomeCardT) => {
   return (
     <View style={styles.container}>
       <View style={styles.overlay} />
       <ImageBackground
-        source={img}
+        source={{ uri: img[0] }}
         style={styles.background}
-        placeholder={{ blurhash }}
+        placeholder={blurhash}
         imageStyle={{
           objectFit: "cover",
           borderRadius: 15,
@@ -42,72 +42,24 @@ export const HomeCard = ({
       >
         <View style={styles.innerCont}>
           <View style={styles.tag}>
-            <CustomText
-              style={[
-                styles.text,
-                {
-                  fontSize: 15,
-                  fontFamily: "CarosSoftBold",
-                  textAlign: "center",
-                },
-              ]}
-            >
+            <CustomText style={[styles.text, { textAlign: "center" }]}>
               {tag}
             </CustomText>
           </View>
 
           <View style={styles.bottomCont}>
             <View>
-              {rating && (
-                <View
-                  style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
-                >
-                  <CustomText
-                    style={[
-                      styles.text,
-                      {
-                        fontFamily: "CarosSoftLight",
-                        fontSize: 15,
-                        lineHeight: 24,
-                      },
-                    ]}
-                  >
-                    {rating}
-                  </CustomText>
-                  <Ionicons name="star" size={14} color={Colors.light.white} />
-                </View>
-              )}
-
-              {distance && (
-                <CustomText
-                  style={[
-                    styles.text,
-                    {
-                      color: Colors.light.muted,
-                      fontSize: 14,
-                      lineHeight: 20,
-                    },
-                  ]}
-                >
-                  {location} • {distance}
+              <View style={styles.tagContainer}>
+                <CustomText style={styles.ratingText}>
+                  {rating === 0 ? "New" : rating}
                 </CustomText>
-              )}
+                <Ionicons name="star" size={14} color={Colors.light.white} />
+              </View>
+
+              <CustomText style={styles.distanceText}>{location}</CustomText>
             </View>
 
-            {name && (
-              <CustomText
-                style={[
-                  styles.text,
-                  {
-                    fontFamily: "CormorantGaramond-Light",
-                    fontSize: 28,
-                    lineHeight: 30,
-                  },
-                ]}
-              >
-                {name}
-              </CustomText>
-            )}
+            <CustomText style={styles.nameText}>{name}</CustomText>
           </View>
         </View>
       </ImageBackground>
@@ -260,6 +212,11 @@ const styles = StyleSheet.create({
     width: 170,
     zIndex: 2,
   },
+  tagContainer: {
+    flexDirection: "row",
+    gap: 4,
+    alignItems: "center",
+  },
   tag: {
     borderRadius: 20,
     backgroundColor: "rgba(60, 60, 60, 0.25)",
@@ -274,7 +231,26 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.light.background,
-    fontSize: 12,
+    fontSize: 15,
+    fontFamily: "CarosSoftBold",
+  },
+  ratingText: {
+    color: Colors.light.white,
+    fontFamily: "CarosSoftBold",
+    fontSize: 15,
+    lineHeight: 24,
+  },
+  distanceText: {
+    color: Colors.light.muted,
+    fontFamily: "CarosSoftBold",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  nameText: {
+    color: Colors.light.white,
+    fontFamily: "CormorantGaramond-Light",
+    fontSize: 28,
+    lineHeight: 30,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,

@@ -1,5 +1,6 @@
 import {
   createBusiness,
+  getAllBusinesses,
   getBusinessById,
   getBusinessesByUserId,
 } from "@/utils";
@@ -24,5 +25,14 @@ export const useGetBusinessById = (id: string) => {
     queryKey: ["businessById", id],
     queryFn: () => getBusinessById(id),
     enabled: !!id,
+  });
+};
+
+export const useGetAllBusinessess = () => {
+  return useQuery({
+    queryKey: ["allBusinesses"],
+    queryFn: getAllBusinesses,
+    staleTime: 3600000, // Cache data for 1 hour
+    refetchOnWindowFocus: false,
   });
 };

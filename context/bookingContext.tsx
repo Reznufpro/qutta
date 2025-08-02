@@ -46,7 +46,7 @@ export const initialBookingData: bookingData = {
     rating: 0,
     image: "",
   },
-  total: null,
+  total: 0,
 };
 
 interface BookingContextType {

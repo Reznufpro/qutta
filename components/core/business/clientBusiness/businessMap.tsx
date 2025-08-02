@@ -6,7 +6,7 @@ import MapView, { Marker } from "react-native-maps";
 
 interface BusinessMapProps {
   coordinates: fullBusinessT["coordinates"];
-  rating: number;
+  rating: number | undefined;
 }
 
 export const BusinessMap = ({ coordinates, rating }: BusinessMapProps) => {
@@ -49,7 +49,11 @@ export const BusinessMap = ({ coordinates, rating }: BusinessMapProps) => {
           }}
         >
           <View style={styles.ratingPin}>
-            <CustomText style={styles.ratingText}>{rating} ★</CustomText>
+            {rating === 0 ? (
+              <CustomText style={styles.ratingText}>New ★</CustomText>
+            ) : (
+              <CustomText style={styles.ratingText}>{rating} ★</CustomText>
+            )}
           </View>
         </Marker>
       </MapView>

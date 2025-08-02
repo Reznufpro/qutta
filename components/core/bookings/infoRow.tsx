@@ -65,7 +65,7 @@ export const InfoRow = ({
   materialicon?: keyof typeof MaterialIcons.glyphMap;
   ionicon?: keyof typeof Ionicons.glyphMap;
   title: string;
-  subtitle?: string;
+  subtitle?: string | null | undefined;
   index: number;
   item: itemDetails[];
   iconColor?: string;

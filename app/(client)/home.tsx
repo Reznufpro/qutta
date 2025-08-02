@@ -2,10 +2,13 @@ import { HeroCardBig } from "@/components/core/home/homeCard";
 import { HomeSection } from "@/components/core/home/homeSections";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
-import { featuredBusinesses, marketingHome } from "@/utils";
+import { useGetAllBusinessess } from "@/hooks/useCreateBusiness";
+import { marketingHome } from "@/utils";
 import { Platform, ScrollView, StyleSheet } from "react-native";
 
 export default function HomeScreen() {
+  const { data: featuredBusinesses } = useGetAllBusinessess();
+
   return (
     <ScreenContainer>
       <Header headerTitle="Home" style={{ marginBottom: 12 }} />
