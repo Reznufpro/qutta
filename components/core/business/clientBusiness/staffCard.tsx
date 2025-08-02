@@ -69,7 +69,9 @@ export const StaffCard = ({
           )}
 
           <View style={styles.rating}>
-            <CustomText style={styles.ratingText}>{item.rating}</CustomText>
+            <CustomText style={styles.ratingText}>
+              {item.rating === 0 ? "5" : item.rating}
+            </CustomText>
             <Ionicons name="star" color={Colors.light.black} />
           </View>
         </Pressable>

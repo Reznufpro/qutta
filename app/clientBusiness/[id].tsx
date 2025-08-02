@@ -1,4 +1,5 @@
 import { ServiceTabs } from "@/components/core/bookings/serviceTabs";
+import { BusinessLocation } from "@/components/core/business/businessLocation";
 import { ClientActions } from "@/components/core/business/clientActions";
 import { ClientBooking } from "@/components/core/business/clientBooking";
 import { AboutBusiness } from "@/components/core/business/clientBusiness/about";
@@ -12,6 +13,11 @@ import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
 import { useBooking } from "@/context/bookingContext";
 import { useGetBusinessById } from "@/hooks/useCreateBusiness";
+import {
+  useAddFavorite,
+  useFavorites,
+  useRemoveFavorite,
+} from "@/hooks/useFavorite";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
@@ -36,6 +42,22 @@ export default function ClientBusinessScreen() {
   const openModal = (content: string) => {
     setModalVisible(true);
     setContent(content);
+  };
+
+  const { data: favorites } = useFavorites();
+  const addFavorite = useAddFavorite();
+  const removeFavorite = useRemoveFavorite();
+
+  const isFavorited = data && favorites?.some((fav) => fav.id === data.id);
+
+  const toggleFavorite = () => {
+    if (addFavorite.isPending || removeFavorite.isPending || !data) return;
+
+    if (isFavorited) {
+      removeFavorite.mutate(data.id);
+    } else {
+      addFavorite.mutate(data.id);
+    }
   };
 
   const [open, setOpen] = useState(false);
@@ -85,7 +107,10 @@ export default function ClientBusinessScreen() {
                   openModal("details");
                 }}
               >
-                <CustomText style={styles.itemText}>2.6km</CustomText>
+                {data?.coordinates && (
+                  <BusinessLocation businessCoordinates={data?.coordinates} />
+                )}
+
                 <Ionicons
                   name="chevron-forward-outline"
                   color={Colors.light.textSecondary}
@@ -145,6 +170,8 @@ export default function ClientBusinessScreen() {
         {content === "details" && data && (
           <ClientActions
             businessData={data}
+            isFavorited={isFavorited}
+            toggleFavorite={toggleFavorite}
             closeModal={() => setModalVisible(false)}
           />
         )}
@@ -201,11 +228,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 4,
   },
-  itemText: {
-    fontFamily: "CarosSoftMedium",
-    color: Colors.light.textSecondary,
-    fontSize: 15,
-  },
+
   itemHeader: {
     fontSize: 20,
     fontFamily: "Satoshi-Bold",

@@ -1,4 +1,5 @@
 import { InnerContainer } from "@/components/ui/innerContainer";
+import { Colors } from "@/constants/Colors";
 import { BusinessData } from "@/types";
 import { handleDirections } from "@/utils";
 import { MotiView } from "moti";
@@ -7,12 +8,16 @@ import { businessCards, InfoRow } from "../bookings/infoRow";
 
 interface ClientActionsProps {
   closeModal: () => void;
+  toggleFavorite: () => void;
+  isFavorited: boolean | undefined;
   businessData: BusinessData;
 }
 
 export const ClientActions = ({
   closeModal,
+  isFavorited,
   businessData,
+  toggleFavorite,
 }: ClientActionsProps) => {
   return (
     <InnerContainer style={{ paddingBottom: 20 }}>
@@ -36,21 +41,36 @@ export const ClientActions = ({
                 type: "timing",
                 duration: 300,
               }}
-              key={item.title}
+              key={`${item.title}-${index}`}
             >
               <InfoRow
                 materialicon={item.materialicon}
-                ionicon={item.ionicon}
-                title={item.title}
+                ionicon={
+                  item.favorite
+                    ? isFavorited
+                      ? "heart"
+                      : "heart-outline"
+                    : item.ionicon
+                }
+                title={
+                  item.favorite
+                    ? isFavorited
+                      ? "Remove from favorite"
+                      : "Add to favorite"
+                    : item.title
+                }
                 subtitle={subtitleItem}
                 index={index}
                 item={businessCards}
+                iconColor={
+                  item.favorite && isFavorited ? "red" : Colors.light.highlight
+                }
                 onPress={() => {
                   if (item.link)
                     handleDirections({
                       location: businessData.coordinates?.location,
                     });
-                  else if (item.favorite) console.log("favorited");
+                  else if (item.favorite) toggleFavorite();
                   else if (item.calendar) console.log("calendar");
                 }}
               />

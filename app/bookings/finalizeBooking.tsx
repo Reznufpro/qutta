@@ -35,7 +35,7 @@ export default function FinalizeBookingScreen() {
           text: "Yes, Cancel",
           onPress: () => {
             resetBookingData();
-            router.push("/(client)/home");
+            router.back();
           },
           style: "destructive",
         },
@@ -75,11 +75,13 @@ export default function FinalizeBookingScreen() {
             </CustomText>
 
             <View style={[styles.itemsContainer, { paddingVertical: 2 }]}>
-              <CustomText>{business.rating}</CustomText>
+              <CustomText>
+                {business.rating === 0 ? "New" : business.rating}
+              </CustomText>
               <Ionicons name="star" size={14} color={Colors.light.black} />
             </View>
 
-            {business.coordinates?.location && (
+            {business.coordinates && (
               <CustomText style={styles.addressText}>
                 {trimTextToOneLine(business.coordinates?.location, 40)}
               </CustomText>
@@ -113,14 +115,12 @@ export default function FinalizeBookingScreen() {
                   </CustomText>
                 )}
 
-                {staff.rating && staff.rating > 0 && (
-                  <View style={styles.rating}>
-                    <CustomText style={styles.ratingText}>
-                      {staff?.rating}
-                    </CustomText>
-                    <Ionicons name="star" color={Colors.light.black} />
-                  </View>
-                )}
+                <View style={styles.rating}>
+                  <CustomText style={styles.ratingText}>
+                    {staff?.rating === 0 ? "5" : staff.rating}
+                  </CustomText>
+                  <Ionicons name="star" color={Colors.light.black} />
+                </View>
               </View>
 
               <View style={{ paddingTop: 10 }}>

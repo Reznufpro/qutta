@@ -1,21 +1,23 @@
-import { HeroCardBig } from "@/components/core/home/homeCard";
+import { BusinessCard } from "@/components/core/business/businessCard";
 import CustomHeading from "@/components/ui/customHeading";
 import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
-import { featuredBusinesses } from "@/utils";
+import { useFavorites } from "@/hooks/useFavorite";
+import { getShortLocation } from "@/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 export default function FavoritesScreen() {
   const router = useRouter();
+  const { data: favorites, isLoading } = useFavorites();
 
   const handleGetStarted = () => router.push("/(client)/home");
 
-  const handlePress = () => {
-    router.push("/clientBusiness/[id]");
+  const handlePress = (id: string) => {
+    router.push({ pathname: "/clientBusiness/[id]", params: { id: id } });
   };
 
   return (
@@ -26,46 +28,56 @@ export default function FavoritesScreen() {
         style={{ marginBottom: 12 }}
       />
 
-      <FlatList
-        data={featuredBusinesses}
-        keyExtractor={(item) => item.id}
-        scrollEnabled
-        horizontal={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <Pressable onPress={handlePress}>
-            <HeroCardBig
-              img={item.image}
-              title={item.name}
-              subtitle={
-                <View
-                  style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
-                >
-                  <CustomText style={styles.text}>{item.rating}</CustomText>
-                  <Ionicons name="star" size={14} color={Colors.light.white} />
-                </View>
-              }
-              extra={`${item.coordinates?.location} • ${item.distance}`}
-              style={{ marginBottom: 0, paddingTop: 0 }}
-            />
-          </Pressable>
-        )}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <CustomHeading style={styles.headin}>No favorites</CustomHeading>
+      {favorites && favorites.length > 0 && (
+        <FlatList
+          data={favorites}
+          keyExtractor={(item) => item.id}
+          scrollEnabled
+          horizontal={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => {
+            return (
+              <Pressable onPress={() => handlePress(item.id)}>
+                <BusinessCard
+                  img={item.image}
+                  title={item.name}
+                  extra={`${getShortLocation(item.coordinates?.location)}`}
+                  subtitle={
+                    <View style={styles.arrange}>
+                      <CustomText style={styles.text}>
+                        {item.rating === 0 ? "New" : item.rating}
+                      </CustomText>
 
-            <CustomText style={styles.emptyText}>
-              Your favorites are empty, Explore businesses and save some. They
-              will appear here.
-            </CustomText>
+                      <Ionicons
+                        name="star"
+                        size={14}
+                        color={Colors.light.white}
+                      />
+                    </View>
+                  }
+                  tag={<View></View>}
+                />
+              </Pressable>
+            );
+          }}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <CustomHeading style={styles.headin}>
+                You have no businesses yet
+              </CustomHeading>
 
-            <Pressable style={styles.button} onPress={handleGetStarted}>
-              <CustomText style={styles.buttonText}>Get started</CustomText>
-            </Pressable>
-          </View>
-        }
-      />
+              <CustomText style={styles.emptyText}>
+                Your businesses will show here once you create one.
+              </CustomText>
+
+              <Pressable style={styles.button} onPress={handleGetStarted}>
+                <CustomText style={styles.buttonText}>Get started</CustomText>
+              </Pressable>
+            </View>
+          }
+        />
+      )}
     </ScreenContainer>
   );
 }
@@ -93,6 +105,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textTransform: "capitalize",
     color: Colors.light.black,
+  },
+  arrange: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   emptyText: {
     fontFamily: "Satoshi-Bold",

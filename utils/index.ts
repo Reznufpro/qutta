@@ -1,6 +1,7 @@
 export * from "./api/auth";
 export * from "./api/business";
 export * from "./api/mapbox";
+export * from "./calculateDistance";
 export * from "./formats";
 export * from "./getIcon";
 export * from "./intro";

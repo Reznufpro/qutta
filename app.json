@@ -42,6 +42,12 @@
         }
       ],
       [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Qutta uses your location to show nearby business and to calculate and show business distance from current location."
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "Qutta accesses your photos to let you share them with your clients."

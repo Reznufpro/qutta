@@ -54,6 +54,7 @@ export const otherStatus: itemDetails[] = [
 
 export const InfoRow = ({
   materialicon,
+  isFavorited,
   iconColor,
   ionicon,
   onPress,
@@ -70,6 +71,7 @@ export const InfoRow = ({
   item: itemDetails[];
   iconColor?: string;
   onPress?: () => void;
+  isFavorited?: boolean | undefined;
 }) => (
   <Pressable
     style={({ pressed }) => [styles.container, pressed && { opacity: 0.5 }]}
@@ -102,7 +104,7 @@ export const InfoRow = ({
       </View>
     </View>
 
-    {index === item.length - 1 ? "" : <CustomDivider style={styles.divider} />}
+    {index < item.length - 1 && <CustomDivider style={styles.divider} />}
   </Pressable>
 );
 
