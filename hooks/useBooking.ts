@@ -4,6 +4,7 @@ import {
   createBooking,
   getBookingById,
   getClientBookings,
+  getClientList,
   getOwnerBookings,
 } from "@/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,6 +58,16 @@ export const useGetOwnerBookings = () => {
   return useQuery({
     queryKey: ["getOwnerBookings"],
     queryFn: getOwnerBookings,
+    staleTime: 3600000,
+    refetchOnWindowFocus: false,
+  });
+};
+
+export const useGetClientList = (businessId: string) => {
+  return useQuery({
+    queryKey: ["getClientList", businessId],
+    queryFn: () => getClientList(businessId),
+    enabled: !!businessId,
     staleTime: 3600000,
     refetchOnWindowFocus: false,
   });

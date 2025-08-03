@@ -1,3 +1,4 @@
+import { AppVersion } from "@/components/core/profile/settings/appVersion";
 import { BackButton } from "@/components/ui/backButton";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
@@ -14,6 +15,8 @@ export default function ProfileScreen() {
         headerTitle="Profile"
         style={{ marginTop: 12, marginBottom: 18 }}
       />
+
+      <AppVersion />
     </ScreenContainer>
   );
 }

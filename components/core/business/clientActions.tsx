@@ -1,7 +1,7 @@
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
 import { AvailabilityEntry, BusinessData } from "@/types";
-import { getTodaySchedule, handleDirections } from "@/utils";
+import { getTodaySchedule, handleCallNumber, handleDirections } from "@/utils";
 import { MotiView } from "moti";
 import { FlatList } from "react-native";
 import { businessCards, InfoRow } from "../bookings/infoRow";
@@ -75,8 +75,8 @@ export const ClientActions = ({
                       location: businessData.coordinates?.location,
                     });
                   else if (item.favorite) toggleFavorite();
-                  else if (item.call) console.log("call");
-                  else if (item.calendar) console.log("calendar");
+                  else if (item.call)
+                    handleCallNumber(businessData.phone_number);
                 }}
               />
             </MotiView>

@@ -14,7 +14,12 @@ import {
   useRemoveFavorite,
 } from "@/hooks/useFavorite";
 import { BookingReturnType } from "@/types";
-import { capitalize, handleDirections } from "@/utils";
+import {
+  addToCalendar,
+  capitalize,
+  handleCallNumber,
+  handleDirections,
+} from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
@@ -159,8 +164,14 @@ export default function BookingsItemScreen() {
                               location: business.coordinates?.location,
                             });
                           else if (item.favorite) toggleFavorite();
-                          else if (item.call) console.log("call");
-                          else if (item.calendar) console.log("calendar");
+                          else if (item.call)
+                            handleCallNumber(business.phone_number);
+                          else if (item.calendar)
+                            addToCalendar(
+                              business.name,
+                              dateTime,
+                              business.coordinates?.location
+                            );
                         }}
                       />
                     </MotiView>

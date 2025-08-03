@@ -1,7 +1,7 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
 import { BookingReturnType } from "@/types";
-import { capitalize, handleDirections } from "@/utils";
+import { addToCalendar, capitalize, handleDirections } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -14,8 +14,6 @@ interface Props {
 
 export const ClientBookingCard = ({ booking }: Props) => {
   const router = useRouter();
-
-  const handleCalendar = () => {};
 
   const handlePress = () => {
     router.push({
@@ -86,7 +84,16 @@ export const ClientBookingCard = ({ booking }: Props) => {
               <CustomText style={styles.buttonText}>Directions</CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={handleCalendar} style={styles.button}>
+            <TouchableOpacity
+              onPress={() =>
+                addToCalendar(
+                  booking.business.name,
+                  booking.dateTime,
+                  booking.business.coordinates?.location
+                )
+              }
+              style={styles.button}
+            >
               <Ionicons
                 name="calendar-outline"
                 size={16}

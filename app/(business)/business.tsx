@@ -39,61 +39,59 @@ export default function BusinessScreen() {
           </Pressable>
         </Header>
 
-        {business && business.length > 0 && (
-          <FlatList
-            data={business}
-            keyExtractor={(item) => item.id}
-            scrollEnabled
-            horizontal={false}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.listContent}
-            renderItem={({ item }) => {
-              return (
-                <Pressable onPress={() => handlePress(item.id)}>
-                  <BusinessCard
-                    img={item.image}
-                    title={item.name}
-                    extra={`${getShortLocation(item.coordinates?.location)}`}
-                    subtitle={
-                      <View style={styles.arrange}>
-                        <CustomText style={styles.text}>
-                          {item.rating === 0 ? "New" : item.rating}
-                        </CustomText>
+        <FlatList
+          data={business}
+          keyExtractor={(item) => item.id}
+          scrollEnabled
+          horizontal={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContent}
+          renderItem={({ item }) => {
+            return (
+              <Pressable onPress={() => handlePress(item.id)}>
+                <BusinessCard
+                  img={item.image}
+                  title={item.name}
+                  extra={`${getShortLocation(item.coordinates?.location)}`}
+                  subtitle={
+                    <View style={styles.arrange}>
+                      <CustomText style={styles.text}>
+                        {item.rating === 0 ? "New" : item.rating}
+                      </CustomText>
 
-                        <Ionicons
-                          name="star"
-                          size={14}
-                          color={Colors.light.white}
-                        />
-                      </View>
-                    }
-                    tag={
-                      <View style={styles.tag}>
-                        <Ionicons name="ellipse" size={12} color="#12FF80" />
-                        <CustomText style={styles.tagText}>Live</CustomText>
-                      </View>
-                    }
-                  />
-                </Pressable>
-              );
-            }}
-            ListEmptyComponent={
-              <View style={styles.emptyContainer}>
-                <CustomHeading style={styles.headin}>
-                  You have no businesses yet
-                </CustomHeading>
+                      <Ionicons
+                        name="star"
+                        size={14}
+                        color={Colors.light.white}
+                      />
+                    </View>
+                  }
+                  tag={
+                    <View style={styles.tag}>
+                      <Ionicons name="ellipse" size={12} color="#12FF80" />
+                      <CustomText style={styles.tagText}>Live</CustomText>
+                    </View>
+                  }
+                />
+              </Pressable>
+            );
+          }}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <CustomHeading style={styles.headin}>
+                You have no businesses yet
+              </CustomHeading>
 
-                <CustomText style={styles.emptyText}>
-                  Your businesses will show here once you create one.
-                </CustomText>
+              <CustomText style={styles.emptyText}>
+                Your businesses will show here once you create one.
+              </CustomText>
 
-                <Pressable style={styles.button} onPress={handleGetStarted}>
-                  <CustomText style={styles.buttonText}>Get started</CustomText>
-                </Pressable>
-              </View>
-            }
-          />
-        )}
+              <Pressable style={styles.button} onPress={handleGetStarted}>
+                <CustomText style={styles.buttonText}>Get started</CustomText>
+              </Pressable>
+            </View>
+          }
+        />
       </InnerContainer>
     </SafeAreaView>
   );

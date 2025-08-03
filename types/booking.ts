@@ -50,3 +50,14 @@ export interface OwnerBookingReturnType {
     image?: any;
   };
 }
+
+export interface clientList {
+  clients?: ClientsEntity[] | null;
+}
+
+export interface ClientsEntity {
+  email: string;
+  id: string;
+  lastName: string;
+  name: string;
+}

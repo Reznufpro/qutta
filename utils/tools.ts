@@ -1,5 +1,5 @@
 import * as Calendar from "expo-calendar";
-import { Linking } from "react-native";
+import { Alert, Linking } from "react-native";
 
 interface handleDirectionsProps {
   location: string | undefined;
@@ -14,7 +14,11 @@ export const handleDirections = ({ location }: handleDirectionsProps) => {
   }
 };
 
-export const addToCalendar = async (title: string, dueDate: Date) => {
+export const addToCalendar = async (
+  title: string,
+  dueDate: string,
+  location: string | undefined
+) => {
   const { status } = await Calendar.requestCalendarPermissionsAsync();
   if (status !== "granted") {
     throw new Error("Calendar permission not granted");
@@ -34,10 +38,45 @@ export const addToCalendar = async (title: string, dueDate: Date) => {
   const calendarId = defaultCalendar.id;
 
   await Calendar.createEventAsync(calendarId, {
-    title: `Return item: ${title}`,
+    title: `Appointment at: ${title}`,
     startDate: dueDate,
-    endDate: new Date(dueDate.getTime() + 30 * 60 * 1000),
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    notes: "Your appointment is set",
+    location: location,
+    notes: `Your appointment is at: ${location}`,
   });
+};
+
+export const handleOpenEmail = async (email: string) => {
+  const url = `mailto:${email}`;
+
+  try {
+    const canOpen = await Linking.canOpenURL(url);
+    if (canOpen) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert("Unable to open email app.");
+    }
+  } catch (error) {
+    console.error("Error opening email link:", error);
+    Alert.alert("Something went wrong when trying to open your email app.");
+  }
+};
+
+export const handleCallNumber = async (phoneNumber: string) => {
+  const url = `tel:${phoneNumber}`;
+
+  try {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(
+        "Unable to initiate call",
+        "Phone call not supported on this device."
+      );
+    }
+  } catch (error) {
+    console.error("Error trying to make a call:", error);
+    Alert.alert("Something went wrong while trying to place the call.");
+  }
 };

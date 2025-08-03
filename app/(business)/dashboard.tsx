@@ -1,19 +1,16 @@
 import { BookedCard } from "@/components/core/business/bookedCard";
+import CustomHeading from "@/components/ui/customHeading";
 import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
 import { useUserData } from "@/context/userContext";
-import { useLogout } from "@/hooks/useAuth";
 import { useCancelBooking, useGetOwnerBookings } from "@/hooks/useBooking";
-import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export default function DashboardScreen() {
   const { userData } = useUserData();
-  const { logout } = useLogout();
-  const router = useRouter();
 
   const { data: ownerBookings } = useGetOwnerBookings();
 
@@ -21,7 +18,7 @@ export default function DashboardScreen() {
     mutateAsync: cancelBooking,
     isSuccess,
     error,
-    isPending,
+    isPending: cancelPending,
   } = useCancelBooking();
 
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -33,13 +30,13 @@ export default function DashboardScreen() {
         style={{ marginBottom: 12 }}
       />
 
+      <CustomText style={styles.text}>Your bookings</CustomText>
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ marginTop: 30, gap: 12 }}>
-          <CustomText style={styles.text}>Your bookings</CustomText>
-
+        <View style={{ marginTop: 15, gap: 12 }}>
           <FlatList
             scrollEnabled={false}
             horizontal={false}
@@ -50,11 +47,23 @@ export default function DashboardScreen() {
               <BookedCard
                 item={item}
                 index={index}
+                cancelPending={cancelPending}
                 expandedId={expandedId}
                 setExpandedId={setExpandedId}
                 cancel={() => cancelBooking(item.id)}
               />
             )}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <CustomHeading style={styles.headin}>
+                  You have no bookings yet
+                </CustomHeading>
+
+                <CustomText style={styles.emptyText}>
+                  Once a client has booked, they will appear here!
+                </CustomText>
+              </View>
+            }
           />
         </View>
       </ScrollView>
@@ -74,5 +83,27 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.light.black,
     fontFamily: "CarosSoftBold",
+  },
+  emptyContainer: {
+    flexDirection: "column",
+    gap: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 150,
+  },
+  headin: {
+    fontFamily: "CarosSoftBold",
+    textAlign: "center",
+    fontSize: 18,
+    textTransform: "none",
+    color: Colors.light.black,
+  },
+  emptyText: {
+    fontFamily: "Satoshi-Bold",
+    fontSize: 14,
+    marginBottom: 16,
+    textAlign: "center",
+    color: Colors.light.textSecondary,
+    maxWidth: 350,
   },
 });

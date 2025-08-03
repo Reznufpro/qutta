@@ -25,6 +25,7 @@ if (
 interface BookedCardProps {
   item: OwnerBookingReturnType;
   index: number;
+  cancelPending: boolean;
   expandedId: number | null;
   setExpandedId: React.Dispatch<React.SetStateAction<number | null>>;
   cancel: () => void;
@@ -35,6 +36,7 @@ export const BookedCard = ({
   index,
   expandedId,
   setExpandedId,
+  cancelPending,
   cancel,
 }: BookedCardProps) => {
   const isExpanded = expandedId === index;
@@ -149,7 +151,7 @@ export const BookedCard = ({
             }}
           >
             <CustomText style={styles.buttonText}>
-              Cancel appointment
+              {cancelPending ? "Canceling..." : "Cancel appointment"}
             </CustomText>
           </Pressable>
         </View>

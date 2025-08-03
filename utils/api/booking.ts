@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/constants";
 import { bookingData } from "@/context/bookingContext";
-import { BookingReturnType, OwnerBookingReturnType } from "@/types";
+import { BookingReturnType, clientList, OwnerBookingReturnType } from "@/types";
 import { getAuthHeaders } from "./auth";
 
 export const createBooking = async (bookingData: bookingData) => {
@@ -97,4 +97,21 @@ export const cancelBooking = async (bookingId: string) => {
   }
 
   return res.json();
+};
+
+export const getClientList = async (businessId: string) => {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${BASE_URL}booking/clients/${businessId}`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch client list");
+  }
+
+  const response: clientList = await res.json();
+
+  return response;
 };
