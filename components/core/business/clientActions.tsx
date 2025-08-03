@@ -1,7 +1,7 @@
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
-import { BusinessData } from "@/types";
-import { handleDirections } from "@/utils";
+import { AvailabilityEntry, BusinessData } from "@/types";
+import { getTodaySchedule, handleDirections } from "@/utils";
 import { MotiView } from "moti";
 import { FlatList } from "react-native";
 import { businessCards, InfoRow } from "../bookings/infoRow";
@@ -11,11 +11,13 @@ interface ClientActionsProps {
   toggleFavorite: () => void;
   isFavorited: boolean | undefined;
   businessData: BusinessData;
+  availability: AvailabilityEntry[];
 }
 
 export const ClientActions = ({
   closeModal,
   isFavorited,
+  availability,
   businessData,
   toggleFavorite,
 }: ClientActionsProps) => {
@@ -28,8 +30,8 @@ export const ClientActions = ({
           const subtitleItem =
             item.title === "Getting there"
               ? businessData.coordinates?.location
-              : item.title === "Open until"
-              ? businessData.closeTime
+              : item.title === "Opening hours"
+              ? getTodaySchedule(availability)
               : item.subtitle;
 
           return (

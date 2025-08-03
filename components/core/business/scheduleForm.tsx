@@ -1,6 +1,5 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
-import { useSelectedBusiness } from "@/context/selectedBusinessContext";
 import {
   useAvailability,
   useUpsertAvailability,
@@ -57,8 +56,11 @@ const defaultSchedule: Record<string, AvailabilityEntry> = {
 
 const DAYS = Object.keys(defaultSchedule);
 
-export const ScheduleForm = () => {
-  const { selectedBusinessId } = useSelectedBusiness();
+interface ScheduleFormProps {
+  selectedBusinessId: string | null;
+}
+
+export const ScheduleForm = ({ selectedBusinessId }: ScheduleFormProps) => {
   const { data, isLoading } = useAvailability(selectedBusinessId);
   const { mutateAsync: saveAvailability, isPending } = useUpsertAvailability(
     selectedBusinessId!
@@ -94,10 +96,8 @@ export const ScheduleForm = () => {
     }
   };
 
-  if (isLoading) return null;
-
   const disabled = useMemo(() => {
-    return isPending || !selectedBusinessId;
+    return isPending || !selectedBusinessId || isLoading;
   }, [isPending, !selectedBusinessId]);
 
   return (

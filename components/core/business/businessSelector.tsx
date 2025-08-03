@@ -1,6 +1,5 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
-import { useSelectedBusiness } from "@/context/selectedBusinessContext";
 import { BusinessData } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
@@ -8,11 +7,15 @@ import { Dropdown } from "react-native-element-dropdown";
 
 interface BusinessSelectorProps {
   businesses: BusinessData[];
+  selectedBusinessId: string | null;
+  setSelectedBusinessId: (id: string | null) => void;
 }
 
-export const BusinessSelector = ({ businesses }: BusinessSelectorProps) => {
-  const { selectedBusinessId, setSelectedBusinessId } = useSelectedBusiness();
-
+export const BusinessSelector = ({
+  businesses,
+  selectedBusinessId,
+  setSelectedBusinessId,
+}: BusinessSelectorProps) => {
   const dropdownData = businesses.map((b) => ({
     label: b.name,
     value: b.id,

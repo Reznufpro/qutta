@@ -35,7 +35,7 @@ export default function FinalizeBookingScreen() {
           text: "Yes, Cancel",
           onPress: () => {
             resetBookingData();
-            router.back();
+            router.push("/(client)/home");
           },
           style: "destructive",
         },
@@ -45,8 +45,9 @@ export default function FinalizeBookingScreen() {
 
   const handleNext = () => {
     try {
+      console.log(bookingData);
       // perform api request here
-      router.push("/bookings/success");
+      // router.push("/bookings/success");
     } catch (error) {
       console.log("Error", error);
     }
@@ -54,98 +55,101 @@ export default function FinalizeBookingScreen() {
 
   return (
     <>
-      <ScreenContainer>
+      <ScreenContainer innerStyle={{ paddingBottom: 0 }}>
         <View style={styles.iconRow}>
           <BackButton />
         </View>
 
-        <Header
-          headerTitle="Review and finalize"
-          style={{ marginBottom: 12 }}
-        />
+        <View>
+          <Header
+            headerTitle="Review and finalize"
+            style={{ marginBottom: 12 }}
+          />
 
-        <View style={styles.businessInfo}>
-          <View style={styles.imageContainer}>
-            <Image source={business.image[0]} style={styles.image} />
-          </View>
-
-          <View style={{ flex: 1 }}>
-            <CustomText style={styles.businessTitle}>
-              {business.name}
-            </CustomText>
-
-            <View style={[styles.itemsContainer, { paddingVertical: 2 }]}>
-              <CustomText>
-                {business.rating === 0 ? "New" : business.rating}
-              </CustomText>
-              <Ionicons name="star" size={14} color={Colors.light.black} />
+          <View style={styles.businessInfo}>
+            <View style={styles.imageContainer}>
+              <Image source={business.image[0]} style={styles.image} />
             </View>
 
-            {business.coordinates && (
-              <CustomText style={styles.addressText}>
-                {trimTextToOneLine(business.coordinates?.location, 40)}
+            <View style={{ flex: 1 }}>
+              <CustomText style={styles.businessTitle}>
+                {business.name}
               </CustomText>
-            )}
-          </View>
-        </View>
 
-        <View style={{ flexDirection: "column", gap: 12 }}>
+              <View style={[styles.itemsContainer, { paddingVertical: 2 }]}>
+                <CustomText>
+                  {business.rating === 0 ? "New" : business.rating}
+                </CustomText>
+                <Ionicons name="star" size={14} color={Colors.light.black} />
+              </View>
+
+              {business.coordinates && (
+                <CustomText style={styles.addressText}>
+                  {trimTextToOneLine(business.coordinates?.location, 40)}
+                </CustomText>
+              )}
+            </View>
+          </View>
+
           <View style={styles.timeContainer}>
             <Ionicons name="calendar-outline" size={16} />
-            <CustomText style={styles.addressText}>Thu, 31 Jul 2025</CustomText>
+            <CustomText style={[styles.addressText, { textTransform: "none" }]}>
+              {bookingData.dateTime}
+            </CustomText>
           </View>
 
-          <View style={styles.timeContainer}>
-            <Ionicons name="time-outline" size={16} />
-            <CustomText style={styles.addressText}>10:20 pm</CustomText>
-          </View>
-        </View>
+          {staff?.id && (
+            <View style={{ paddingVertical: 16 }}>
+              <CustomText style={styles.sectionTitle}>
+                Selected Staff
+              </CustomText>
 
-        {staff?.id && (
-          <View style={{ paddingVertical: 16 }}>
-            <CustomText style={styles.sectionTitle}>Selected Staff</CustomText>
+              <View style={styles.itemContainer}>
+                <View style={styles.avatar}>
+                  {staff?.image ? (
+                    <Image source={staff?.image} style={styles.avatarImg} />
+                  ) : (
+                    <CustomText style={styles.avatarText}>
+                      {getInitials(staff?.name || "")}
+                    </CustomText>
+                  )}
 
-            <View style={styles.itemContainer}>
-              <View style={styles.avatar}>
-                {staff?.image ? (
-                  <Image source={staff?.image} style={styles.avatarImg} />
-                ) : (
-                  <CustomText style={styles.avatarText}>
-                    {getInitials(staff?.name || "")}
+                  <View style={styles.rating}>
+                    <CustomText style={styles.ratingText}>
+                      {staff?.rating === 0 ? "5" : staff.rating}
+                    </CustomText>
+                    <Ionicons name="star" color={Colors.light.black} />
+                  </View>
+                </View>
+
+                <View style={{ paddingTop: 10 }}>
+                  <CustomText style={styles.staffText}>
+                    {staff?.name}
                   </CustomText>
-                )}
-
-                <View style={styles.rating}>
-                  <CustomText style={styles.ratingText}>
-                    {staff?.rating === 0 ? "5" : staff.rating}
-                  </CustomText>
-                  <Ionicons name="star" color={Colors.light.black} />
                 </View>
               </View>
-
-              <View style={{ paddingTop: 10 }}>
-                <CustomText style={styles.staffText}>{staff?.name}</CustomText>
-              </View>
             </View>
-          </View>
-        )}
+          )}
 
-        <View style={{ paddingVertical: 16, gap: 12 }}>
-          <CustomText style={styles.sectionTitle}>Overview</CustomText>
+          <View style={{ paddingVertical: 16, gap: 12 }}>
+            <CustomText style={styles.sectionTitle}>Overview</CustomText>
 
-          <View>
-            {service?.map((s) => (
-              <ServiceSummary
-                key={`${s.title}-${s.price}`}
-                serviceTitle={s.title}
-                price={s.price.toString()}
-              />
-            ))}
-          </View>
+            <View>
+              {service.map((s) => {
+                return (
+                  <ServiceSummary
+                    key={`${s.title}-${s.price}}`}
+                    serviceTitle={s.title}
+                    price={s.price.toString()}
+                  />
+                );
+              })}
+            </View>
 
-          <View style={styles.totalSection}>
-            <CustomText style={styles.totalLabel}>Total</CustomText>
-            <CustomText style={styles.totalLabel}>MX${total}</CustomText>
+            <View style={styles.totalSection}>
+              <CustomText style={styles.totalLabel}>Total</CustomText>
+              <CustomText style={styles.totalLabel}>MX${total}</CustomText>
+            </View>
           </View>
         </View>
       </ScreenContainer>
@@ -270,5 +274,24 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 16,
     fontFamily: "CarosSoftBold",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: Colors.light.muted,
+    borderRadius: 5,
+    padding: 12,
+    fontSize: 16,
+    height: 55.5,
+    backgroundColor: "#fafafa",
+  },
+  focusedInput: {
+    borderColor: "#000",
+    borderWidth: 2,
+    borderRadius: 4,
+  },
+  textArea: {
+    height: 150,
+    textAlignVertical: "top",
+    borderRadius: 5,
   },
 });

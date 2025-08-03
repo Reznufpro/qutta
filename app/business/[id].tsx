@@ -1,4 +1,5 @@
 import { ServiceTabs } from "@/components/core/bookings/serviceTabs";
+import { AvailabilityView } from "@/components/core/business/availabilityView";
 import { AboutBusiness } from "@/components/core/business/clientBusiness/about";
 import { BusinessMap } from "@/components/core/business/clientBusiness/businessMap";
 import { ItemImagesCarousel } from "@/components/core/business/clientBusiness/itemImgCarousel";
@@ -7,6 +8,7 @@ import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
+import { useAvailability } from "@/hooks/useBusinessAvailability";
 import { useGetBusinessById } from "@/hooks/useCreateBusiness";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -24,6 +26,7 @@ const { height } = Dimensions.get("window");
 export default function BusinessItemScreen() {
   const { id } = useLocalSearchParams();
   const { data, isLoading, error } = useGetBusinessById(id as string);
+  const { data: availability } = useAvailability(id as string);
 
   const [open, setOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(3);
@@ -97,6 +100,14 @@ export default function BusinessItemScreen() {
           <View>
             <CustomText style={styles.itemHeader}>About</CustomText>
             {data?.about && <AboutBusiness about={data?.about} />}
+          </View>
+
+          <View>
+            <CustomText style={styles.itemHeader}>
+              Availability times
+            </CustomText>
+
+            {availability && <AvailabilityView schedule={availability} />}
           </View>
 
           <View>

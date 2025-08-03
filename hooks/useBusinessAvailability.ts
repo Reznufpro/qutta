@@ -11,7 +11,7 @@ export const useAvailability = (businessId: string | null) => {
   return useQuery({
     queryKey: ["availability", businessId],
     queryFn: () => getAvailability(businessId!),
-    staleTime: 1000 * 60 * 5, // 5 minutes cache
+    staleTime: 1000 * 60 * 60, // 1 hour
     refetchOnWindowFocus: false,
     enabled: !!businessId,
   });

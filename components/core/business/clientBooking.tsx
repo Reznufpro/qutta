@@ -33,6 +33,7 @@ export const ClientBooking = ({
     setBookingData((prev) => ({
       ...prev,
       business: {
+        id: businessData.id,
         name: businessData.name,
         image: businessData.image,
         rating: businessData.rating,
@@ -44,7 +45,7 @@ export const ClientBooking = ({
       },
     }));
 
-    router.push("/bookings/finalizeBooking");
+    router.push("/bookings/selectTimeDate");
   };
 
   return (

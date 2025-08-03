@@ -2,6 +2,7 @@ import { createContext, FC, useContext, useState } from "react";
 
 export type bookingData = {
   business: {
+    id: string;
     name: string;
     image: any[];
     date?: string;
@@ -24,11 +25,13 @@ export type bookingData = {
     rating?: number;
     image?: any;
   };
+  dateTime: string;
   total: number | null;
 };
 
 export const initialBookingData: bookingData = {
   business: {
+    id: "",
     name: "",
     image: [],
     date: "",
@@ -46,6 +49,7 @@ export const initialBookingData: bookingData = {
     rating: 0,
     image: "",
   },
+  dateTime: "",
   total: 0,
 };
 

@@ -1,4 +1,5 @@
 import { ServiceTabs } from "@/components/core/bookings/serviceTabs";
+import { AvailabilityView } from "@/components/core/business/availabilityView";
 import { BusinessLocation } from "@/components/core/business/businessLocation";
 import { ClientActions } from "@/components/core/business/clientActions";
 import { ClientBooking } from "@/components/core/business/clientBooking";
@@ -12,6 +13,8 @@ import { FlexibleModal } from "@/components/ui/flexibleModal";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
 import { useBooking } from "@/context/bookingContext";
+import { useSelectedBusiness } from "@/context/selectedBusinessContext";
+import { useAvailability } from "@/hooks/useBusinessAvailability";
 import { useGetBusinessById } from "@/hooks/useCreateBusiness";
 import {
   useAddFavorite,
@@ -20,7 +23,7 @@ import {
 } from "@/hooks/useFavorite";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Dimensions,
   Pressable,
@@ -34,6 +37,9 @@ const { height } = Dimensions.get("window");
 export default function ClientBusinessScreen() {
   const { id } = useLocalSearchParams();
   const { data, isLoading, error } = useGetBusinessById(id as string);
+
+  const { data: availability } = useAvailability(id as string);
+  const { setSelectedBusinessId } = useSelectedBusiness();
 
   const { bookingData, setBookingData, resetBookingData } = useBooking();
 
@@ -75,6 +81,12 @@ export default function ClientBusinessScreen() {
     const check = bookingData.service.length > 0;
     return check;
   }, [bookingData.service]);
+
+  useEffect(() => {
+    if (id) {
+      setSelectedBusinessId(id as string);
+    }
+  }, [id]);
 
   return (
     <>
@@ -154,6 +166,14 @@ export default function ClientBusinessScreen() {
           </View>
 
           <View>
+            <CustomText style={styles.itemHeader}>
+              Availability times
+            </CustomText>
+
+            {availability && <AvailabilityView schedule={availability} />}
+          </View>
+
+          <View>
             <BusinessMap
               coordinates={data?.coordinates}
               rating={data?.rating}
@@ -167,9 +187,10 @@ export default function ClientBusinessScreen() {
         closeModal={() => setModalVisible(false)}
         styles={{ backgroundColor: Colors.light.white }}
       >
-        {content === "details" && data && (
+        {content === "details" && data && availability && (
           <ClientActions
             businessData={data}
+            availability={availability}
             isFavorited={isFavorited}
             toggleFavorite={toggleFavorite}
             closeModal={() => setModalVisible(false)}

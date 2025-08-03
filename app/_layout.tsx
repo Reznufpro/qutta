@@ -13,10 +13,12 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { en, registerTranslation } from "react-native-paper-dates";
 import "react-native-reanimated";
 
 SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
+registerTranslation("en", en);
 
 export default function RootLayout() {
   const { theme } = useTheme();

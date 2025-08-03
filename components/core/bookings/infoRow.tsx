@@ -34,7 +34,7 @@ export const confirmed: itemDetails[] = [
 
 export const businessCards: itemDetails[] = [
   { ionicon: "location-sharp", title: "Getting there", link: true },
-  { ionicon: "time-outline", title: "Open until" },
+  { ionicon: "time-outline", title: "Opening hours" },
   { ionicon: "heart-outline", title: "Add to favorites", favorite: true },
 ];
 
