@@ -4,12 +4,13 @@ import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
-import { mockClientBookings } from "@/utils";
+import { useClientBookings } from "@/hooks/useBooking";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 export default function BookingsScreen() {
   const router = useRouter();
+  const { data: bookings, isLoading, error } = useClientBookings();
 
   const handleGetStarted = () => router.push("/(client)/home");
 
@@ -25,9 +26,9 @@ export default function BookingsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {mockClientBookings && mockClientBookings.length > 0 ? (
-          mockClientBookings.map((booking) => (
-            <ClientBookingCard key={booking.id} booking={booking} />
+        {bookings && bookings.length > 0 ? (
+          bookings.map((booking, i) => (
+            <ClientBookingCard key={i} booking={booking} />
           ))
         ) : (
           <View style={styles.emptyContainer}>

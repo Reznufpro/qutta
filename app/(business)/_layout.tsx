@@ -41,12 +41,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="waitlist"
-        options={{
-          title: "",
-        }}
-      />
-      <Tabs.Screen
         name="schedule"
         options={{
           title: "",
@@ -54,6 +48,18 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="business"
+        options={{
+          title: "",
+        }}
+      />
+      <Tabs.Screen
+        name="waitlist"
+        options={{
+          title: "",
+        }}
+      />
+      <Tabs.Screen
+        name="menu"
         options={{
           title: "",
         }}

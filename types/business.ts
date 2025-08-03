@@ -2,10 +2,9 @@ export interface BusinessData {
   id: string;
   name: string;
   about: string;
-  distance: string | null;
+  phone_number: string;
   rating: number;
   tag: "Recommended" | "New" | "Popular" | "Open Now";
-  closeTime: string | null;
   coordinates: BusinessCoordinates;
   image: string[];
   staff: StaffEntity[];

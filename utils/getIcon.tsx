@@ -99,6 +99,14 @@ export const getIconNameBusiness = (
           resizeMode="contain"
         />
       );
+    case "menu":
+      return (
+        <Image
+          source={require("../assets/icons/menu.png")}
+          style={iconStyle}
+          resizeMode="contain"
+        />
+      );
     default:
       return (
         <Image

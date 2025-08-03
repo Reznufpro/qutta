@@ -8,17 +8,17 @@ import { ListingButtons } from "@/components/ui/listingButtons";
 import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
 import { useBooking } from "@/context/bookingContext";
+import { useCreateBooking } from "@/hooks/useBooking";
 import { getInitials, trimTextToOneLine } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
 export default function FinalizeBookingScreen() {
   const { bookingData, resetBookingData } = useBooking();
+  const { mutate, isError, error } = useCreateBooking();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const { service, staff, total, business } = bookingData;
 
@@ -44,10 +44,19 @@ export default function FinalizeBookingScreen() {
   };
 
   const handleNext = () => {
+    if (!bookingData) return;
+
     try {
-      console.log(bookingData);
-      // perform api request here
-      // router.push("/bookings/success");
+      mutate(bookingData, {
+        onSuccess: (res) => {
+          console.log("Booking successful:", res);
+          router.push("/(client)/bookings");
+        },
+        onError: (err) => {
+          console.log("Booking failed:", err);
+          // optionally show toast/snackbar here
+        },
+      });
     } catch (error) {
       console.log("Error", error);
     }

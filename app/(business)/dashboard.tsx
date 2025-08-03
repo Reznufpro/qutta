@@ -1,43 +1,64 @@
-import CustomHeading from "@/components/ui/customHeading";
+import { BookedCard } from "@/components/core/business/bookedCard";
 import CustomText from "@/components/ui/customText";
-import { InnerContainer } from "@/components/ui/innerContainer";
+import { Header } from "@/components/ui/header";
+import { ScreenContainer } from "@/components/ui/screenContainer";
+import { Colors } from "@/constants/Colors";
 import { useUserData } from "@/context/userContext";
 import { useLogout } from "@/hooks/useAuth";
+import { useCancelBooking, useGetOwnerBookings } from "@/hooks/useBooking";
 import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import {
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { useState } from "react";
+import { FlatList, Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export default function DashboardScreen() {
   const { userData } = useUserData();
   const { logout } = useLogout();
   const router = useRouter();
 
+  const { data: ownerBookings } = useGetOwnerBookings();
+
+  const {
+    mutateAsync: cancelBooking,
+    isSuccess,
+    error,
+    isPending,
+  } = useCancelBooking();
+
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" />
-      <InnerContainer style={{ gap: 12, marginTop: 20 }}>
-        <CustomHeading>Welcome</CustomHeading>
+    <ScreenContainer>
+      <Header
+        headerTitle={`Welcome, ${userData.name}`}
+        style={{ marginBottom: 12 }}
+      />
 
-        <Pressable onPress={logout}>
-          <CustomText>Logout</CustomText>
-        </Pressable>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ marginTop: 30, gap: 12 }}>
+          <CustomText style={styles.text}>Your bookings</CustomText>
 
-        <Pressable onPress={() => router.push("/onboarding/business/intro")}>
-          <CustomText>Onboarding</CustomText>
-        </Pressable>
-
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        ></ScrollView>
-      </InnerContainer>
-    </SafeAreaView>
+          <FlatList
+            scrollEnabled={false}
+            horizontal={false}
+            data={ownerBookings}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.scrollContent}
+            renderItem={({ item, index }) => (
+              <BookedCard
+                item={item}
+                index={index}
+                expandedId={expandedId}
+                setExpandedId={setExpandedId}
+                cancel={() => cancelBooking(item.id)}
+              />
+            )}
+          />
+        </View>
+      </ScrollView>
+    </ScreenContainer>
   );
 }
 
@@ -48,5 +69,10 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: Platform.OS === "ios" ? 70 : 30,
+  },
+  text: {
+    fontSize: 18,
+    color: Colors.light.black,
+    fontFamily: "CarosSoftBold",
   },
 });

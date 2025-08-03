@@ -8,7 +8,13 @@ import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
-import { capitalize, handleDirections, mockBooking } from "@/utils";
+import {
+  useAddFavorite,
+  useFavorites,
+  useRemoveFavorite,
+} from "@/hooks/useFavorite";
+import { BookingReturnType } from "@/types";
+import { capitalize, handleDirections } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
@@ -19,17 +25,42 @@ import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 const { height } = Dimensions.get("window");
 
 export default function BookingsItemScreen() {
-  const { id } = useLocalSearchParams();
+  const { results } = useLocalSearchParams();
 
-  const { businessName, location, img, service, time } = mockBooking;
+  const parsedResults: BookingReturnType = useMemo(() => {
+    try {
+      return JSON.parse(decodeURIComponent(results as string));
+    } catch (err) {
+      console.log("Error parsing flight results:", err);
+      return [];
+    }
+  }, [results]);
+
+  const { service, status, business, dateTime } = parsedResults;
+
+  const { data: favorites } = useFavorites();
+  const addFavorite = useAddFavorite();
+  const removeFavorite = useRemoveFavorite();
+
+  const isFavorited =
+    parsedResults &&
+    favorites?.some((fav) => fav.id === parsedResults.business.id);
+
+  const toggleFavorite = () => {
+    if (addFavorite.isPending || removeFavorite.isPending || !parsedResults)
+      return;
+
+    if (isFavorited) {
+      removeFavorite.mutate(parsedResults.business.id);
+    } else {
+      addFavorite.mutate(parsedResults.business.id);
+    }
+  };
 
   const total = useMemo(() => {
     const prices = service?.map((s) => Number(s.price) || 0);
     return prices?.reduce((acc, curr) => acc + curr, 0);
   }, []);
-
-  type BookingStatus = "confirmed" | "cancelled";
-  const status = "confirmed" as BookingStatus;
 
   const statusMap = {
     confirmed: {
@@ -47,7 +78,7 @@ export default function BookingsItemScreen() {
   return (
     <>
       <View style={styles.imageContainer}>
-        <Image source={img} style={styles.image} />
+        <Image source={business.image[0]} style={styles.image} />
 
         <View style={styles.iconRow}>
           <BackButton />
@@ -57,7 +88,7 @@ export default function BookingsItemScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <InnerContainer style={{ gap: 24 }}>
           <View style={styles.status}>
-            <CustomText style={styles.headerTitle}>{businessName}</CustomText>
+            <CustomText style={styles.headerTitle}>{business.name}</CustomText>
 
             <View
               style={[styles.statusContainer, { backgroundColor: statusColor }]}
@@ -73,16 +104,18 @@ export default function BookingsItemScreen() {
             </View>
           </View>
 
-          <CustomText style={styles.time}>Today at {time}</CustomText>
+          <CustomText style={styles.time}>{dateTime}</CustomText>
 
           <View>
             {status === "confirmed"
               ? confirmed.map((item, i) => {
                   const subtitleItem =
                     item.title === "Getting there"
-                      ? location
+                      ? business.coordinates?.location
+                      : item.title === "Contact business"
+                      ? business.phone_number
                       : i === confirmed.length - 1
-                      ? businessName
+                      ? business.name
                       : item.subtitle;
 
                   return (
@@ -98,15 +131,35 @@ export default function BookingsItemScreen() {
                     >
                       <InfoRow
                         materialicon={item.materialicon}
-                        ionicon={item.ionicon}
-                        title={item.title}
+                        ionicon={
+                          item.favorite
+                            ? isFavorited
+                              ? "heart"
+                              : "heart-outline"
+                            : item.ionicon
+                        }
+                        title={
+                          item.favorite
+                            ? isFavorited
+                              ? "Remove from favorite"
+                              : "Add to favorite"
+                            : item.title
+                        }
                         subtitle={subtitleItem}
                         index={i}
                         item={confirmed}
+                        iconColor={
+                          item.favorite && isFavorited
+                            ? "red"
+                            : Colors.light.highlight
+                        }
                         onPress={() => {
                           if (item.link)
-                            handleDirections({ location: location });
-                          else if (item.favorite) console.log("favorited");
+                            handleDirections({
+                              location: business.coordinates?.location,
+                            });
+                          else if (item.favorite) toggleFavorite();
+                          else if (item.call) console.log("call");
                           else if (item.calendar) console.log("calendar");
                         }}
                       />
@@ -115,7 +168,9 @@ export default function BookingsItemScreen() {
                 })
               : otherStatus.map((item, i) => {
                   const subtitleItem =
-                    i === otherStatus.length - 1 ? businessName : item.subtitle;
+                    i === otherStatus.length - 1
+                      ? business.name
+                      : item.subtitle;
 
                   return (
                     <MotiView
@@ -136,7 +191,9 @@ export default function BookingsItemScreen() {
                         item={otherStatus}
                         onPress={() => {
                           if (item.link)
-                            handleDirections({ location: location });
+                            handleDirections({
+                              location: business.coordinates?.location,
+                            });
                           else if (item.favorite) console.log("favorited");
                           else if (item.calendar) console.log("calendar");
                         }}
@@ -152,9 +209,9 @@ export default function BookingsItemScreen() {
             <View>
               {service?.map((s) => (
                 <ServiceSummary
-                  key={`${s.serviceTitle}-${s.staff}`}
-                  serviceTitle={s.serviceTitle}
-                  price={s.price}
+                  key={`${s.title}-${s.price}`}
+                  serviceTitle={s.title}
+                  price={s.price.toString()}
                 />
               ))}
             </View>

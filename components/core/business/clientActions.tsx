@@ -30,6 +30,8 @@ export const ClientActions = ({
           const subtitleItem =
             item.title === "Getting there"
               ? businessData.coordinates?.location
+              : item.title === "Contact business"
+              ? businessData.phone_number
               : item.title === "Opening hours"
               ? getTodaySchedule(availability)
               : item.subtitle;
@@ -73,6 +75,7 @@ export const ClientActions = ({
                       location: businessData.coordinates?.location,
                     });
                   else if (item.favorite) toggleFavorite();
+                  else if (item.call) console.log("call");
                   else if (item.calendar) console.log("calendar");
                 }}
               />

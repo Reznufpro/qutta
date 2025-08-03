@@ -1,41 +1,35 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
-import { bookingClientCardT, capitalize, handleDirections } from "@/utils";
+import { BookingReturnType } from "@/types";
+import { capitalize, handleDirections } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
-import {
-  Image,
-  Linking,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface Props {
-  booking: bookingClientCardT;
+  booking: BookingReturnType;
 }
 
 export const ClientBookingCard = ({ booking }: Props) => {
   const router = useRouter();
 
-  const handleCalendar = () => {
-    if (booking.calendarUrl) {
-      Linking.openURL(booking.calendarUrl);
-    }
-  };
+  const handleCalendar = () => {};
 
   const handlePress = () => {
-    router.push("/bookings/[id]");
+    router.push({
+      pathname: "/bookings/bookingResults",
+      params: {
+        results: encodeURIComponent(JSON.stringify(booking)),
+      },
+    });
   };
 
   const total = useMemo(() => {
     const prices = booking.service?.map((s) => Number(s.price) || 0);
     return prices?.reduce((acc, curr) => acc + curr, 0);
   }, []);
-
-  type BookingStatus = "confirmed" | "cancelled";
-  const status = "confirmed" as BookingStatus;
 
   const statusMap = {
     confirmed: {
@@ -48,34 +42,40 @@ export const ClientBookingCard = ({ booking }: Props) => {
     },
   };
 
-  const { color: statusColor } = statusMap[status];
+  const { color: statusColor } = statusMap[booking.status];
 
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={0.95}>
       <View style={styles.card}>
         <View style={styles.imageWrapper}>
           <View style={[styles.overlay]} />
-          <Image source={booking.img} style={styles.image} />
-          {status ? (
+          <Image
+            source={{ uri: booking.business.image[0] }}
+            cachePolicy="memory-disk"
+            style={styles.image}
+          />
+          {booking.status ? (
             <View style={[styles.statusTag, { backgroundColor: statusColor }]}>
               <CustomText style={styles.statusText}>
-                {capitalize(status)}
+                {capitalize(booking.status)}
               </CustomText>
             </View>
           ) : null}
         </View>
 
         <View style={styles.details}>
-          <CustomText style={styles.name}>{booking.businessName}</CustomText>
-          <CustomText style={styles.dateTime}>
-            {`${booking.date} at ${booking.time}`}
-          </CustomText>
+          <CustomText style={styles.name}>{booking.business.name}</CustomText>
+          <CustomText style={styles.dateTime}>{booking.dateTime}</CustomText>
 
           <CustomText style={styles.totalLabel}>Total: MX${total}</CustomText>
 
           <View style={styles.buttons}>
             <TouchableOpacity
-              onPress={() => handleDirections({ location: booking.location })}
+              onPress={() =>
+                handleDirections({
+                  location: booking.business.coordinates?.location,
+                })
+              }
               style={styles.button}
             >
               <Ionicons

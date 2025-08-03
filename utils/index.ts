@@ -1,4 +1,5 @@
 export * from "./api/auth";
+export * from "./api/booking";
 export * from "./api/business";
 export * from "./api/businessAvailability";
 export * from "./api/favorites";

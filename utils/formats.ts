@@ -1,5 +1,6 @@
 import { AvailabilityEntry } from "@/types";
-import { format } from "date-fns";
+import type { Day } from "date-fns";
+import { format, nextDay, parse } from "date-fns";
 
 export const getTimeOfDay = (): string => {
   const currentHour = new Date().getHours();
@@ -75,4 +76,42 @@ export const getTodaySchedule = (availability: AvailabilityEntry[]) => {
   if (!entry || entry.is_closed) return "Closed";
 
   return `${formatTime(entry.open_time)} - ${formatTime(entry.close_time)}`;
+};
+
+export const parseDateTime = (dateTimeStr: string) => {
+  const [dayOfWeek, , timeStr, meridiem] = dateTimeStr.split(" ");
+  const timeWithMeridiem = `${timeStr} ${meridiem}`;
+
+  const validDays = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  if (!validDays.includes(dayOfWeek)) {
+    throw new Error(`Invalid day of week: ${dayOfWeek}`);
+  }
+
+  const today = new Date();
+  const nextDate = nextDay(today, dayOfWeek as unknown as Day);
+
+  const timeParsed = parse(timeWithMeridiem, "h:mm a", new Date());
+
+  const combined = new Date(
+    nextDate.getFullYear(),
+    nextDate.getMonth(),
+    nextDate.getDate(),
+    timeParsed.getHours(),
+    timeParsed.getMinutes(),
+    0
+  );
+
+  const date = format(combined, "yyyy-MM-dd");
+  const time = format(combined, "HH:mm:ss");
+
+  return { date, time };
 };

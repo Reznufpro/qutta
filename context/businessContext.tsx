@@ -10,6 +10,7 @@ export interface BusinessForm {
   tag?: "Recommended" | "New" | "Popular" | "Open Now";
   about?: string;
   images: string[];
+  phone_number: "";
   staff: {
     name: string;
     image?: string;
@@ -36,6 +37,7 @@ interface BusinessFormContextType {
 
 const defaultForm: BusinessForm = {
   name: "",
+  phone_number: "",
   coordinates: {
     location: "",
     latitude: 0,

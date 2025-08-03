@@ -10,6 +10,7 @@ interface itemDetails {
   title: string;
   subtitle?: string;
   link?: boolean;
+  call?: boolean;
   favorite?: boolean;
   calendar?: boolean;
   bookAgain?: boolean;
@@ -29,12 +30,14 @@ export const confirmed: itemDetails[] = [
     title: "Manage appointment",
     subtitle: "Cancel",
   },
+  { ionicon: "call-outline", title: "Contact business", call: true },
   { ionicon: "business-outline", title: "Business details" },
 ];
 
 export const businessCards: itemDetails[] = [
   { ionicon: "location-sharp", title: "Getting there", link: true },
   { ionicon: "time-outline", title: "Opening hours" },
+  { ionicon: "call-outline", title: "Contact business", call: true },
   { ionicon: "heart-outline", title: "Add to favorites", favorite: true },
 ];
 
@@ -46,6 +49,7 @@ export const otherStatus: itemDetails[] = [
     bookAgain: true,
   },
   { ionicon: "heart-outline", title: "Add to favorites", favorite: true },
+  { ionicon: "call-outline", title: "Contact business", call: true },
   {
     ionicon: "business-outline",
     title: "Business details",

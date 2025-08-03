@@ -45,6 +45,7 @@ export default function BusinessReviewScreen() {
     form.coordinates?.location &&
     form.coordinates?.latitude &&
     form.coordinates?.longitude &&
+    form.phone_number &&
     form.about &&
     form.images.length > 0 &&
     form.staff.length > 0 &&
@@ -94,6 +95,7 @@ export default function BusinessReviewScreen() {
 
       // 3. Other form fields
       formData.append("name", form.name);
+      formData.append("phone_number", form.phone_number || "");
       formData.append("tag", form.tag || "");
       formData.append("about", form.about || "");
       formData.append("coordinates", JSON.stringify(form.coordinates));
@@ -150,6 +152,7 @@ export default function BusinessReviewScreen() {
                     label="Location"
                     value={form.coordinates?.location}
                   />
+                  <ReviewRow label="Phone number" value={form.phone_number} />
                 </View>
 
                 <View>

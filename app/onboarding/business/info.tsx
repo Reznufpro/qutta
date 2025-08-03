@@ -26,18 +26,19 @@ export default function BusinessInfoScreen() {
   const router = useRouter();
   const nameInputRef = useRef<TextInput>(null);
   const aboutInputRef = useRef<TextInput>(null);
+  const numberInputRef = useRef<TextInput>(null);
 
   const [step, setStep] = useState<0 | 1>(0);
-  const [focusedInput, setFocusedInput] = useState<null | "name" | "about">(
-    null
-  );
+  const [focusedInput, setFocusedInput] = useState<
+    null | "name" | "about" | "number"
+  >(null);
 
   const progressPercentage: DimensionValue = `${
     (form.current_step / form.total_steps) * 100
   }%`;
 
   const emptyForm = useMemo(
-    () => !(form.name && form.about),
+    () => !(form.name && form.about && form.phone_number),
     [form.name, form.about]
   );
 
@@ -129,6 +130,41 @@ export default function BusinessInfoScreen() {
                     onFocus={() => setFocusedInput("about")}
                     onBlur={() => setFocusedInput(null)}
                     onChangeText={(text) => updateForm("about", text)}
+                  />
+                </MotiView>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {step === 1 && (
+                <MotiView
+                  key="tags"
+                  from={{ opacity: 0, translateY: 20 }}
+                  animate={{ opacity: 1, translateY: 0 }}
+                  exit={{ opacity: 0, translateY: 20 }}
+                  transition={{ type: "timing", duration: 400 }}
+                  style={{ paddingTop: 30 }}
+                >
+                  <CustomText style={styles.label}>
+                    Business Phone number
+                  </CustomText>
+
+                  <TextInput
+                    ref={numberInputRef}
+                    style={[
+                      styles.input,
+                      focusedInput === "number" && styles.focusedInput,
+                    ]}
+                    placeholder="+5281********"
+                    placeholderTextColor="#c7c7c7"
+                    keyboardType="default"
+                    selectionColor="#000"
+                    autoCorrect={false}
+                    returnKeyType="next"
+                    value={form.phone_number}
+                    onFocus={() => setFocusedInput("number")}
+                    onBlur={() => setFocusedInput(null)}
+                    onChangeText={(text) => updateForm("phone_number", text)}
                   />
                 </MotiView>
               )}

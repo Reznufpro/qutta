@@ -28,56 +28,54 @@ export default function FavoritesScreen() {
         style={{ marginBottom: 12 }}
       />
 
-      {favorites && favorites.length > 0 && (
-        <FlatList
-          data={favorites}
-          keyExtractor={(item) => item.id}
-          scrollEnabled
-          horizontal={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.listContent}
-          renderItem={({ item }) => {
-            return (
-              <Pressable onPress={() => handlePress(item.id)}>
-                <BusinessCard
-                  img={item.image}
-                  title={item.name}
-                  extra={`${getShortLocation(item.coordinates?.location)}`}
-                  subtitle={
-                    <View style={styles.arrange}>
-                      <CustomText style={styles.text}>
-                        {item.rating === 0 ? "New" : item.rating}
-                      </CustomText>
+      <FlatList
+        data={favorites}
+        keyExtractor={(item) => item.id}
+        scrollEnabled
+        horizontal={false}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+        renderItem={({ item }) => {
+          return (
+            <Pressable onPress={() => handlePress(item.id)}>
+              <BusinessCard
+                img={item.image}
+                title={item.name}
+                extra={`${getShortLocation(item.coordinates?.location)}`}
+                subtitle={
+                  <View style={styles.arrange}>
+                    <CustomText style={styles.text}>
+                      {item.rating === 0 ? "New" : item.rating}
+                    </CustomText>
 
-                      <Ionicons
-                        name="star"
-                        size={14}
-                        color={Colors.light.white}
-                      />
-                    </View>
-                  }
-                  tag={<View></View>}
-                />
-              </Pressable>
-            );
-          }}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <CustomHeading style={styles.headin}>
-                You have no businesses yet
-              </CustomHeading>
+                    <Ionicons
+                      name="star"
+                      size={14}
+                      color={Colors.light.white}
+                    />
+                  </View>
+                }
+                tag={<View></View>}
+              />
+            </Pressable>
+          );
+        }}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <CustomHeading style={styles.headin}>
+              You have no favorites yet
+            </CustomHeading>
 
-              <CustomText style={styles.emptyText}>
-                Your businesses will show here once you create one.
-              </CustomText>
+            <CustomText style={styles.emptyText}>
+              Your favorite businesses will show here once you add one.
+            </CustomText>
 
-              <Pressable style={styles.button} onPress={handleGetStarted}>
-                <CustomText style={styles.buttonText}>Get started</CustomText>
-              </Pressable>
-            </View>
-          }
-        />
-      )}
+            <Pressable style={styles.button} onPress={handleGetStarted}>
+              <CustomText style={styles.buttonText}>Get started</CustomText>
+            </Pressable>
+          </View>
+        }
+      />
     </ScreenContainer>
   );
 }
@@ -103,7 +101,7 @@ const styles = StyleSheet.create({
     fontFamily: "CarosSoftBold",
     textAlign: "center",
     fontSize: 18,
-    textTransform: "capitalize",
+    textTransform: "none",
     color: Colors.light.black,
   },
   arrange: {
