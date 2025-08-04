@@ -41,13 +41,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="favorites"
+        name="search"
         options={{
           title: "",
         }}
       />
       <Tabs.Screen
         name="bookings"
+        options={{
+          title: "",
+        }}
+      />
+      <Tabs.Screen
+        name="favorites"
         options={{
           title: "",
         }}

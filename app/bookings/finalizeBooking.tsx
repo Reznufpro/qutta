@@ -1,4 +1,5 @@
 import { ServiceSummary } from "@/components/core/bookings/serviceSummary";
+import { BusinessInfo } from "@/components/core/home/businessInfo";
 import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
@@ -9,7 +10,7 @@ import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
 import { useBooking } from "@/context/bookingContext";
 import { useCreateBooking } from "@/hooks/useBooking";
-import { getInitials, trimTextToOneLine } from "@/utils";
+import { getInitials } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -75,30 +76,7 @@ export default function FinalizeBookingScreen() {
             style={{ marginBottom: 12 }}
           />
 
-          <View style={styles.businessInfo}>
-            <View style={styles.imageContainer}>
-              <Image source={business.image[0]} style={styles.image} />
-            </View>
-
-            <View style={{ flex: 1 }}>
-              <CustomText style={styles.businessTitle}>
-                {business.name}
-              </CustomText>
-
-              <View style={[styles.itemsContainer, { paddingVertical: 2 }]}>
-                <CustomText>
-                  {business.rating === 0 ? "New" : business.rating}
-                </CustomText>
-                <Ionicons name="star" size={14} color={Colors.light.black} />
-              </View>
-
-              {business.coordinates && (
-                <CustomText style={styles.addressText}>
-                  {trimTextToOneLine(business.coordinates?.location, 40)}
-                </CustomText>
-              )}
-            </View>
-          </View>
+          <BusinessInfo business={business} />
 
           <View style={styles.timeContainer}>
             <Ionicons name="calendar-outline" size={16} />

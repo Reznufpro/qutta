@@ -45,6 +45,14 @@ export const getIconNameClient = (
           resizeMode="contain"
         />
       );
+    case "search":
+      return (
+        <Image
+          source={require("../assets/icons/search.png")}
+          style={iconStyle}
+          resizeMode="contain"
+        />
+      );
     default:
       return (
         <Image

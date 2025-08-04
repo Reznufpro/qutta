@@ -144,16 +144,18 @@ export const BookedCard = ({
             </View>
           </View>
 
-          <Pressable
-            style={styles.cancelButton}
-            onPress={() => {
-              console.log("Cancel");
-            }}
-          >
-            <CustomText style={styles.buttonText}>
-              {cancelPending ? "Canceling..." : "Cancel appointment"}
-            </CustomText>
-          </Pressable>
+          {item.status === "confirmed" && (
+            <Pressable
+              style={styles.cancelButton}
+              onPress={() => {
+                console.log("Cancel");
+              }}
+            >
+              <CustomText style={styles.buttonText}>
+                {cancelPending ? "Canceling..." : "Cancel appointment"}
+              </CustomText>
+            </Pressable>
+          )}
         </View>
       )}
     </Pressable>

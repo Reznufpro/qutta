@@ -24,6 +24,7 @@ export interface BookingReturnType {
     image?: any;
   };
   dateTime: string;
+  createdAt: string;
   total: number | null;
   status: "confirmed" | "cancelled";
 }

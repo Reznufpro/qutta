@@ -11,6 +11,19 @@ export interface BusinessData {
   services: Record<number, CategoryT>;
 }
 
+export interface BusinessInfoData {
+  id: string;
+  name: string;
+  image: any[];
+  date?: string;
+  rating: number;
+  coordinates?: {
+    latitude?: number;
+    longitude?: number;
+    location: string;
+  };
+}
+
 export interface BusinessCoordinates {
   latitude: number;
   longitude: number;

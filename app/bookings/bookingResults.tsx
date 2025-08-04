@@ -22,7 +22,7 @@ import {
 } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { MotiView } from "moti";
 import { useMemo } from "react";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
@@ -42,6 +42,7 @@ export default function BookingsItemScreen() {
   }, [results]);
 
   const { service, status, business, dateTime } = parsedResults;
+  const router = useRouter();
 
   const { data: favorites } = useFavorites();
   const addFavorite = useAddFavorite();
@@ -79,6 +80,13 @@ export default function BookingsItemScreen() {
   };
 
   const { icon: statusIcon, color: statusColor } = statusMap[status];
+
+  const bookingAgain = () => {
+    router.push({
+      pathname: "/clientBusiness/[id]",
+      params: { id: business.id },
+    });
+  };
 
   return (
     <>
@@ -172,6 +180,7 @@ export default function BookingsItemScreen() {
                               dateTime,
                               business.coordinates?.location
                             );
+                          else if (item.bookAgain) bookingAgain();
                         }}
                       />
                     </MotiView>
@@ -179,7 +188,9 @@ export default function BookingsItemScreen() {
                 })
               : otherStatus.map((item, i) => {
                   const subtitleItem =
-                    i === otherStatus.length - 1
+                    item.title === "Contact business"
+                      ? business.phone_number
+                      : i === otherStatus.length - 1
                       ? business.name
                       : item.subtitle;
 
@@ -195,18 +206,37 @@ export default function BookingsItemScreen() {
                       key={item.title}
                     >
                       <InfoRow
-                        ionicon={item.ionicon}
-                        title={item.title}
+                        ionicon={
+                          item.favorite
+                            ? isFavorited
+                              ? "heart"
+                              : "heart-outline"
+                            : item.ionicon
+                        }
+                        title={
+                          item.favorite
+                            ? isFavorited
+                              ? "Remove from favorite"
+                              : "Add to favorite"
+                            : item.title
+                        }
                         subtitle={subtitleItem}
                         index={i}
                         item={otherStatus}
+                        iconColor={
+                          item.favorite && isFavorited
+                            ? "red"
+                            : Colors.light.highlight
+                        }
                         onPress={() => {
                           if (item.link)
                             handleDirections({
                               location: business.coordinates?.location,
                             });
-                          else if (item.favorite) console.log("favorited");
-                          else if (item.calendar) console.log("calendar");
+                          else if (item.favorite) toggleFavorite();
+                          else if (item.call)
+                            handleCallNumber(business.phone_number);
+                          else if (item.bookAgain) bookingAgain();
                         }}
                       />
                     </MotiView>
