@@ -7,6 +7,7 @@ interface userProfile {
   email: string;
   role: string;
   token: string;
+  created_at: string;
 }
 
 const initialState: userProfile = {
@@ -16,6 +17,7 @@ const initialState: userProfile = {
   email: "",
   role: "",
   token: "",
+  created_at: "",
 };
 
 interface userContextType {

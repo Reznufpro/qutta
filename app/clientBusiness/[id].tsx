@@ -10,7 +10,9 @@ import { StaffCard } from "@/components/core/business/clientBusiness/staffCard";
 import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
 import { FlexibleModal } from "@/components/ui/flexibleModal";
+import { HoverError } from "@/components/ui/hoverError";
 import { InnerContainer } from "@/components/ui/innerContainer";
+import LoadingScreen from "@/components/ui/loadingScreen";
 import { Colors } from "@/constants/Colors";
 import { useBooking } from "@/context/bookingContext";
 import { useSelectedBusiness } from "@/context/selectedBusinessContext";
@@ -36,9 +38,12 @@ const { height } = Dimensions.get("window");
 
 export default function ClientBusinessScreen() {
   const { id } = useLocalSearchParams();
-  const { data, isLoading, error } = useGetBusinessById(id as string);
+  const { data, isLoading, isError } = useGetBusinessById(id as string);
+  const [showError, setShowError] = useState(false);
 
-  const { data: availability } = useAvailability(id as string);
+  const { data: availability, isError: availabilityError } = useAvailability(
+    id as string
+  );
   const { setSelectedBusinessId } = useSelectedBusiness();
 
   const { bookingData, setBookingData, resetBookingData } = useBooking();
@@ -87,6 +92,22 @@ export default function ClientBusinessScreen() {
       setSelectedBusinessId(id as string);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (isError || availabilityError) {
+      setShowError(true);
+
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isError]);
+
+  if (isLoading) {
+    return <LoadingScreen status="Loading business data..." />;
+  }
 
   return (
     <>
@@ -204,6 +225,10 @@ export default function ClientBusinessScreen() {
           setBookingData={setBookingData}
           businessData={data}
         />
+      )}
+
+      {showError && (
+        <HoverError error="Error loading business, try again later." />
       )}
     </>
   );

@@ -13,7 +13,6 @@ import {
   getProfileTop,
   getTimeOfDay,
   handleOpenLink,
-  user,
 } from "@/utils";
 import { useRouter } from "expo-router";
 import { FlatList, Platform, ScrollView, StyleSheet } from "react-native";
@@ -49,9 +48,8 @@ export default function ProfileScreen() {
           name={`${getFirstName(userData.name)} ${getFirstName(
             userData.lastName
           )}`}
-          image={user.image}
-          type={user.type}
-          joined={user.joined}
+          type={userData.role}
+          joined={userData.created_at}
         />
 
         <FlatList

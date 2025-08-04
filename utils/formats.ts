@@ -1,5 +1,5 @@
 import { AvailabilityEntry } from "@/types";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 export const getTimeOfDay = (): string => {
   const currentHour = new Date().getHours();
@@ -75,4 +75,12 @@ export const getTodaySchedule = (availability: AvailabilityEntry[]) => {
   if (!entry || entry.is_closed) return "Closed";
 
   return `${formatTime(entry.open_time)} - ${formatTime(entry.close_time)}`;
+};
+
+export const formatISODate = (date: string): string => {
+  const formatted = `Joined ${formatDistanceToNow(new Date(date), {
+    addSuffix: true,
+  })}`;
+
+  return formatted;
 };

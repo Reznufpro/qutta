@@ -6,13 +6,15 @@ import { ItemImagesCarousel } from "@/components/core/business/clientBusiness/it
 import { StaffCard } from "@/components/core/business/clientBusiness/staffCard";
 import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
+import { HoverError } from "@/components/ui/hoverError";
 import { InnerContainer } from "@/components/ui/innerContainer";
+import LoadingScreen from "@/components/ui/loadingScreen";
 import { Colors } from "@/constants/Colors";
 import { useAvailability } from "@/hooks/useBusinessAvailability";
 import { useGetBusinessById } from "@/hooks/useCreateBusiness";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
   Pressable,
@@ -25,8 +27,11 @@ const { height } = Dimensions.get("window");
 
 export default function BusinessItemScreen() {
   const { id } = useLocalSearchParams();
-  const { data, isLoading, error } = useGetBusinessById(id as string);
-  const { data: availability } = useAvailability(id as string);
+  const { data, isLoading, isError } = useGetBusinessById(id as string);
+  const { data: availability, isError: availabilityError } = useAvailability(
+    id as string
+  );
+  const [showError, setShowError] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(3);
@@ -38,6 +43,22 @@ export default function BusinessItemScreen() {
       prev >= data?.staff.length ? 3 : Math.min(prev + 3, data.staff.length)
     );
   };
+
+  useEffect(() => {
+    if (isError || availabilityError) {
+      setShowError(true);
+
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isError]);
+
+  if (isLoading) {
+    return <LoadingScreen status="Loading business data..." />;
+  }
 
   return (
     <>
@@ -118,6 +139,10 @@ export default function BusinessItemScreen() {
           </View>
         </InnerContainer>
       </ScrollView>
+
+      {showError && (
+        <HoverError error="Error loading business, try again later." />
+      )}
     </>
   );
 }

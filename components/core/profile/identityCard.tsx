@@ -1,5 +1,6 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
+import { formatISODate, getInitials } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { MotiView } from "moti";
@@ -7,7 +8,7 @@ import { StyleSheet, View } from "react-native";
 
 interface IdentityCardProps {
   name: string;
-  image: any;
+  image?: string;
   type: string;
   joined: string;
 }
@@ -38,13 +39,21 @@ export const IdentityCard = ({
       style={styles.card}
     >
       <View style={styles.profileSection}>
-        <Image source={image} style={styles.avatar} />
+        <View style={styles.avatarBg}>
+          {image ? (
+            <Image source={image} style={styles.avatar} />
+          ) : (
+            <CustomText style={styles.avatarText}>
+              {name && getInitials(name || "")}
+            </CustomText>
+          )}
+        </View>
         <View style={styles.badge}>
           <Ionicons name="person" size={14} color={Colors.light.black} />
           <CustomText style={styles.badgeText}>{type}</CustomText>
         </View>
         <CustomText style={styles.name}>{name}</CustomText>
-        <CustomText style={styles.subText}>Joined {joined}</CustomText>
+        <CustomText style={styles.subText}>{formatISODate(joined)}</CustomText>
       </View>
     </MotiView>
   );
@@ -69,10 +78,24 @@ const styles = StyleSheet.create({
   profileSection: {
     alignItems: "center",
   },
+  avatarBg: {
+    width: 80,
+    height: 80,
+    borderRadius: 999,
+    backgroundColor: Colors.light.highlight,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   avatar: {
-    width: 72,
-    height: 72,
+    width: 80,
+    height: 80,
     borderRadius: 36,
+  },
+  avatarText: {
+    fontSize: 28,
+    fontWeight: "600",
+    color: "#fff",
+    fontFamily: "CarosSoftBold",
   },
   badge: {
     flexDirection: "row",
