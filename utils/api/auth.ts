@@ -56,3 +56,19 @@ export const loginUser = async (data: { email: string; password: string }) => {
 
   return res.json(); // returns { user, token }
 };
+
+export const deleteUser = async () => {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${BASE_URL}auth/delete`, {
+    method: "DELETE",
+    headers,
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || "Delete failed");
+  }
+
+  return res.json();
+};

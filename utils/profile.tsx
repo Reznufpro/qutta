@@ -6,6 +6,7 @@ export type profileT = {
   iconRight?: keyof typeof Ionicons.glyphMap;
   func?: true;
   link?: any;
+  href?: string;
 };
 
 export const getProfileTop = (): profileT[] => [
@@ -15,37 +16,25 @@ export const getProfileTop = (): profileT[] => [
     link: "/accountSettings/",
     iconRight: "chevron-forward-outline",
   },
-  {
-    label: "View profile",
-    icon: "person-outline",
-    link: "/profile/",
-    iconRight: "chevron-forward-outline",
-  },
-  {
-    label: "History",
-    icon: "time-outline",
-    link: "/history/",
-    iconRight: "chevron-forward-outline",
-  },
+  // {
+  //   label: "View profile",
+  //   icon: "person-outline",
+  //   link: "/profile/",
+  //   iconRight: "chevron-forward-outline",
+  // },
 ];
 
 export const getAccountSettings = (): profileT[] => [
   {
     label: "Personal information",
     icon: "person-outline",
-    link: "/",
+    link: "/accountSettings/personalInfo",
     iconRight: "chevron-forward-outline",
   },
   {
     label: "Login & Security",
     icon: "shield-outline",
-    link: "/",
-    iconRight: "chevron-forward-outline",
-  },
-  {
-    label: "Translation",
-    icon: "language-outline",
-    link: "/",
+    link: "/accountSettings/loginSecurity",
     iconRight: "chevron-forward-outline",
   },
 ];
@@ -69,7 +58,7 @@ export const getProfileBottom = (): profileT[] => [
   {
     label: "Get help",
     icon: "help-circle-outline",
-    link: "/",
+    href: "https://www.okekedev.com",
     iconRight: "chevron-forward-outline",
   },
   {

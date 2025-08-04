@@ -16,7 +16,7 @@ export const Colors = {
     highlight: "#D8BBA2", // Slightly brighter accent for hover/active
     button: "#7A5C3E", // Rich dark brown for CTA
     icon: "#1A1A1A", // Dark icons for contrast
-    border: "#E6DCCF", // Light border or divider color
+    border: "#E0E0E0", // Light border or divider color
     muted: "#C8C8C8",
 
     // Brand accents

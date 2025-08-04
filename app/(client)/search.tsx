@@ -2,13 +2,14 @@ import { BusinessInfo } from "@/components/core/home/businessInfo";
 import { MapSearchResults } from "@/components/core/home/mapResults";
 import { SearchBar } from "@/components/core/home/searchBar";
 import CustomText from "@/components/ui/customText";
+import { HoverError } from "@/components/ui/hoverError";
 import { Colors } from "@/constants/Colors";
 import { useGetAllBusinessess } from "@/hooks/useCreateBusiness";
 import { useUserCoordinates } from "@/hooks/useUserCoordinates";
 import { BusinessData } from "@/types";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -23,9 +24,10 @@ import MapView, { Marker } from "react-native-maps";
 const { width, height } = Dimensions.get("window");
 
 export default function MapSearchScreen() {
-  const { data: coords, isLoading } = useUserCoordinates();
+  const { data: coords, isError } = useUserCoordinates();
   const { data: allBusinesses } = useGetAllBusinessess();
   const [searchInput, setSearchInput] = useState("");
+  const [showError, setShowError] = useState(false);
 
   const router = useRouter();
   const [selectedBuss, setSelectedBuss] = useState<BusinessData | null>(null);
@@ -57,92 +59,96 @@ export default function MapSearchScreen() {
     }
   };
 
+  useEffect(() => {
+    if (isError) {
+      setShowError(true);
+
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isError]);
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <View style={styles.searchBar}>
-            <SearchBar setSearchInput={setSearchInput} />
-          </View>
+    <>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View>
+            <View style={styles.searchBar}>
+              <SearchBar setSearchInput={setSearchInput} />
+            </View>
 
-          <MapView
-            userInterfaceStyle="light"
-            style={{
-              position: "absolute",
-              width: width,
-              height: height,
-            }}
-            initialRegion={{
-              latitude: (coords && coords.lat) || 25.6866,
-              longitude: (coords && coords.lon) || -100.3161,
-              latitudeDelta: 0.2,
-              longitudeDelta: 0.2,
-            }}
-            onPress={() => setSelectedBuss(null)}
-          >
-            {searchedResults?.map((business) => (
-              <Marker
-                key={business.id}
-                coordinate={{
-                  latitude: business.coordinates.latitude,
-                  longitude: business.coordinates.longitude,
-                }}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  handleSelect(business);
-                }}
-              >
-                <Pressable style={styles.ratingPin}>
-                  <CustomText style={styles.ratingText}>
-                    {business.rating === 0 ? "New ★" : `${business.rating} ★`}
-                  </CustomText>
-                </Pressable>
-              </Marker>
-            ))}
-          </MapView>
-
-          {selectedBuss && (
-            <Pressable
-              style={styles.selectedBusinessCard}
-              onPress={handlePress}
+            <MapView
+              userInterfaceStyle="light"
+              style={{
+                position: "absolute",
+                width: width,
+                height: height,
+              }}
+              initialRegion={{
+                latitude: (coords && coords.lat) || 25.6866,
+                longitude: (coords && coords.lon) || -100.3161,
+                latitudeDelta: 0.2,
+                longitudeDelta: 0.2,
+              }}
+              onPress={() => setSelectedBuss(null)}
             >
-              <BusinessInfo
-                business={selectedBuss}
-                styleCard={{
-                  backgroundColor: Colors.light.white,
-                  borderWidth: 0.5,
-                  borderColor: "#E7E7E7",
-                  borderRadius: 5,
-                  overflow: "hidden",
-                  paddingVertical: 2,
-                  shadowColor: "#E7E7E7",
-                  shadowOpacity: 0.6,
-                  shadowRadius: 15,
-                  shadowOffset: { width: 0, height: 4 },
-                  elevation: 1,
-                }}
-              />
-            </Pressable>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
+              {searchedResults?.map((business) => (
+                <Marker
+                  key={business.id}
+                  coordinate={{
+                    latitude: business.coordinates.latitude,
+                    longitude: business.coordinates.longitude,
+                  }}
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    handleSelect(business);
+                  }}
+                >
+                  <Pressable style={styles.ratingPin}>
+                    <CustomText style={styles.ratingText}>
+                      {business.rating === 0 ? "New ★" : `${business.rating} ★`}
+                    </CustomText>
+                  </Pressable>
+                </Marker>
+              ))}
+            </MapView>
 
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        enableOverDrag={false}
-        enableDynamicSizing={false}
-        backgroundStyle={styles.bottomSheetBackground}
-        handleIndicatorStyle={styles.handleIndicator}
-      >
-        <BottomSheetView style={styles.contentContainer}>
-          {searchedResults && (
-            <MapSearchResults allBusinesses={searchedResults} />
-          )}
-        </BottomSheetView>
-      </BottomSheet>
-    </GestureHandlerRootView>
+            {selectedBuss && (
+              <Pressable
+                style={styles.selectedBusinessCard}
+                onPress={handlePress}
+              >
+                <BusinessInfo
+                  business={selectedBuss}
+                  styleCard={styles.businessInfo}
+                />
+              </Pressable>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPoints}
+          enableOverDrag={false}
+          enableDynamicSizing={false}
+          backgroundStyle={styles.bottomSheetBackground}
+          handleIndicatorStyle={styles.handleIndicator}
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            {searchedResults && (
+              <MapSearchResults allBusinesses={searchedResults} />
+            )}
+          </BottomSheetView>
+        </BottomSheet>
+      </GestureHandlerRootView>
+
+      {showError && <HoverError error="We cannot access your location" />}
+    </>
   );
 }
 
@@ -184,5 +190,18 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: width - 35,
     zIndex: 10,
+  },
+  businessInfo: {
+    backgroundColor: Colors.light.white,
+    borderWidth: 0.5,
+    borderColor: "#E7E7E7",
+    borderRadius: 5,
+    overflow: "hidden",
+    paddingVertical: 2,
+    shadowColor: "#E7E7E7",
+    shadowOpacity: 0.6,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 1,
   },
 });

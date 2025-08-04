@@ -12,6 +12,7 @@ import {
   getProfileBottom,
   getProfileTop,
   getTimeOfDay,
+  handleOpenLink,
   user,
 } from "@/utils";
 import { useRouter } from "expo-router";
@@ -45,13 +46,12 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         <IdentityCard
-          name={user.name}
+          name={`${getFirstName(userData.name)} ${getFirstName(
+            userData.lastName
+          )}`}
           image={user.image}
           type={user.type}
           joined={user.joined}
-          appointments={user.appointments}
-          reviews={user.reviews}
-          completionRate={user.completionRate}
         />
 
         <FlatList
@@ -86,6 +86,7 @@ export default function ProfileScreen() {
               onPress={() => {
                 if (item.func) logout();
                 else if (item.link) router.push(item.link);
+                else if (item.href) handleOpenLink(item.href);
               }}
             />
           )}

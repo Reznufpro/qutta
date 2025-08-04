@@ -80,3 +80,12 @@ export const handleCallNumber = async (phoneNumber: string) => {
     Alert.alert("Something went wrong while trying to place the call.");
   }
 };
+
+export const handleOpenLink = async (href: string) => {
+  const supported = await Linking.canOpenURL(href);
+  if (supported) {
+    await Linking.openURL(href);
+  } else {
+    Alert.alert("Cannot open link");
+  }
+};

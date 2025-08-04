@@ -4,6 +4,7 @@ import { BackButton } from "@/components/ui/backButton";
 import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
 import { HoverButton } from "@/components/ui/hoverButton";
+import { HoverError } from "@/components/ui/hoverError";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { ListingButtons } from "@/components/ui/listingButtons";
 import { ScreenContainer } from "@/components/ui/screenContainer";
@@ -14,11 +15,13 @@ import { getInitials } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 
 export default function FinalizeBookingScreen() {
   const { bookingData, resetBookingData } = useBooking();
-  const { mutate, isError, error } = useCreateBooking();
+  const { mutate, isError } = useCreateBooking();
+  const [showError, setShowError] = useState(false);
   const router = useRouter();
 
   const { service, staff, total, business } = bookingData;
@@ -43,6 +46,18 @@ export default function FinalizeBookingScreen() {
       ]
     );
   };
+
+  useEffect(() => {
+    if (isError) {
+      setShowError(true);
+
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isError]);
 
   const handleNext = () => {
     if (!bookingData) return;
@@ -151,6 +166,10 @@ export default function FinalizeBookingScreen() {
           />
         </InnerContainer>
       </HoverButton>
+
+      {showError && (
+        <HoverError error="Error submitting appoinment, try again later" />
+      )}
     </>
   );
 }

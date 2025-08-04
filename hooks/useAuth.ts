@@ -1,5 +1,5 @@
 import { useUserData } from "@/context/userContext";
-import { checkEmailExists, loginUser, registerUser } from "@/utils";
+import { checkEmailExists, deleteUser, loginUser, registerUser } from "@/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -14,6 +14,12 @@ export const useRegisterUser = () => {
 export const useLoginUser = () => {
   return useMutation({
     mutationFn: loginUser,
+  });
+};
+
+export const useDeleteAccount = () => {
+  return useMutation({
+    mutationFn: deleteUser,
   });
 };
 
@@ -55,4 +61,37 @@ export const useLogout = () => {
   };
 
   return { logout };
+};
+
+export const useDelete = () => {
+  const router = useRouter();
+  const { resetUserData } = useUserData();
+  const { mutateAsync: deleteAcc } = useDeleteAccount();
+
+  const deleteAccount = async () => {
+    Alert.alert("Deactivate Account", "Are you sure you want to continue?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteAcc();
+            // Remove the token from secure storage
+            await SecureStore.deleteItemAsync("token");
+
+            // delete user context data
+            resetUserData();
+
+            // Redirect to the login screen
+            router.replace("/onboarding");
+          } catch (error) {
+            console.error("Account deletion failed:", error);
+          }
+        },
+      },
+    ]);
+  };
+
+  return { deleteAccount };
 };

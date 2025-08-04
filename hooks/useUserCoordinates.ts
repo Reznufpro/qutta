@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import * as Location from "expo-location";
-import { Alert } from "react-native";
 
 export const useUserCoordinates = () => {
   return useQuery({
@@ -8,10 +7,6 @@ export const useUserCoordinates = () => {
     queryFn: async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert(
-          "Permission denied",
-          "Location access is required to show distance."
-        );
         throw new Error("Location permission denied");
       }
 

@@ -4,16 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { MotiView } from "moti";
 import { StyleSheet, View } from "react-native";
-import { Stats } from "./stats";
 
 interface IdentityCardProps {
   name: string;
   image: any;
   type: string;
   joined: string;
-  reviews: number;
-  appointments: number;
-  completionRate: string;
 }
 
 export const IdentityCard = ({
@@ -21,9 +17,6 @@ export const IdentityCard = ({
   image,
   type,
   joined,
-  appointments,
-  reviews,
-  completionRate,
 }: IdentityCardProps) => {
   return (
     <MotiView
@@ -53,12 +46,6 @@ export const IdentityCard = ({
         <CustomText style={styles.name}>{name}</CustomText>
         <CustomText style={styles.subText}>Joined {joined}</CustomText>
       </View>
-
-      <View style={styles.stats}>
-        <Stats label="Reviews" value={reviews} />
-        <Stats label="Appointments" value={appointments} />
-        <Stats label="Completion rate" value={completionRate} />
-      </View>
     </MotiView>
   );
 };
@@ -81,7 +68,6 @@ const styles = StyleSheet.create({
   },
   profileSection: {
     alignItems: "center",
-    marginBottom: 16,
   },
   avatar: {
     width: 72,

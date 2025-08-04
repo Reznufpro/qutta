@@ -1,4 +1,5 @@
 import { ProfileCard } from "@/components/core/profile/profileCard";
+import { AppVersion } from "@/components/core/profile/settings/appVersion";
 import { BackButton } from "@/components/ui/backButton";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
@@ -24,7 +25,7 @@ export default function AccountSettingsScreen() {
       <FlatList
         data={settings}
         keyExtractor={(item) => item.label}
-        scrollEnabled
+        scrollEnabled={false}
         horizontal={false}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
@@ -39,13 +40,15 @@ export default function AccountSettingsScreen() {
           />
         )}
       />
+
+      <AppVersion />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingBottom: 150,
+    paddingBottom: 40,
   },
   iconRow: {
     flexDirection: "row",

@@ -3,16 +3,17 @@ import { CustomProgressBar } from "@/components/ui/customProgressBar";
 import CustomText from "@/components/ui/customText";
 import { Header } from "@/components/ui/header";
 import { HoverButton } from "@/components/ui/hoverButton";
+import { HoverError } from "@/components/ui/hoverError";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { ListingButtons } from "@/components/ui/listingButtons";
 import { ScreenContainerWithoutAnimation } from "@/components/ui/screenContainer";
 import { useBusinessForm } from "@/context/businessContext";
-import { useUserData } from "@/context/userContext";
 import { useCreateBusiness } from "@/hooks/useCreateBusiness";
 import { introSlides } from "@/utils";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { AnimatePresence, MotiView } from "moti";
+import { useEffect, useState } from "react";
 import {
   DimensionValue,
   Keyboard,
@@ -24,15 +25,13 @@ import {
 
 export default function BusinessReviewScreen() {
   const { form, updateForm, resetForm } = useBusinessForm();
-  const { userData } = useUserData();
-
-  console.log(userData.lastName);
   const router = useRouter();
+  const [showError, setShowError] = useState(false);
+
   const introUtils = introSlides();
   const {
     mutateAsync: submitBusiness,
-    isSuccess,
-    error,
+    isError,
     isPending,
   } = useCreateBusiness();
 
@@ -55,6 +54,18 @@ export default function BusinessReviewScreen() {
     updateForm("current_step", form.current_step - 1);
     router.back();
   };
+
+  useEffect(() => {
+    if (isError) {
+      setShowError(true);
+
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isError]);
 
   const handleSubmit = async () => {
     if (!isFormValid) {
@@ -255,6 +266,10 @@ export default function BusinessReviewScreen() {
           />
         </InnerContainer>
       </HoverButton>
+
+      {showError && (
+        <HoverError error="Error creating your business, try again later." />
+      )}
     </>
   );
 }
