@@ -10,11 +10,21 @@ import {
 } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
+import * as Notifications from "expo-notifications";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { en, registerTranslation } from "react-native-paper-dates";
 import "react-native-reanimated";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
