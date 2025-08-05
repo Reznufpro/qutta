@@ -72,3 +72,41 @@ export const deleteUser = async () => {
 
   return res.json();
 };
+
+export const appleLogin = async (payload: {
+  identityToken: string;
+  fullName: string;
+}) => {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${BASE_URL}auth/appleLogin`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || "Login failed");
+  }
+
+  return res.json();
+};
+
+export const setRole = async (role: "Client" | "Business") => {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${BASE_URL}auth/setRole`, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ role }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || "Failed to set role");
+  }
+
+  const data = await res.json();
+  return data;
+};

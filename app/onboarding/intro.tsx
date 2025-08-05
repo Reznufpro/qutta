@@ -88,14 +88,12 @@ export default function IntroScreen() {
       if (userData.role === "Client") {
         router.push("/(client)/home");
       } else {
-        router.push("/(business)/dashboard");
+        router.push("/onboarding/business/intro");
       }
     }
   };
 
-  const handleSkip = () => {
-    setCurrentIndex(totalIntro);
-  };
+  const handleSkip = () => router.push("/onboarding");
 
   return (
     <SafeAreaView style={styles.container}>

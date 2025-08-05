@@ -1,5 +1,13 @@
+import { useSelectedBusiness } from "@/context/selectedBusinessContext";
 import { useUserData } from "@/context/userContext";
-import { checkEmailExists, deleteUser, loginUser, registerUser } from "@/utils";
+import {
+  appleLogin,
+  checkEmailExists,
+  deleteUser,
+  loginUser,
+  registerUser,
+  setRole,
+} from "@/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -14,6 +22,18 @@ export const useRegisterUser = () => {
 export const useLoginUser = () => {
   return useMutation({
     mutationFn: loginUser,
+  });
+};
+
+export const useAppleAuth = () => {
+  return useMutation({
+    mutationFn: appleLogin,
+  });
+};
+
+export const useSetUserRole = () => {
+  return useMutation({
+    mutationFn: setRole,
   });
 };
 
@@ -35,6 +55,7 @@ export const useCheckEmailExists = (email: string, enabled = false) => {
 export const useLogout = () => {
   const router = useRouter();
   const { resetUserData } = useUserData();
+  const { setSelectedBusinessId } = useSelectedBusiness();
 
   const logout = async () => {
     Alert.alert("Log out", "Are you sure you want to continue?", [
@@ -49,6 +70,7 @@ export const useLogout = () => {
 
             // delete user context data
             resetUserData();
+            setSelectedBusinessId(null);
 
             // Redirect to the login screen
             router.replace("/onboarding");
@@ -67,6 +89,7 @@ export const useDelete = () => {
   const router = useRouter();
   const { resetUserData } = useUserData();
   const { mutateAsync: deleteAcc } = useDeleteAccount();
+  const { setSelectedBusinessId } = useSelectedBusiness();
 
   const deleteAccount = async () => {
     Alert.alert("Deactivate Account", "Are you sure you want to continue?", [
@@ -82,6 +105,7 @@ export const useDelete = () => {
 
             // delete user context data
             resetUserData();
+            setSelectedBusinessId(null);
 
             // Redirect to the login screen
             router.replace("/onboarding");

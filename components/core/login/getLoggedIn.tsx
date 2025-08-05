@@ -2,10 +2,10 @@ import { CustomDivider } from "@/components/ui/customDivider";
 import CustomText from "@/components/ui/customText";
 import { HoverError } from "@/components/ui/hoverError";
 import { InnerContainer } from "@/components/ui/innerContainer";
-import { h3 } from "@/constants";
+import { BASE_URL, h3 } from "@/constants";
 import { Colors } from "@/constants/Colors";
 import { useUserData } from "@/context/userContext";
-import { useLoginUser, useRegisterUser } from "@/hooks/useAuth";
+import { useAppleAuth, useLoginUser, useRegisterUser } from "@/hooks/useAuth";
 import {
   checkEmailExists,
   registerPushToken,
@@ -78,6 +78,7 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal }) => {
     isError,
   } = useLoginUser();
   const { setUser } = useUserData();
+  const { mutateAsync: appleLoginMutate, isPending } = useAppleAuth();
   const router = useRouter();
   const [showError, setShowError] = useState(false);
 
@@ -339,7 +340,94 @@ export const GetLoggedIn: FC<GetLoggedInProps> = ({ closeModal }) => {
                           height: 53,
                           marginVertical: 30,
                         }}
-                        onPress={() => {}}
+                        onPress={async () => {
+                          try {
+                            const credential =
+                              await AppleAuthentication.signInAsync({
+                                requestedScopes: [
+                                  AppleAuthentication.AppleAuthenticationScope
+                                    .EMAIL,
+                                  AppleAuthentication.AppleAuthenticationScope
+                                    .FULL_NAME,
+                                ],
+                              });
+
+                            console.log("Apple credential:", credential);
+
+                            const fullName = `${
+                              credential.fullName?.givenName ?? ""
+                            } ${credential.fullName?.familyName ?? ""}`.trim();
+
+                            if (!credential.identityToken) {
+                              alert("Apple login failed: No token received");
+                              return;
+                            }
+
+                            const res = await fetch(
+                              `${BASE_URL}auth/appleLogin`,
+                              {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                  identityToken: credential.identityToken,
+                                  fullName,
+                                }),
+                              }
+                            );
+
+                            if (!res.ok) {
+                              const err = await res.json();
+                              throw new Error(err.error || "Login failed");
+                            }
+
+                            const data = await res.json();
+
+                            const { user, token, isNew } = data;
+
+                            // Store token to SecureStore, etc
+                            console.log("Created:", user, token);
+
+                            setUser({ ...user, token: token });
+
+                            await SecureStore.setItemAsync("token", token);
+
+                            closeModal();
+
+                            if (user.role === "Client") {
+                              await registerPushToken();
+                              closeModal();
+
+                              router.replace("/(client)/home");
+                            } else {
+                              await registerPushToken();
+                              closeModal();
+
+                              router.replace("/(business)/dashboard");
+                            }
+
+                            if (isNew) {
+                              // navigate to Role Picker
+                              closeModal();
+                              router.push("/onboarding/setRole");
+                            } else {
+                              // go to app
+                              await registerPushToken();
+                              closeModal();
+
+                              if (user.role === "Client") {
+                                router.replace("/(client)/home");
+                              } else {
+                                router.replace("/(business)/dashboard");
+                              }
+                            }
+                          } catch (error: any) {
+                            if (error.code === "ERR_CANCELED") {
+                              console.log("Apple login canceled");
+                            } else {
+                              console.error("Apple login failed", error);
+                            }
+                          }
+                        }}
                       />
                     </MotiView>
                   )}

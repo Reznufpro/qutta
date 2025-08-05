@@ -9,6 +9,14 @@ import { Platform, ScrollView, StyleSheet } from "react-native";
 export default function HomeScreen() {
   const { data: featuredBusinesses } = useGetAllBusinessess();
 
+  const recommended = featuredBusinesses?.filter(
+    (items) => items.tag === "Recommended"
+  );
+
+  const newBusinesses = featuredBusinesses?.filter(
+    (items) => items.tag === "New"
+  );
+
   return (
     <ScreenContainer>
       <Header headerTitle="Home" style={{ marginBottom: 12 }} />
@@ -18,6 +26,16 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <HomeSection heading="For you" business={featuredBusinesses} />
+
+        <HeroCardBig
+          img={marketingHome[1].img}
+          title={marketingHome[1].title}
+          subtitle={marketingHome[1].subtitle}
+          extra={marketingHome[1].extra}
+          heading="Explore"
+        />
+
+        <HomeSection heading="Recommended" business={recommended} />
 
         <HeroCardBig
           img={marketingHome[0].img}
@@ -32,10 +50,10 @@ export default function HomeScreen() {
           title={marketingHome[1].title}
           subtitle={marketingHome[1].subtitle}
           extra={marketingHome[1].extra}
-          heading="Explore"
+          heading="Book"
         />
 
-        <HomeSection heading="Top picks" business={featuredBusinesses} />
+        <HomeSection heading="New" business={newBusinesses} />
       </ScrollView>
     </ScreenContainer>
   );

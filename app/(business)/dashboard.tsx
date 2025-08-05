@@ -11,7 +11,6 @@ import { FlatList, Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export default function DashboardScreen() {
   const { userData } = useUserData();
-
   const { data: ownerBookings } = useGetOwnerBookings();
 
   const {

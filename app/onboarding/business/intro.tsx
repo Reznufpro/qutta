@@ -23,7 +23,7 @@ export default function IntroScreen() {
   return (
     <ScreenContainerWithoutAnimation innerStyle={styles.container}>
       <View style={styles.iconRow}>
-        <BackButton func={() => resetForm()} />
+        <BackButton func={() => resetForm()} cancel />
       </View>
 
       <View style={styles.inner}>

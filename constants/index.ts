@@ -22,4 +22,6 @@ const isDev = process.env.NODE_ENV !== "production";
 // Use EXPO_PUBLIC_MACHINE_IP for local dev
 const machineIP = process.env.EXPO_PUBLIC_MACHINE_IP || "localhost";
 
-export const BASE_URL = isDev ? `http://${machineIP}:3000/api/` : "";
+export const BASE_URL = isDev
+  ? `http://${machineIP}:3000/api/`
+  : "https://qutta-backend-production.up.railway.app/";

@@ -13,6 +13,7 @@ interface BackIconProps {
   iconName?: keyof typeof Ionicons.glyphMap;
   style?: StyleProp<ViewStyle>;
   func?: () => void;
+  cancel?: boolean;
 }
 
 export const BackButton = ({
@@ -21,13 +22,19 @@ export const BackButton = ({
   iconName = "arrow-back",
   style,
   func,
+  cancel,
 }: BackIconProps) => {
   const router = useRouter();
 
   const handleBack = () => {
-    router.back();
-    if (func) {
+    if (cancel && func) {
       func();
+      router.push("/(business)/dashboard");
+    } else if (func) {
+      func();
+      router.back();
+    } else {
+      router.back();
     }
   };
 
