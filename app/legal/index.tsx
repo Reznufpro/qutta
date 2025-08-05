@@ -2,7 +2,7 @@ import { ProfileCard } from "@/components/core/profile/profileCard";
 import { BackButton } from "@/components/ui/backButton";
 import { Header } from "@/components/ui/header";
 import { ScreenContainer } from "@/components/ui/screenContainer";
-import { getLegal } from "@/utils";
+import { getLegal, handleOpenLink } from "@/utils";
 import { useRouter } from "expo-router";
 import { FlatList, StyleSheet, View } from "react-native";
 
@@ -32,6 +32,7 @@ export default function LegalScreen() {
             iconRight={item.iconRight}
             onPress={() => {
               if (item.link) router.push(item.link);
+              else if (item.href) handleOpenLink(item.href);
             }}
           />
         )}

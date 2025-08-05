@@ -11,7 +11,10 @@ import { InnerContainer } from "@/components/ui/innerContainer";
 import LoadingScreen from "@/components/ui/loadingScreen";
 import { Colors } from "@/constants/Colors";
 import { useAvailability } from "@/hooks/useBusinessAvailability";
-import { useGetBusinessById } from "@/hooks/useCreateBusiness";
+import {
+  useDeleteBusinessPrompt,
+  useGetBusinessById,
+} from "@/hooks/useCreateBusiness";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -31,6 +34,7 @@ export default function BusinessItemScreen() {
   const { data: availability, isError: availabilityError } = useAvailability(
     id as string
   );
+  const { deleteBussiness } = useDeleteBusinessPrompt(id as string);
   const [showError, setShowError] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -80,6 +84,7 @@ export default function BusinessItemScreen() {
                   This is what clients see
                 </CustomText>
               </View>
+
               <CustomText style={styles.headerTitle}>{data?.name}</CustomText>
             </View>
 
@@ -137,6 +142,10 @@ export default function BusinessItemScreen() {
               rating={data?.rating}
             />
           </View>
+
+          <Pressable onPress={deleteBussiness} style={styles.button}>
+            <CustomText style={styles.buttonText}>Delete business</CustomText>
+          </Pressable>
         </InnerContainer>
       </ScrollView>
 
@@ -200,5 +209,16 @@ const styles = StyleSheet.create({
   itemHeader: {
     fontSize: 20,
     fontFamily: "Satoshi-Bold",
+  },
+  button: {
+    backgroundColor: "red",
+    paddingVertical: 14,
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: Colors.light.white,
+    fontFamily: "Satoshi-Bold",
+    fontSize: 18,
   },
 });

@@ -72,3 +72,19 @@ export const getAllBusinesses = async (): Promise<BusinessData[]> => {
 
   return response;
 };
+
+export const deleteBusiness = async (businessId: string) => {
+  const headers = await getAuthHeaders();
+
+  const res = await fetch(`${BASE_URL}business/businesses/${businessId}`, {
+    method: "DELETE",
+    headers,
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error || "Failed to fetch business");
+  }
+
+  return res.json();
+};

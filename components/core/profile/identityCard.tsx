@@ -19,6 +19,10 @@ export const IdentityCard = ({
   type,
   joined,
 }: IdentityCardProps) => {
+  if (!name || !type) {
+    return null;
+  }
+
   return (
     <MotiView
       from={{

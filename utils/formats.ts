@@ -4,12 +4,14 @@ import { format, formatDistanceToNow } from "date-fns";
 export const getTimeOfDay = (): string => {
   const currentHour = new Date().getHours();
 
-  if (currentHour >= 0 && currentHour < 12) {
+  if (currentHour >= 5 && currentHour < 12) {
     return "Good morning!";
-  } else if (currentHour >= 12 && currentHour < 23) {
+  } else if (currentHour >= 12 && currentHour < 17) {
     return "Good afternoon!";
+  } else if (currentHour >= 17 && currentHour < 21) {
+    return "Good evening!";
   } else {
-    return "Good day!";
+    return "Good night!";
   }
 };
 
@@ -77,10 +79,26 @@ export const getTodaySchedule = (availability: AvailabilityEntry[]) => {
   return `${formatTime(entry.open_time)} - ${formatTime(entry.close_time)}`;
 };
 
-export const formatISODate = (date: string): string => {
-  const formatted = `Joined ${formatDistanceToNow(new Date(date), {
-    addSuffix: true,
-  })}`;
+export const formatISODate = (date: string | null | undefined): string => {
+  if (!date || date.trim() === "") {
+    return "Recently joined";
+  }
 
-  return formatted;
+  try {
+    const parsedDate = new Date(date);
+
+    // Check if the date is valid
+    if (isNaN(parsedDate.getTime())) {
+      return "Recently joined";
+    }
+
+    const formatted = `Joined ${formatDistanceToNow(parsedDate, {
+      addSuffix: true,
+    })}`;
+
+    return formatted;
+  } catch (error) {
+    console.warn("Error formatting date:", error);
+    return "Recently joined";
+  }
 };

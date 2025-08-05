@@ -24,7 +24,7 @@ export const ProfileCard = ({
 
         {iconRight && (
           <Ionicons
-            name="chevron-forward"
+            name={iconRight}
             size={14}
             color={Colors.light.textSecondary}
           />

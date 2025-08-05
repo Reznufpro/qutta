@@ -1,10 +1,13 @@
 import {
   createBusiness,
+  deleteBusiness,
   getAllBusinesses,
   getBusinessById,
   getBusinessesByUserId,
 } from "@/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
+import { Alert } from "react-native";
 
 export const useCreateBusiness = () => {
   return useMutation({
@@ -35,4 +38,44 @@ export const useGetAllBusinessess = () => {
     staleTime: 3600000, // Cache data for 1 hour
     refetchOnWindowFocus: false,
   });
+};
+
+export const useDeleteBusiness = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (businessId: string) => deleteBusiness(businessId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allBusinesses"] });
+      queryClient.invalidateQueries({ queryKey: ["getOwnerBookings"] });
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+    },
+  });
+};
+
+export const useDeleteBusinessPrompt = (businessId: string) => {
+  const router = useRouter();
+  const { mutateAsync: deleteBusiness } = useDeleteBusiness();
+
+  const deleteBussiness = async () => {
+    Alert.alert("Delete Business", "Are you sure you want to continue?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteBusiness(businessId);
+
+            // Redirect to the login screen
+            router.replace("/(business)/business");
+          } catch (error) {
+            console.error("Account deletion failed:", error);
+          }
+        },
+      },
+    ]);
+  };
+
+  return { deleteBussiness };
 };

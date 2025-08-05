@@ -3,6 +3,7 @@ import CustomText from "@/components/ui/customText";
 import { AppName, BASE_URL } from "@/constants";
 import { Colors } from "@/constants/Colors";
 import { useUserData } from "@/context/userContext";
+import { registerPushToken } from "@/utils";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useRef, useState } from "react";
@@ -57,6 +58,7 @@ export default function IndexScreen() {
 
         const user = await res.json();
         setUser({ ...user, token }); // Save user data
+        await registerPushToken();
 
         if (user.role === "Client") {
           router.replace("/(client)/home");

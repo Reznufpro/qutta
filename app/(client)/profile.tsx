@@ -44,13 +44,15 @@ export default function ProfileScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <IdentityCard
-          name={`${getFirstName(userData.name)} ${getFirstName(
-            userData.lastName
-          )}`}
-          type={userData.role}
-          joined={userData.created_at}
-        />
+        {userData && (
+          <IdentityCard
+            name={`${getFirstName(userData.name)} ${getFirstName(
+              userData.lastName
+            )}`}
+            type={userData.role}
+            joined={userData.created_at}
+          />
+        )}
 
         <FlatList
           data={profileTop}

@@ -43,7 +43,7 @@ export const getLegal = (): profileT[] => [
   {
     label: "Terms of Service",
     icon: "book-outline",
-    link: "/",
+    href: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
     iconRight: "chevron-forward-outline",
   },
   {
@@ -68,4 +68,37 @@ export const getProfileBottom = (): profileT[] => [
     iconRight: "chevron-forward-outline",
   },
   { label: "Log out", icon: "log-out-outline", func: true },
+];
+
+export const allProfileItems = (): profileT[] => [
+  {
+    label: "Create a new business",
+    icon: "business-outline",
+    iconRight: "chevron-forward-outline",
+    link: "/onboarding/business/intro",
+  },
+  {
+    label: "Personal information",
+    icon: "person-outline",
+    link: "/accountSettings/personalInfo",
+    iconRight: "chevron-forward-outline",
+  },
+  {
+    label: "Login & Security",
+    icon: "shield-outline",
+    link: "/accountSettings/loginSecurity",
+    iconRight: "chevron-forward-outline",
+  },
+  {
+    label: "Get help",
+    icon: "help-circle-outline",
+    href: "https://www.okekedev.com",
+    iconRight: "chevron-forward-outline",
+  },
+  {
+    label: "Legal",
+    icon: "book-outline",
+    link: "/legal/",
+    iconRight: "chevron-forward-outline",
+  },
 ];
