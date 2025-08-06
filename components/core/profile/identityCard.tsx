@@ -8,9 +8,10 @@ import { StyleSheet, View } from "react-native";
 
 interface IdentityCardProps {
   userData: userProfile;
+  user?: boolean;
 }
 
-export const IdentityCard = ({ userData }: IdentityCardProps) => {
+export const IdentityCard = ({ userData, user }: IdentityCardProps) => {
   if (!userData) {
     return null;
   }
@@ -42,7 +43,7 @@ export const IdentityCard = ({ userData }: IdentityCardProps) => {
             </CustomText>
           )}
         </View>
-        <View style={styles.badge}>
+        <View style={[styles.badge, user && styles.userBadge]}>
           <Ionicons name="person" size={14} color={Colors.light.black} />
           <CustomText style={styles.badgeText}>
             {userData.role || ""}
@@ -103,8 +104,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 12,
     position: "absolute",
+    top: 1,
+    right: -18,
+  },
+  userBadge: {
     top: 4,
-    right: -8,
+    right: -3,
   },
   badgeText: {
     color: "#000",

@@ -132,7 +132,11 @@ export default function IntroScreen() {
           </AnimatePresence>
         </View>
 
-        <ListingButtons handleBack={handleSkip} handleNext={handleNext} />
+        <ListingButtons
+          backBtnTitle="Cancel"
+          handleBack={handleSkip}
+          handleNext={handleNext}
+        />
       </InnerContainer>
     </SafeAreaView>
   );

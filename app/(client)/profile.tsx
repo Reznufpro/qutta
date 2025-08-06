@@ -44,7 +44,7 @@ export default function ProfileScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {userData && <IdentityCard userData={userData} />}
+        {userData && <IdentityCard userData={userData} user />}
 
         <FlatList
           data={profileTop}

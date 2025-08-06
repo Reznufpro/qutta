@@ -53,7 +53,14 @@ export default function IndexScreen() {
         });
 
         if (!res.ok) {
-          throw new Error("Token invalid or expired");
+          await SecureStore.deleteItemAsync("token");
+          setStatus("Session expired. Please log in again.");
+          return router.replace("/onboarding");
+        }
+
+        if (res.status === 403) {
+          await SecureStore.deleteItemAsync("token");
+          router.replace("/onboarding");
         }
 
         const user = await res.json();
