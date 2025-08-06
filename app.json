@@ -11,14 +11,13 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "buildNumber": "3",
+      "buildNumber": "5",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSLocationWhenInUseUsageDescription": "Qutta uses your location to show nearby businesses and calculate distances for appointments.",
         "NSCameraUsageDescription": "Qutta uses your camera to upload images for your business.",
         "NSPhotoLibraryUsageDescription": "Qutta accesses your photo library so you can upload photos for your business, staff, or services.",
         "NSCalendarsUsageDescription": "Qutta uses your calendar to help you manage and schedule appointments.",
-        "NSUserTrackingUsageDescription": "This identifier will be used to send you personalized notifications.",
         "UIBackgroundModes": [
           "remote-notification"
         ]

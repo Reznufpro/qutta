@@ -49,7 +49,7 @@ export const getLegal = (): profileT[] => [
   {
     label: "Privacy policy",
     icon: "book-outline",
-    link: "/",
+    href: "https://docs.google.com/document/d/1tYMO05iIo9z0gSp7_teda2V22ME3EsjMlp3r1Gb10Nk/edit?usp=sharing",
     iconRight: "chevron-forward-outline",
   },
 ];

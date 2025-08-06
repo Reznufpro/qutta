@@ -1,21 +1,17 @@
 import { BASE_URL } from "@/constants";
-import * as SecureStore from "expo-secure-store";
 import { registerForPushNotificationsAsync } from "../notifications";
+import { getAuthHeaders } from "./auth";
 
 export const registerPushToken = async () => {
   try {
-    const token = await SecureStore.getItemAsync("token");
-    if (!token) return;
+    const headers = await getAuthHeaders();
 
     const pushToken = await registerForPushNotificationsAsync();
     if (!pushToken) return;
 
     await fetch(`${BASE_URL}notifications/token`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
+      method: "PATCH",
+      headers,
       body: JSON.stringify({ token: pushToken }),
     });
 

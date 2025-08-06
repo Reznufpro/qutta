@@ -54,15 +54,7 @@ export default function MenuScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {userData && (
-            <IdentityCard
-              name={`${getFirstName(userData.name)} ${getFirstName(
-                userData.lastName
-              )}`}
-              type={userData.role}
-              joined={userData.created_at}
-            />
-          )}
+          {userData && <IdentityCard userData={userData} />}
 
           <FlatList
             data={profileAll}

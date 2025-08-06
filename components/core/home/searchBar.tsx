@@ -40,7 +40,7 @@ export const SearchBar = ({ setSearchInput }: SearchBarProps) => {
           setSubmittedQuery(text);
         }}
         placeholder="Search by business name"
-        placeholderTextColor="#c7c7c7"
+        placeholderTextColor={Colors.light.textSecondary}
         returnKeyType="search"
         selectionColor="#000"
         onSubmitEditing={handleSearch}
@@ -63,7 +63,7 @@ export const SearchBar = ({ setSearchInput }: SearchBarProps) => {
 const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: Colors.light.white,
     borderWidth: 1,
     borderColor: Colors.light.border,
     borderRadius: 12,

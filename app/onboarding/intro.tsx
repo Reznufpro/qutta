@@ -24,19 +24,19 @@ const clientOnboardingData = [
     heading: "Book Services Instantly",
     subHeading:
       "Easily browse and book appointments with barbers, trainers, wellness experts, and more — all in just a few taps.",
-    image: require("../../assets/onBoarding/book.png"),
+    image: require("../../assets/onBoarding/client.jpg"),
   },
   {
-    heading: "Join Waitlists with Ease",
+    heading: "Manage your appointments",
     subHeading:
-      "No slots available? No problem. Join the waitlist and get notified the moment something opens up.",
-    image: require("../../assets/onBoarding/notification.png"),
+      "You can cancel or rebook appointments at your ease. Save favorite businesses for later.",
+    image: require("../../assets/onBoarding/manage.jpg"),
   },
   {
     heading: "Discover Quality Businesses",
     subHeading:
       "Explore local businesses, view their staff schedules, and read reviews — so you always know what to expect.",
-    image: require("../../assets/onBoarding/spa1.jpg"),
+    image: require("../../assets/onBoarding/busOpen.jpg"),
   },
 ];
 
@@ -45,19 +45,19 @@ const businessOnboardingData = [
     heading: "Manage Your Schedule Effortlessly",
     subHeading:
       "Set your business hours, block out time, and let clients book without back-and-forth messages.",
-    image: require("../../assets/onBoarding/spa1.jpg"),
+    image: require("../../assets/onBoarding/time.jpg"),
   },
   {
     heading: "Build a Loyal Client Base",
     subHeading:
-      "Showcase your services, team, and reviews. Get discovered by nearby clients ready to book.",
-    image: require("../../assets/onBoarding/spa1.jpg"),
+      "See list of loyal clients, Get discovered by nearby clients ready to book.",
+    image: require("../../assets/onBoarding/client.jpg"),
   },
   {
-    heading: "Stay in Control with Waitlists",
+    heading: "Adjust your schedule at ease",
     subHeading:
       "Fill every empty slot. Clients join waitlists and get auto-notified when there’s an opening.",
-    image: require("../../assets/onBoarding/spa1.jpg"),
+    image: require("../../assets/onBoarding/calendar.jpg"),
   },
 ];
 

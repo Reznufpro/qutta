@@ -24,4 +24,4 @@ const machineIP = process.env.EXPO_PUBLIC_MACHINE_IP || "localhost";
 
 export const BASE_URL = isDev
   ? `http://${machineIP}:3000/api/`
-  : "https://qutta-backend-production.up.railway.app/";
+  : "https://qutta-backend-production.up.railway.app/api/";

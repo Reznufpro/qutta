@@ -62,7 +62,7 @@ export default function IndexScreen() {
 
         if (user.role === "Client") {
           router.replace("/(client)/home");
-        } else {
+        } else if (user.role === "Business") {
           router.replace("/(business)/dashboard");
         }
       } catch (err) {

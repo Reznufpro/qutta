@@ -1,25 +1,17 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
+import { userProfile } from "@/context/userContext";
 import { formatISODate, getInitials } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
-import { Image } from "expo-image";
 import { MotiView } from "moti";
 import { StyleSheet, View } from "react-native";
 
 interface IdentityCardProps {
-  name: string;
-  image?: string;
-  type: string;
-  joined: string;
+  userData: userProfile;
 }
 
-export const IdentityCard = ({
-  name,
-  image,
-  type,
-  joined,
-}: IdentityCardProps) => {
-  if (!name || !type) {
+export const IdentityCard = ({ userData }: IdentityCardProps) => {
+  if (!userData) {
     return null;
   }
 
@@ -44,20 +36,22 @@ export const IdentityCard = ({
     >
       <View style={styles.profileSection}>
         <View style={styles.avatarBg}>
-          {image ? (
-            <Image source={image} style={styles.avatar} />
-          ) : (
+          {userData.name && (
             <CustomText style={styles.avatarText}>
-              {name && getInitials(name || "")}
+              {getInitials(userData.name || "")}
             </CustomText>
           )}
         </View>
         <View style={styles.badge}>
           <Ionicons name="person" size={14} color={Colors.light.black} />
-          <CustomText style={styles.badgeText}>{type}</CustomText>
+          <CustomText style={styles.badgeText}>
+            {userData.role || ""}
+          </CustomText>
         </View>
-        <CustomText style={styles.name}>{name}</CustomText>
-        <CustomText style={styles.subText}>{formatISODate(joined)}</CustomText>
+        <CustomText style={styles.name}>{userData.name || ""}</CustomText>
+        <CustomText style={styles.subText}>
+          {userData.created_at && formatISODate(userData.created_at)}
+        </CustomText>
       </View>
     </MotiView>
   );

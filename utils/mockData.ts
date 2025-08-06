@@ -76,13 +76,19 @@ export const marketingHome: marketingCards[] = [
     title: "Appointments Made Easy",
     subtitle: "Wait in comfort",
     extra: "Browse and book at anytime.",
-    img: require("../assets/onBoarding/book1.png"),
+    img: require("../assets/onBoarding/client.jpg"),
   },
   {
     title: "Discover Trusted Businesses",
     subtitle: "Local and verified",
     extra: "Find top-rated services near you from barbers to pilates.",
-    img: require("../assets/onBoarding/discover.png"),
+    img: require("../assets/onBoarding/discover.jpg"),
+  },
+  {
+    title: "Manage your appointments",
+    subtitle: "Book and Rebook",
+    extra: "Notify businesses when you cant make it.",
+    img: require("../assets/onBoarding/manage.jpg"),
   },
 ];
 
