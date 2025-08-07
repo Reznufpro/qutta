@@ -49,7 +49,9 @@ export const IdentityCard = ({ userData, user }: IdentityCardProps) => {
             {userData.role || ""}
           </CustomText>
         </View>
-        <CustomText style={styles.name}>{userData.name || ""}</CustomText>
+        <CustomText style={styles.name}>
+          {userData.name || ""} {userData.lastName}
+        </CustomText>
         <CustomText style={styles.subText}>
           {userData.created_at && formatISODate(userData.created_at)}
         </CustomText>

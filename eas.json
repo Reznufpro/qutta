@@ -9,6 +9,10 @@
                 "distribution": "store",
                 "autoIncrement": true
             }
+        },
+        "local": {
+            "developmentClient": true,
+            "distribution": "internal"
         }
     }
 }

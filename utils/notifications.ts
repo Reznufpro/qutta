@@ -2,7 +2,9 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 
-export const registerForPushNotificationsAsync = async () => {
+export const registerForPushNotificationsAsync = async (): Promise<
+  string | null
+> => {
   if (!Device.isDevice) {
     alert("Must use physical device for Push Notifications");
     return null;
@@ -21,9 +23,20 @@ export const registerForPushNotificationsAsync = async () => {
     return null;
   }
 
-  const tokenData = await Notifications.getExpoPushTokenAsync({
-    projectId: Constants.expoConfig?.extra?.eas?.projectId,
-  });
-
-  return tokenData.data;
+  try {
+    const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId;
+    if (!projectId) {
+      throw new Error("Project ID not found");
+    }
+    const { data: token, type } = await Notifications.getExpoPushTokenAsync({
+      projectId,
+    });
+    console.log("Expo Push Token:", token, type);
+    return token;
+  } catch (e) {
+    console.error("Error getting push token:", e);
+    return null;
+  }
 };

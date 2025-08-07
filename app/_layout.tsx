@@ -43,6 +43,24 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    const subscriptionReceived = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("Notification Received:", notification);
+      }
+    );
+
+    const subscriptionResponse =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log("Notification Tapped:", response);
+      });
+
+    return () => {
+      subscriptionReceived.remove();
+      subscriptionResponse.remove();
+    };
+  }, []);
+
+  useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();
     }

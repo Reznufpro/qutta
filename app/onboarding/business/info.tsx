@@ -39,7 +39,7 @@ export default function BusinessInfoScreen() {
 
   const emptyForm = useMemo(
     () => !(form.name && form.about && form.phone_number),
-    [form.name, form.about]
+    [form.name, form.about, form.phone_number]
   );
 
   const handleBack = () => router.back();

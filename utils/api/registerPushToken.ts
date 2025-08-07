@@ -9,6 +9,8 @@ export const registerPushToken = async () => {
     const pushToken = await registerForPushNotificationsAsync();
     if (!pushToken) return;
 
+    console.log(pushToken);
+
     await fetch(`${BASE_URL}notifications/token`, {
       method: "PATCH",
       headers,

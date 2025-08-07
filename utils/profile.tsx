@@ -9,21 +9,6 @@ export type profileT = {
   href?: string;
 };
 
-export const getProfileTop = (): profileT[] => [
-  {
-    label: "Account settings",
-    icon: "settings-outline",
-    link: "/accountSettings/",
-    iconRight: "chevron-forward-outline",
-  },
-  // {
-  //   label: "View profile",
-  //   icon: "person-outline",
-  //   link: "/profile/",
-  //   iconRight: "chevron-forward-outline",
-  // },
-];
-
 export const getAccountSettings = (): profileT[] => [
   {
     label: "Personal information",
@@ -54,7 +39,25 @@ export const getLegal = (): profileT[] => [
   },
 ];
 
-export const getProfileBottom = (): profileT[] => [
+export const allProfileItems = (): profileT[] => [
+  {
+    label: "Create a new business",
+    icon: "business-outline",
+    iconRight: "chevron-forward-outline",
+    link: "/onboarding/business/intro",
+  },
+  {
+    label: "Personal information",
+    icon: "person-outline",
+    link: "/accountSettings/personalInfo",
+    iconRight: "chevron-forward-outline",
+  },
+  {
+    label: "Login & Security",
+    icon: "shield-outline",
+    link: "/accountSettings/loginSecurity",
+    iconRight: "chevron-forward-outline",
+  },
   {
     label: "Get help",
     icon: "help-circle-outline",
@@ -67,16 +70,9 @@ export const getProfileBottom = (): profileT[] => [
     link: "/legal/",
     iconRight: "chevron-forward-outline",
   },
-  { label: "Log out", icon: "log-out-outline", func: true },
 ];
 
-export const allProfileItems = (): profileT[] => [
-  {
-    label: "Create a new business",
-    icon: "business-outline",
-    iconRight: "chevron-forward-outline",
-    link: "/onboarding/business/intro",
-  },
+export const allSettings = (): profileT[] => [
   {
     label: "Personal information",
     icon: "person-outline",
