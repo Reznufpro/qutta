@@ -2,7 +2,7 @@
   "expo": {
     "name": "Qutta",
     "slug": "Qutta",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "qutta",
@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "buildNumber": "1",
+      "buildNumber": "2",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSLocationWhenInUseUsageDescription": "Qutta uses your location to show nearby businesses and calculate distances for appointments.",
@@ -45,6 +45,14 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#ffffff",
+          "sounds": []
+        }
+      ],
       [
         "expo-splash-screen",
         {
