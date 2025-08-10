@@ -1,5 +1,6 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
+import { useCurrency } from "@/context/currencyContext";
 import { OwnerBookingReturnType } from "@/types";
 import { capitalize, getFirstName, getInitials } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
@@ -40,6 +41,7 @@ export const BookedCard = ({
   cancel,
 }: BookedCardProps) => {
   const isExpanded = expandedId === index;
+  const { formatAmount, isLoading } = useCurrency();
 
   const toggleExpand = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -140,17 +142,14 @@ export const BookedCard = ({
             {/* Total */}
             <View style={styles.totalSection}>
               <CustomText style={styles.totalLabel}>Total</CustomText>
-              <CustomText style={styles.totalLabel}>MX${total}</CustomText>
+              <CustomText style={styles.totalLabel}>
+                {total && formatAmount(total)}
+              </CustomText>
             </View>
           </View>
 
           {item.status === "confirmed" && (
-            <Pressable
-              style={styles.cancelButton}
-              onPress={() => {
-                console.log("Cancel");
-              }}
-            >
+            <Pressable style={styles.cancelButton} onPress={cancel}>
               <CustomText style={styles.buttonText}>
                 {cancelPending ? "Canceling..." : "Cancel appointment"}
               </CustomText>

@@ -1,5 +1,6 @@
 import { BookingProvider } from "@/context/bookingContext";
 import { BusinessFormProvider } from "@/context/businessContext";
+import { CurrencyProvider } from "@/context/currencyContext";
 import { SelectedBusinessProvider } from "@/context/selectedBusinessContext";
 import { UserProvider } from "@/context/userContext";
 import { useTheme } from "@/hooks/userThemeContext";
@@ -73,26 +74,28 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
-        <SelectedBusinessProvider>
-          <BusinessFormProvider>
-            <BookingProvider>
-              <UserProvider>
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                    gestureEnabled: false,
-                  }}
-                >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                </Stack>
-              </UserProvider>
-            </BookingProvider>
-          </BusinessFormProvider>
-        </SelectedBusinessProvider>
+        <CurrencyProvider>
+          <SelectedBusinessProvider>
+            <BusinessFormProvider>
+              <BookingProvider>
+                <UserProvider>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      gestureEnabled: false,
+                    }}
+                  >
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                </UserProvider>
+              </BookingProvider>
+            </BusinessFormProvider>
+          </SelectedBusinessProvider>
+        </CurrencyProvider>
         <StatusBar style="auto" />
       </ThemeProvider>
     </QueryClientProvider>

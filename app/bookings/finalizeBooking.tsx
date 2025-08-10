@@ -10,6 +10,7 @@ import { ListingButtons } from "@/components/ui/listingButtons";
 import { ScreenContainer } from "@/components/ui/screenContainer";
 import { Colors } from "@/constants/Colors";
 import { useBooking } from "@/context/bookingContext";
+import { useCurrency } from "@/context/currencyContext";
 import { useCreateBooking } from "@/hooks/useBooking";
 import { getInitials } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,6 +23,7 @@ export default function FinalizeBookingScreen() {
   const { bookingData, resetBookingData } = useBooking();
   const { mutate, isError } = useCreateBooking();
   const [showError, setShowError] = useState(false);
+  const { formatAmount, isLoading } = useCurrency();
   const router = useRouter();
 
   const { service, staff, total, business } = bookingData;
@@ -150,7 +152,9 @@ export default function FinalizeBookingScreen() {
 
             <View style={styles.totalSection}>
               <CustomText style={styles.totalLabel}>Total</CustomText>
-              <CustomText style={styles.totalLabel}>MX${total}</CustomText>
+              <CustomText style={styles.totalLabel}>
+                {total && formatAmount(total)}
+              </CustomText>
             </View>
           </View>
         </View>

@@ -14,6 +14,7 @@ import {
   Dimensions,
   Keyboard,
   Pressable,
+  SafeAreaView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -71,14 +72,27 @@ export default function MapSearchScreen() {
     }
   }, [isError]);
 
+  // Calculate if user is far from available businesses (for MVP feedback)
+  const isUserNearBusinesses = useMemo(() => {
+    if (!coords || !allBusinesses?.length) return false;
+
+    // Simple distance check - you might want to use a proper distance calculation
+    return allBusinesses.some((business) => {
+      const latDiff = Math.abs(coords.lat - business.coordinates.latitude);
+      const lonDiff = Math.abs(coords.lon - business.coordinates.longitude);
+      // Rough check for ~50km radius (adjust as needed)
+      return latDiff < 0.5 && lonDiff < 0.5;
+    });
+  }, [coords, allBusinesses]);
+
   return (
     <>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View>
-            <View style={styles.searchBar}>
+          <View style={{ flex: 1 }}>
+            <SafeAreaView style={styles.searchBar}>
               <SearchBar setSearchInput={setSearchInput} />
-            </View>
+            </SafeAreaView>
 
             <MapView
               userInterfaceStyle="light"
@@ -116,16 +130,34 @@ export default function MapSearchScreen() {
               ))}
             </MapView>
 
+            {/* No coverage message */}
+            {coords &&
+              !isUserNearBusinesses &&
+              allBusinesses &&
+              allBusinesses?.length > 0 && (
+                <View style={styles.noCoverageMessage}>
+                  <CustomText style={styles.noCoverageText}>
+                    We're not in your area yet, but we're expanding soon! 🚀
+                  </CustomText>
+                  <CustomText style={styles.noCoverageSubtext}>
+                    Available in Monterrey, México
+                  </CustomText>
+                </View>
+              )}
+
+            {/* Selected business card with better positioning */}
             {selectedBuss && (
-              <Pressable
-                style={styles.selectedBusinessCard}
-                onPress={handlePress}
-              >
-                <BusinessInfo
-                  business={selectedBuss}
-                  styleCard={styles.businessInfo}
-                />
-              </Pressable>
+              <View style={styles.selectedBusinessContainer}>
+                <Pressable
+                  style={styles.selectedBusinessCard}
+                  onPress={handlePress}
+                >
+                  <BusinessInfo
+                    business={selectedBuss}
+                    styleCard={styles.businessInfo}
+                  />
+                </Pressable>
+              </View>
             )}
           </View>
         </TouchableWithoutFeedback>
@@ -140,14 +172,24 @@ export default function MapSearchScreen() {
           handleIndicatorStyle={styles.handleIndicator}
         >
           <BottomSheetView style={styles.contentContainer}>
-            {searchedResults && (
+            {searchedResults && searchedResults.length > 0 ? (
               <MapSearchResults allBusinesses={searchedResults} />
+            ) : (
+              <View style={styles.noResultsContainer}>
+                <CustomText style={styles.noResultsText}>
+                  {searchInput
+                    ? `No businesses found matching "${searchInput}"`
+                    : "No businesses available yet"}
+                </CustomText>
+              </View>
             )}
           </BottomSheetView>
         </BottomSheet>
       </GestureHandlerRootView>
 
-      {showError && <HoverError error="We cannot access your location" />}
+      {showError && (
+        <HoverError error="We cannot access your location. Showing available businesses instead." />
+      )}
     </>
   );
 }
@@ -155,7 +197,7 @@ export default function MapSearchScreen() {
 const styles = StyleSheet.create({
   searchBar: {
     position: "absolute",
-    top: 60,
+    top: 20,
     left: 20,
     zIndex: 10,
   },
@@ -183,13 +225,18 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 80,
+    flex: 1,
+  },
+  selectedBusinessContainer: {
+    position: "absolute",
+    bottom: 120, // Better positioning relative to bottom sheet
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    zIndex: 10,
   },
   selectedBusinessCard: {
-    position: "absolute",
-    bottom: -620,
-    alignSelf: "center",
     width: width - 35,
-    zIndex: 10,
   },
   businessInfo: {
     backgroundColor: Colors.light.white,
@@ -203,5 +250,43 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: { width: 0, height: 4 },
     elevation: 1,
+  },
+  noCoverageMessage: {
+    position: "absolute",
+    top: 120,
+    left: 20,
+    right: 20,
+    backgroundColor: Colors.light.white,
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 5,
+  },
+  noCoverageText: {
+    textAlign: "center",
+    fontFamily: "CarosSoftBold",
+    fontSize: 14,
+    color: Colors.light.text,
+    marginBottom: 4,
+  },
+  noCoverageSubtext: {
+    textAlign: "center",
+    fontSize: 12,
+    color: Colors.light.muted,
+  },
+  noResultsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  noResultsText: {
+    textAlign: "center",
+    color: Colors.light.muted,
+    fontSize: 16,
   },
 });

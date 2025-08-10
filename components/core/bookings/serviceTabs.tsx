@@ -1,6 +1,7 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
 import { bookingData } from "@/context/bookingContext";
+import { useCurrency } from "@/context/currencyContext";
 import { BusinessData } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { MotiView } from "moti";
@@ -34,6 +35,7 @@ export const ServiceTabs = ({
   bookingData,
   setBookingData,
 }: ServiceTabsProps) => {
+  const { formatAmount, isLoading } = useCurrency();
   const tabData = Object.values(services);
   const [selectedTab, setSelectedTab] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
@@ -123,7 +125,9 @@ export const ServiceTabs = ({
             )}
             <CustomText style={styles.serviceTime}>{item.time}</CustomText>
           </View>
-          <CustomText style={styles.servicePrice}>MX${item.price}</CustomText>
+          <CustomText style={styles.servicePrice}>
+            {item.price && formatAmount(item.price)}
+          </CustomText>
         </View>
 
         {!preview && (

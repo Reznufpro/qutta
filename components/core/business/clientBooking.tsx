@@ -3,6 +3,7 @@ import { HoverButton } from "@/components/ui/hoverButton";
 import { InnerContainer } from "@/components/ui/innerContainer";
 import { Colors } from "@/constants/Colors";
 import { bookingData } from "@/context/bookingContext";
+import { useCurrency } from "@/context/currencyContext";
 import { BusinessData } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -21,6 +22,7 @@ export const ClientBooking = ({
   setBookingData,
 }: ClientBookingProps) => {
   const router = useRouter();
+  const { formatAmount, isLoading } = useCurrency();
 
   const disable = useMemo(() => {
     const check = bookingData.service.length === 0 || !bookingData.business;
@@ -67,7 +69,10 @@ export const ClientBooking = ({
           )}
 
           <CustomText style={styles.serviceText}>
-            Total: <CustomText>MX${bookingData.total}</CustomText>{" "}
+            Total:{" "}
+            <CustomText>
+              {bookingData.total && formatAmount(bookingData.total)}
+            </CustomText>{" "}
           </CustomText>
         </View>
         <TouchableOpacity style={styles.button} onPress={handlePress}>

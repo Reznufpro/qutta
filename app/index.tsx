@@ -39,6 +39,7 @@ export default function IndexScreen() {
         const token = await SecureStore.getItemAsync("token");
 
         if (!token) {
+          console.log("No token found, redirecting to onboarding");
           setStatus("No token found. Redirecting...");
           return router.replace("/onboarding");
         }
@@ -49,31 +50,55 @@ export default function IndexScreen() {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         });
 
+        console.log("Auth verification response:", res.status);
+
         if (!res.ok) {
+          console.log("Token verification failed, clearing stored token");
           await SecureStore.deleteItemAsync("token");
           setStatus("Session expired. Please log in again.");
           return router.replace("/onboarding");
         }
 
-        if (res.status === 403) {
-          await SecureStore.deleteItemAsync("token");
-          router.replace("/onboarding");
+        const user = await res.json();
+        console.log("User authenticated successfully:", {
+          id: user.id,
+          role: user.role,
+        });
+
+        // Set user data with token
+        setUser({ ...user, token });
+
+        // Register push token
+        try {
+          await registerPushToken();
+        } catch (pushError) {
+          console.error(
+            "Push token registration failed during auth:",
+            pushError
+          );
         }
 
-        const user = await res.json();
-        setUser({ ...user, token }); // Save user data
-        await registerPushToken();
-
+        // Navigate to appropriate screen
         if (user.role === "Client") {
           router.replace("/(client)/home");
         } else if (user.role === "Business") {
           router.replace("/(business)/dashboard");
+        } else {
+          console.warn("User has no role set, redirecting to role selection");
+          router.push("/onboarding/setRole");
         }
       } catch (err) {
         console.error("Auth failed:", err);
+        // Clear any stored token on auth failure
+        try {
+          await SecureStore.deleteItemAsync("token");
+        } catch (clearError) {
+          console.error("Failed to clear token:", clearError);
+        }
         router.replace("/onboarding");
       }
     };

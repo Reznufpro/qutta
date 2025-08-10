@@ -1,5 +1,6 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
+import { useCurrency } from "@/context/currencyContext";
 import { StyleSheet, View } from "react-native";
 
 export const ServiceSummary = ({
@@ -8,12 +9,18 @@ export const ServiceSummary = ({
 }: {
   serviceTitle: string | undefined;
   price: string | undefined;
-}) => (
-  <View style={styles.row}>
-    <CustomText style={styles.text}>{serviceTitle}</CustomText>
-    <CustomText style={styles.text}>MX${price}</CustomText>
-  </View>
-);
+}) => {
+  const { formatAmount, isLoading } = useCurrency();
+
+  return (
+    <View style={styles.row}>
+      <CustomText style={styles.text}>{serviceTitle}</CustomText>
+      <CustomText style={styles.text}>
+        {price && formatAmount(Number(price))}
+      </CustomText>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   row: {

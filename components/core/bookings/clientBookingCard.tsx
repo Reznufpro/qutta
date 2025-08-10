@@ -1,5 +1,6 @@
 import CustomText from "@/components/ui/customText";
 import { Colors } from "@/constants/Colors";
+import { useCurrency } from "@/context/currencyContext";
 import { BookingReturnType } from "@/types";
 import { addToCalendar, capitalize, handleDirections } from "@/utils";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,6 +15,7 @@ interface Props {
 
 export const ClientBookingCard = ({ booking }: Props) => {
   const router = useRouter();
+  const { formatAmount, isLoading } = useCurrency();
 
   const handlePress = () => {
     router.push({
@@ -65,7 +67,9 @@ export const ClientBookingCard = ({ booking }: Props) => {
           <CustomText style={styles.name}>{booking.business.name}</CustomText>
           <CustomText style={styles.dateTime}>{booking.dateTime}</CustomText>
 
-          <CustomText style={styles.totalLabel}>Total: MX${total}</CustomText>
+          <CustomText style={styles.totalLabel}>
+            Total: {total && formatAmount(total)}
+          </CustomText>
 
           <View style={styles.buttons}>
             <TouchableOpacity
