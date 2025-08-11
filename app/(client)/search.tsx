@@ -14,7 +14,6 @@ import {
   Dimensions,
   Keyboard,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -89,10 +88,10 @@ export default function MapSearchScreen() {
     <>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ flex: 1 }}>
-            <SafeAreaView style={styles.searchBar}>
+          <View>
+            <View style={styles.searchBar}>
               <SearchBar setSearchInput={setSearchInput} />
-            </SafeAreaView>
+            </View>
 
             <MapView
               userInterfaceStyle="light"
@@ -147,17 +146,15 @@ export default function MapSearchScreen() {
 
             {/* Selected business card with better positioning */}
             {selectedBuss && (
-              <View style={styles.selectedBusinessContainer}>
-                <Pressable
-                  style={styles.selectedBusinessCard}
-                  onPress={handlePress}
-                >
-                  <BusinessInfo
-                    business={selectedBuss}
-                    styleCard={styles.businessInfo}
-                  />
-                </Pressable>
-              </View>
+              <Pressable
+                style={styles.selectedBusinessCard}
+                onPress={handlePress}
+              >
+                <BusinessInfo
+                  business={selectedBuss}
+                  styleCard={styles.businessInfo}
+                />
+              </Pressable>
             )}
           </View>
         </TouchableWithoutFeedback>
@@ -197,7 +194,7 @@ export default function MapSearchScreen() {
 const styles = StyleSheet.create({
   searchBar: {
     position: "absolute",
-    top: 20,
+    top: 60,
     left: 20,
     zIndex: 10,
   },
@@ -225,18 +222,13 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 80,
-    flex: 1,
-  },
-  selectedBusinessContainer: {
-    position: "absolute",
-    bottom: 120, // Better positioning relative to bottom sheet
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    zIndex: 10,
   },
   selectedBusinessCard: {
+    position: "absolute",
+    bottom: -620,
+    alignSelf: "center",
     width: width - 35,
+    zIndex: 10,
   },
   businessInfo: {
     backgroundColor: Colors.light.white,
